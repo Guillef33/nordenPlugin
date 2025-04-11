@@ -1,0 +1,17 @@
+.container {
+    background-color: #f4f4f4;
+    padding: 20px;
+}
+
+.form-header {
+    text-align: center;
+    margin-bottom: 20px;
+    background-color: #f4f4f4;
+}
+
+.form-line {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background-color:#f4f4f4;
+    margin-bottom: 20px;
+}
