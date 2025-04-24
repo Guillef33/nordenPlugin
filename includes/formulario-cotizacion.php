@@ -10,11 +10,8 @@ function formulario_cotizacion_auto() {
     //     $codigos_postales = [];
     // }
 
-    $marcas = [
-        ['Codigo' => '1', 'Nombre' => 'Toyota'],
-        ['Codigo' => '2', 'Nombre' => 'Ford'],
-        ['Codigo' => '3', 'Nombre' => 'Volkswagen'],
-    ];
+    $marcas = obtener_marcas_norden($token);
+
 
     $modelos = [
         ['Codigo' => '1', 'Nombre' => 'Corolla'],

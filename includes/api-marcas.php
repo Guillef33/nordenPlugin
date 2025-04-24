@@ -2,7 +2,7 @@
 
 if (!defined('ABSPATH')) exit;
 
-function obtener_provincias_norden($token) {
+function obtener_marcas_norden($token) {
     $url = 'https://quickbi4.norden.com.ar/api_externa/autos/vehiculo/listamarcaanio?anio=2020';
 
     $args = [
