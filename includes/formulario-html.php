@@ -81,25 +81,26 @@
             <h3>Ubicacion</h3>
             <div></div>
             <div>
-                <label for="provincia">Provincia</label> 
-                <select type="text" name="provincia" name="provincia" id="provincia" for="provincia" required>
-                <option value="" disabled selected>Selecciona una marca</option>
-                    <?php foreach ($provincias as $provincia): ?>
-                        <option value="<?php echo esc_attr($provincia['Codigo']); ?>">
-                            <?php echo esc_html($provincia['Nombre']); ?>
-                        </option>
-                    <?php endforeach; ?>
+                <label>Provincia</label>
+                <select name="provincia" required>
+                    <?php if (!empty($provincias)): ?>
+                    <?php foreach ($provincias['Data'] as $prov): ?>
+                    <option value="<?= esc_attr($prov['Value']) ?>"><?= esc_html($prov['Text']) ?></option>
+                <?php endforeach; ?>
+                    <?php else: ?>
+                        <option value="">No se pudieron cargar las provincias</option>
+                    <?php endif; ?>
                 </select>
             </div>
             <div>
                 <label for="codigo_postal"></label> 
                 <select type="text" name="codigo_postal"id="codigo_postal" for="codigo_postal" required>
                 <option value="" disabled selected>Selecciona un codigo postal</option>
-                    <?php foreach ($codigos_postales as $codigo): ?>
+                    <!-- <?php foreach ($codigos_postales as $codigo): ?>
                         <option value="<?php echo esc_attr($codigo['Codigo']); ?>">
                             <?php echo esc_html($codigo['Nombre']); ?>
                         </option>
-                    <?php endforeach; ?>
+                    <?php endforeach; ?> -->
                 </select>
             </div>
         </div>
