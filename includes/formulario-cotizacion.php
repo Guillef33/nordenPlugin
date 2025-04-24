@@ -4,7 +4,7 @@ function formulario_cotizacion_auto() {
     ob_start();
 
     $token = obtener_token_norden();
-    $codigos_postales = obtener_codigos_postales($token, '02'); 
+    // $codigos_postales = obtener_codigos_postales($token, '02'); 
 
     if (!is_array($codigos_postales)) {
         $codigos_postales = [];
