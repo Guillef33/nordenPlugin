@@ -44,14 +44,15 @@
             </div>
 
             <div>
-                <label for="marca">Marca</label>
-                <select name="marca" id="marca" for="marca" required>
-                    <option value="" disabled selected>Selecciona una marca</option>
-                    <?php foreach ($marcas as $marca): ?>
-                        <option value="<?php echo esc_attr($marca['Codigo']); ?>">
-                            <?php echo esc_html($marca['Nombre']); ?>
-                        </option>
-                    <?php endforeach; ?>
+                <label>Marcas</label>
+                <select name="marcas" required>
+                    <?php if (!empty($marcas)): ?>
+                    <?php foreach ($marcas['Data'] as $marca): ?>
+                    <option value="<?= esc_attr($marca['Value']) ?>"><?= esc_html($marca['Text']) ?></option>
+                <?php endforeach; ?>
+                    <?php else: ?>
+                        <option value="">No se pudieron cargar las marcas</option>
+                    <?php endif; ?>
                 </select>
             </div>
 

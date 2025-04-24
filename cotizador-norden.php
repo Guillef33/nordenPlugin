@@ -17,6 +17,7 @@ defined( 'ABSPATH' ) or die( 'No molestar!' );
 require_once plugin_dir_path(__FILE__) . 'includes/api-auth.php';
 require_once plugin_dir_path(__FILE__) . 'includes/api-cotizador.php';
 require_once plugin_dir_path(__FILE__) . 'includes/api-provincias.php';
+require_once plugin_dir_path(__FILE__) . 'includes/api-marcas.php';
 
 require_once plugin_dir_path(__FILE__) . 'includes/formulario-cotizacion.php';
 

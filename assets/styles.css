@@ -1,4 +1,4 @@
-.container {
+/* .container {
     background-color: #f4f4f4;
     padding: 20px;
 }
@@ -14,4 +14,79 @@
     grid-template-columns: 1fr 1fr;
     background-color:#f4f4f4;
     margin-bottom: 20px;
-}
+} */
+
+.form-cotizar {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: #fdfdfd;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    font-family: 'Segoe UI', sans-serif;
+  }
+  
+  .form-cotizar h3,
+  .form-cotizar h4 {
+    grid-column: 1 / -1;
+    margin-top: 2rem;
+    font-size: 1.2rem;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 0.3rem;
+    color: #333;
+  }
+  
+  .form-cotizar label {
+    font-weight: 500;
+    margin-bottom: 0.3rem;
+    color: #333;
+  }
+  
+  .form-cotizar input,
+  .form-cotizar select {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+    background-color: #fff;
+  }
+  
+  .form-cotizar button {
+    grid-column: 1 / -1;
+    padding: 0.75rem 1.5rem;
+    background-color: #0066cc;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-top: 1.5rem;
+    transition: background-color 0.2s ease-in-out;
+  }
+  
+  .form-cotizar button:hover {
+    background-color: #004a99;
+  }
+  
+  .form-cotizar {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 2rem;
+  }
+  
+  @media (max-width: 768px) {
+    .form-cotizar {
+      grid-template-columns: 1fr;
+    }
+  }
+  
+  .site-header, .site-footer {
+      display: none;
+  }
+  
+  .site-logo {
+      width: 100px;
+  }
