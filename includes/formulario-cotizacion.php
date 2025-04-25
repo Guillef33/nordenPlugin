@@ -4,11 +4,6 @@ function formulario_cotizacion_auto() {
     ob_start();
 
     $token = obtener_token_norden();
-    // // $codigos_postales = obtener_codigos_postales($token, '02'); 
-
-    // if (!is_array($codigos_postales)) {
-    //     $codigos_postales = [];
-    // }
 
     $marcas = obtener_marcas_norden($token);
 
@@ -21,7 +16,7 @@ function formulario_cotizacion_auto() {
 
     $provincias = obtener_provincias_norden($token);
 
-    $provincia = $_GET['provincia'] ?? '02';
+    $provincia = '02';
 
     $codigos_postales = obtener_codigos_postales($token, $provincia);
 

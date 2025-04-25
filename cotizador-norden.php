@@ -13,6 +13,8 @@
 
 defined( 'ABSPATH' ) or die( 'No molestar!' );
 
+add_action('wp_ajax_mi_endpoint', 'mi_funcion_php');
+
 // Requerir archivos de funciones
 require_once plugin_dir_path(__FILE__) . 'includes/api-auth.php';
 require_once plugin_dir_path(__FILE__) . 'includes/api-cotizador.php';
@@ -42,6 +44,15 @@ function cotizador_norden_enqueue_assets() {
     );
 }
 add_action('wp_enqueue_scripts', 'cotizador_norden_enqueue_assets');
+
+add_action('rest_api_init', function () {
+    register_rest_route('mi-plugin/v1', '/codigos-postales', array(
+        'methods' => 'GET',
+        'callback' => 'api-codigos-postales',
+        'permission_callback' => '__return_true'
+    ));
+});
+
 
 // Shortcodes
 add_shortcode('resultado_cotizador_auto', 'resultado_cotizador_auto');

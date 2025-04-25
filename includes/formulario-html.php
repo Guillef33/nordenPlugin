@@ -175,9 +175,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const apiToken = "<?= $token ?>";
 
     // Llamada a la API (reemplazá con tu endpoint real)
-    fetch(`https://quickbi4.norden.com.ar/api/general/ubicacion/listacodigopostal?provincia=${provinciaId}`, {
-        "Authorization": `Bearer ${apiToken}`
-    })
+    fetch(`${miPluginData.rest_url}codigos-postales?provincia=${provincia}`)
       .then(res => res.json())
       .then(data => {
         cpSelect.innerHTML = '<option disabled selected>Selecciona un código postal</option>';
