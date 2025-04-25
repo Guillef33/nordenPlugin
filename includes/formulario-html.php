@@ -45,7 +45,7 @@
 
             <div>
                 <label>Marcas</label>
-                <select name="marcas" required>
+                <select name="marcas" id="marca" required>
                     <?php if (!empty($marcas)): ?>
                     <?php foreach ($marcas['Data'] as $marca): ?>
                     <option value="<?= esc_attr($marca['Value']) ?>"><?= esc_html($marca['Text']) ?></option>
@@ -233,5 +233,5 @@ function cargarModelosSiCorresponde() {
   // Escuchamos cambios en ambos selects
   marcaSelect.addEventListener('change', cargarModelosSiCorresponde);
   anioSelect.addEventListener('change', cargarModelosSiCorresponde);
-  
+
 </script>
