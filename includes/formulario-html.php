@@ -179,13 +179,11 @@ document.addEventListener('DOMContentLoaded', function () {
   const marcaSelect = document.querySelector('#marca');
   const anioSelect = document.querySelector('#anio');
   const modeloSelect = document.querySelector('#modelo');
-  const condicion=document.querySelector('#condicion');
 
-
-const radioButton = document.querySelector('input[name="condicion"]:checked'); // O usando id: document.querySelector('#id_del_radio')
+const condicion = document.querySelector('input[name="condicion"]:checked');
 
 // Añadir el event listener
-radioButton.addEventListener('change', (event) => {
+condicion.addEventListener('change', (event) => {
   // Obtener el valor del radio button seleccionado
   const selectedValue = event.target.value;
   console.log('Valor seleccionado:', selectedValue);
