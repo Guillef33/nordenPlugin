@@ -8,7 +8,23 @@
         <div class="form-line">
             <h3>Datos del vehículo</h3>
             <div></div>
+
             <div>
+                <label for="condicion">Condicion</label>
+                <div class="radio-condicion">
+                    <div>
+                        <input type="radio" id="0km" name="condicion" value="" />
+                        <label for="0km">0km</label> 
+                    </div>
+
+                    <div>
+                        <input type="radio" id="usado" name="condicion" value="email" />
+                        <label for="Usado">Usado</label> 
+                    </div>
+                </div>
+            </div>
+
+            <div class="hidden">
                 <label for="anio">Año</label> 
                 <select type="text" name="anio" id="anio" for="anio" required>
                     <option value="" disabled="">Selecciona un año</option>
@@ -33,20 +49,6 @@
                     <option value="2007">2007</option>
                     <option value="2006">2006</option>
 				</select>
-            </div>
-            <div>
-                <label for="condicion">Condicion</label>
-                <div class="radio-condicion">
-                    <div>
-                        <input type="radio" id="0km" name="condicion" value="" />
-                        <label for="0km">0km</label> 
-                    </div>
-
-                    <div>
-                        <input type="radio" id="usado" name="condicion" value="email" />
-                        <label for="Usado">Usado</label> 
-                    </div>
-                </div>
             </div>
 
             <div>
@@ -177,6 +179,18 @@ document.addEventListener('DOMContentLoaded', function () {
   const marcaSelect = document.querySelector('#marca');
   const anioSelect = document.querySelector('#anio');
   const modeloSelect = document.querySelector('#modelo');
+  const condicion=document.querySelector('#condicion');
+
+
+const radioButton = document.querySelector('input[name="condicion"]:checked'); // O usando id: document.querySelector('#id_del_radio')
+
+// Añadir el event listener
+radioButton.addEventListener('change', (event) => {
+  // Obtener el valor del radio button seleccionado
+  const selectedValue = event.target.value;
+  console.log('Valor seleccionado:', selectedValue);
+});
+  /////////////////////////////////////////////////////////////////
 
   console.log(provinciaSelect)
   console.log(cpSelect)
