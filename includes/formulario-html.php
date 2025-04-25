@@ -172,9 +172,11 @@ document.addEventListener('DOMContentLoaded', function () {
     // Limpiar opciones anteriores
     cpSelect.innerHTML = '<option disabled selected>Cargando...</option>';
 
+    const apiToken = "<?= $token ?>";
+
     // Llamada a la API (reemplazá con tu endpoint real)
     fetch(`https://quickbi4.norden.com.ar/api/general/ubicacion/listacodigopostal?provincia=${provinciaId}`, {
-        "Authorization": "Bearer "+$token
+        "Authorization": `Bearer ${token}`
     })
       .then(res => res.json())
       .then(data => {
