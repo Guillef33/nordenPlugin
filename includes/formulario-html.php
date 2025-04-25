@@ -35,11 +35,15 @@
 				</select>
             </div>
             <div>
-                <label for="condicion"></label> 
-                <input type="radio" id="0km" name="condicion" value="" />
-                <label for="0km">0km</label> 
-                <input type="radio" id="usado" name="condicion" value="email" />
-                <label for="Usado">Usado</label> 
+                <label for="condicion">Condicion</label>
+                <div>
+                    <input type="radio" id="0km" name="condicion" value="" />
+                    <label for="0km">0km</label> 
+                </div>
+                <div>
+                    <input type="radio" id="usado" name="condicion" value="email" />
+                    <label for="Usado">Usado</label> 
+                </div>
             </div>
 
             <div>
