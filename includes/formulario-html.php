@@ -13,7 +13,7 @@
                 <label for="condicion">Condicion</label>
                 <div class="radio-condicion">
                     <div>
-                        <input type="radio" id="0km" name="condicion" value="0km" selected />
+                        <input type="radio" id="0km" name="condicion" value="0km" checked />
                         <label for="0km">0km</label> 
                     </div>
 
@@ -24,7 +24,7 @@
                 </div>
             </div>
 
-            <div class="hidden">
+            <div class="hidden" id="div-anios">
                 <label for="anio">Año</label> 
                 <select type="text" name="anio" id="anio" for="anio" required>
                     <option value="" disabled="">Selecciona un año</option>
@@ -179,6 +179,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const marcaSelect = document.querySelector('#marca');
   const anioSelect = document.querySelector('#anio');
   const modeloSelect = document.querySelector('#modelo');
+  const aniosDiv = document.querySelector('#div-anios');
 
 const condicion = document.querySelector('input[name="condicion"]:checked');
 
@@ -186,7 +187,13 @@ const condicion = document.querySelector('input[name="condicion"]:checked');
 condicion.addEventListener('change', (event) => {
   // Obtener el valor del radio button seleccionado
   const selectedValue = event.target.value;
-  console.log('Valor seleccionado:', selectedValue);
+
+  if(selectedValue==="usado"){
+    aniosDiv.classList.remove("hidden");
+}else{
+    aniosDiv.classList.add("hidden");
+  }
+  
 });
   /////////////////////////////////////////////////////////////////
 
