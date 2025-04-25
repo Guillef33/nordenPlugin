@@ -1,13 +1,19 @@
 <?php
 
 if (!defined('ABSPATH')) exit;
-
 function resultado_cotizador_auto() {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        echo '<pre>';
+        print_r($_POST);
+        echo '</pre>';
+
         $token = obtener_token_norden();
 
         if (!$token) {
-            return '<p style="color:red;">Error de autenticación. Intente más tarde.</p>';
+            echo '<p style="color:red;">Error de autenticación. Intente más tarde.</p>';
+            return;
+        } else {
+            echo '<p style="color:green;">Se ha autenticado correctamente.</p>';
         }
 
         $url_cotizar = 'https://quickbi4.norden.com.ar/api_externa/autos/cotizador/cotizar';
@@ -31,13 +37,35 @@ function resultado_cotizador_auto() {
                 "ValuacionGNC" => ""
             ],
             "ParametrosEspecificos" => [
-                "Providencia" => [
-                    "Clausula" => "3",
-                    "PlanPago" => "624",
-                    "DescuentoMedioDePago" => "5",
-                    "DescuentoComercial" => "0",
-                    "Comision" => "5",
+                "Sancor" => [
+                    "ClausulaAjuste" => "0",
+                    "NeumaticosAuxiliares" => "1",
+                    "Garage" => "1",
+                    "KilometrosAnuales" => "1",
+                    "TipoIva" => "4",
+                    "PlanDePago" => "0",
+                    "FechaEmisionValor" => "2025-04-23 00:00:00",
+                    "Provincia" => "01",
+                    "Localidad" => "001",
+                    "Menor25Años" => "2",
+                    "DescuentoEspecial" => "0",
                     "TipoFacturacionCustom" => ""
+                ],
+                "Zurich" => [
+                    "Beneficio" => "1",
+                    "ClausulaAjuste" => "A",
+                    "Descuento" => "10",
+                    "Comision" => "10",
+                    "DescuentoComision" => "10",
+                    "PlanDePago" => "91",
+                    "Rastreador" => "1",
+                    "TipoIva" => "1",
+                    "EstadoCivil" => "1",
+                    "Provincia" => "01",
+                    "IdPlan" => "350",
+                    "Localidad" => "001",
+                    "Asistencia" => "31",
+                    "TipoFacturacionCustom" => "M"
                 ]
             ]
         ];
@@ -55,11 +83,17 @@ function resultado_cotizador_auto() {
         $response = wp_remote_get($url_with_params, $args);
 
         if (is_wp_error($response)) {
-            error_log('Error WP: ' . $response->get_error_message());
-            return '<p>Error al obtener cotizaciones.</p>';
+            echo '<pre>Error WP: ';
+            print_r($response->get_error_message());
+            echo '</pre>';
+            return null;
         }
 
         $body = json_decode(wp_remote_retrieve_body($response), true);
+
+        echo '<pre>Respuesta API: ';
+        print_r($body);
+        echo '</pre>';
 
         if (!empty($body['Data']['Cotizaciones'])) {
             ob_start();
