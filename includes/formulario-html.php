@@ -177,9 +177,9 @@ document.addEventListener('DOMContentLoaded', function () {
 const condicion = document.querySelector('#condicion');
 
 // Añadir el event listener
-condicion.addEventListener('change', () => {
+condicion.addEventListener('change', (e) => {
   // Obtener el valor del radio button seleccionado
-  const selectedValue = this.value;
+  const selectedValue = e.target.value;
 
   console.log(selectedValue)
 
