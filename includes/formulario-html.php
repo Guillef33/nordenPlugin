@@ -95,7 +95,7 @@
             </div>
             <div>
                 <label for="codigo_postal"></label> 
-                <select type="text" name="codigo_postal" id="codigo_postal" for="codigo_postal" required>
+                <select type="text" name="codigo_postal" id="codigo_postal" for="codigo_postal" searchable required>
                 <option value="" disabled selected>Selecciona un codigo postal</option>
                     <?php foreach ($codigos_postales["Data"] as $codigo): ?>
                         <option value="<?= esc_attr($codigo['Value']); ?>">
@@ -160,3 +160,35 @@
         <button type="submit">Enviar y conocer resultado</button>
     </form>
     </section>
+
+    <script>
+document.addEventListener('DOMContentLoaded', function () {
+  const provinciaSelect = document.querySelector('select[name="provincia"]');
+  const cpSelect = document.querySelector('#codigo_postal');
+
+  provinciaSelect.addEventListener('change', function () {
+    const provinciaId = this.value;
+
+    // Limpiar opciones anteriores
+    cpSelect.innerHTML = '<option disabled selected>Cargando...</option>';
+
+    // Llamada a la API (reemplazá con tu endpoint real)
+    fetch(`/api/obtener-codigos-postales.php?provincia=${provinciaId}`)
+      .then(res => res.json())
+      .then(data => {
+        cpSelect.innerHTML = '<option disabled selected>Selecciona un código postal</option>';
+
+        data.Data.forEach(codigo => {
+          const option = document.createElement('option');
+          option.value = codigo.Value;
+          option.textContent = codigo.Text;
+          cpSelect.appendChild(option);
+        });
+      })
+      .catch(error => {
+        cpSelect.innerHTML = '<option disabled selected>Error al cargar</option>';
+        console.error('Error al obtener códigos postales:', error);
+      });
+  });
+});
+</script>

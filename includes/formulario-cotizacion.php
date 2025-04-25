@@ -21,7 +21,9 @@ function formulario_cotizacion_auto() {
 
     $provincias = obtener_provincias_norden($token);
 
-    $codigos_postales = obtener_codigos_postales($token,"02");
+    $provincia = $_GET['provincia'] ?? '02';
+
+    $codigos_postales = obtener_codigos_postales($token, $provincia);
 
     include plugin_dir_path(__FILE__) . 'formulario-html.php';
 
