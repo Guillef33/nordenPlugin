@@ -94,10 +94,10 @@
                 </select>
             </div>
             <div>
+                <p><?php $codigos_postales?></p>
                 <label for="codigo_postal"></label> 
                 <select type="text" name="codigo_postal"id="codigo_postal" for="codigo_postal" required>
                 <option value="" disabled selected>Selecciona un codigo postal</option>
-                <p><?php $codigos_postales?></p>
                     <?php foreach ($codigos_postales as $codigo): ?>
                         <option value="<?php echo esc_attr($codigo['Codigo']); ?>">
                             <?php echo esc_html($codigo['Nombre']); ?>
