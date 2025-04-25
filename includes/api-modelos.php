@@ -16,12 +16,12 @@ function mi_plugin_modelos_handler(WP_REST_Request $request) {
         return new WP_REST_Response(['error' => 'Marca requerida'], 400);
     }
 
-    if (!$marca) {
-        return new WP_REST_Response(['error' => 'Modelo requerido'], 400);
+    if (!$anio) {
+        return new WP_REST_Response(['error' => 'Año requerido'], 400);
     }
 
     $token = obtener_token_norden(); // Tu función existente
-    $codigos = obtener_codigos_postales($token, $provincia); // Tu función existente
+    $codigos = obtener_modelos_norden($token, $marca, $anio); // Tu función existente
 
     return new WP_REST_Response($codigos, 200);
 }
