@@ -42,8 +42,8 @@ function cotizador_norden_enqueue_assets() {
         '1.0',
         true // Cargar en el footer
     );
-    
-    wp_localize_script('mi-plugin-js', 'miPluginData', array(
+
+    wp_localize_script('cotizador-norden-script', 'miPluginData', array(
         'rest_url' => esc_url_raw(rest_url('mi-plugin/v1/')),
     ));
 }
