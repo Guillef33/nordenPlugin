@@ -86,7 +86,7 @@
                 <select name="provincia" required>
                     <?php if (!empty($provincias)): ?>
                     <?php foreach ($provincias['Data'] as $prov): ?>
-                    <option value="<?= esc_attr($prov['Value']) ?>"><?= esc_html($prov['Text']) ?></option>
+                    <option value="<?php echo esc_attr($prov['Value']) ?>"><?= esc_html($prov['Text']) ?></option>
                 <?php endforeach; ?>
                     <?php else: ?>
                         <option value="">No se pudieron cargar las provincias</option>
