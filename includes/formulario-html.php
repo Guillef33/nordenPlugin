@@ -169,6 +169,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   const marcaSelect = document.querySelector('#marca');
   const anioSelect = document.querySelector('#anio');
+  const modeloSelect = document.querySelector('#modelo');
 
   console.log(provinciaSelect)
   console.log(cpSelect)
