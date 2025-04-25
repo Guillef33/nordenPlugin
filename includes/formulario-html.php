@@ -166,6 +166,9 @@ document.addEventListener('DOMContentLoaded', function () {
   const provinciaSelect = document.querySelector('select[name="provincia"]');
   const cpSelect = document.querySelector('#codigo_postal');
 
+  console.log(provinciaSelect)
+  console.log(cpSelect)
+
   provinciaSelect.addEventListener('change', function () {
     const provinciaId = this.value;
 
@@ -175,7 +178,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const apiToken = "<?= $token ?>";
 
     // Llamada a la API (reemplazá con tu endpoint real)
-    fetch(`${miPluginData.rest_url}codigos-postales?provincia=${provincia}`)
+    fetch(`${miPluginData.rest_url}codigos-postales?provincia=${provinciaId}`)
       .then(res => res.json())
       .then(data => {
         cpSelect.innerHTML = '<option disabled selected>Selecciona un código postal</option>';
