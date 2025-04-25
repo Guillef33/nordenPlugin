@@ -11,17 +11,10 @@
 
             <div>
                 <label for="condicion">Condicion</label>
-                <div class="radio-condicion">
-                    <div>
-                        <input type="radio" id="0km" name="condicion" value="0km" checked />
-                        <label for="0km">0km</label> 
-                    </div>
-
-                    <div>
-                        <input type="radio" id="usado" name="condicion" value="Usado" />
-                        <label for="Usado">Usado</label> 
-                    </div>
-                </div>
+                <select name="condicion" id="condicion">
+                    <option value="0km" selected>0KM</option>
+                    <option value="usado">Usado</option>
+                </select>
             </div>
 
             <div class="hidden" id="div-anios">
@@ -181,12 +174,12 @@ document.addEventListener('DOMContentLoaded', function () {
   const modeloSelect = document.querySelector('#modelo');
   const aniosDiv = document.querySelector('#div-anios');
 
-const condicion = document.querySelector('input[name="condicion"]:checked');
+const condicion = document.querySelector('#condicion');
 
 // Añadir el event listener
-condicion.addEventListener('change', (event) => {
+condicion.addEventListener('change', () => {
   // Obtener el valor del radio button seleccionado
-  const selectedValue = event.target.value;
+  const selectedValue = this.value;
 
   if(selectedValue==="usado"){
     aniosDiv.classList.remove("hidden");
