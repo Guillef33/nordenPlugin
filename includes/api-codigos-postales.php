@@ -5,7 +5,7 @@ function obtener_codigos_postales($token, $provincias) {
 
     $url = $url_base . '?' . http_build_query([
         'Pais' => '054',
-        'Provincias' => $provincias,
+        'Provincia' => $provincias,
     ]);
 
     $args = [
