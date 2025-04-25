@@ -36,11 +36,10 @@
             </div>
             <div>
                 <label for="condicion"></label> 
-                <select  name="condicion" id="condicion" for="condicion" required>
-                    <option value="" disabled="">Selecciona una condicion</option>
-                    <option value="0km">0KM</option>
-                    <option value="usado">USADO</option>
-                </select>
+                <input type="radio" id="0km" name="condicion" value="" />
+                <label for="0km">0km</label> 
+                <input type="radio" id="usado" name="condicion" value="email" />
+                <label for="Usado">Usado</label> 
             </div>
 
             <div>
@@ -93,6 +92,7 @@
                     <?php endif; ?>
                 </select>
             </div>
+
             <div>
                 <label for="codigo_postal"></label> 
                 <select type="text" name="codigo_postal" id="codigo_postal" for="codigo_postal" searchable required>
