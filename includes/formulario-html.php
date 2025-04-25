@@ -173,7 +173,9 @@ document.addEventListener('DOMContentLoaded', function () {
     cpSelect.innerHTML = '<option disabled selected>Cargando...</option>';
 
     // Llamada a la API (reemplazá con tu endpoint real)
-    fetch(`/api/obtener-codigos-postales.php?provincia=${provinciaId}`)
+    fetch(`https://quickbi4.norden.com.ar/api/general/ubicacion/listacodigopostal?provincia=${provinciaId}`, {
+        "Authorization": "Bearer "+$token
+    })
       .then(res => res.json())
       .then(data => {
         cpSelect.innerHTML = '<option disabled selected>Selecciona un código postal</option>';
