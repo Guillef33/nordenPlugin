@@ -176,7 +176,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Llamada a la API (reemplazá con tu endpoint real)
     fetch(`https://quickbi4.norden.com.ar/api/general/ubicacion/listacodigopostal?provincia=${provinciaId}`, {
-        "Authorization": `Bearer ${token}`
+        "Authorization": `Bearer ${apiToken}`
     })
       .then(res => res.json())
       .then(data => {
