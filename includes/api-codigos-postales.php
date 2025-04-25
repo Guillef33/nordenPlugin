@@ -1,17 +1,16 @@
 <?php
 
-function obtener_codigos_postales($token, $provincias) {
+function obtener_codigos_postales($token, $provincia = '02') {
     $url_base = 'https://quickbi4.norden.com.ar/api/general/ubicacion/listacodigopostal';
 
     $url = $url_base . '?' . http_build_query([
         'Pais' => '054',
-        'Provincia' => "02",
+        'Provincia' => $provincia,
     ]);
 
     $args = [
         'headers' => [
             'Authorization' => 'Bearer ' . $token,
-            'Content-Type'  => 'application/json',
         ],
         'timeout' => 15,
     ];
