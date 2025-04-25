@@ -199,39 +199,39 @@ document.addEventListener('DOMContentLoaded', function () {
         console.error('Error al obtener códigos postales:', error);
       });
   });
-});
-
-// ********************************************* Logica get marcas *********************************************
-
-function cargarModelosSiCorresponde() {
-    const marcaId = marcaSelect.value;
-    const anio = anioSelect.value;
-
-    if (!marcaId || !anio) {
-      return;
-    }
-
-    modeloSelect.innerHTML = '<option disabled selected>Cargando modelos...</option>';
-
-    fetch(`${miPluginData.rest_url}modelos?marca=${marcaId}&anio=${anio}`)
-      .then(res => res.json())
-      .then(data => {
-        modeloSelect.innerHTML = '<option disabled selected>Selecciona un modelo</option>';
-        data.Data.forEach(modelo => {
-          const option = document.createElement('option');
-          option.value = modelo.Value;
-          option.textContent = modelo.Text;
-          modeloSelect.appendChild(option);
+  
+  // ********************************************* Logica get marcas *********************************************
+  
+  function cargarModelosSiCorresponde() {
+      const marcaId = marcaSelect.value;
+      const anio = anioSelect.value;
+      
+      if (!marcaId || !anio) {
+          return;
+        }
+        
+        modeloSelect.innerHTML = '<option disabled selected>Cargando modelos...</option>';
+        
+        fetch(`${miPluginData.rest_url}modelos?marca=${marcaId}&anio=${anio}`)
+        .then(res => res.json())
+        .then(data => {
+            modeloSelect.innerHTML = '<option disabled selected>Selecciona un modelo</option>';
+            data.Data.forEach(modelo => {
+                const option = document.createElement('option');
+                option.value = modelo.Value;
+                option.textContent = modelo.Text;
+                modeloSelect.appendChild(option);
+            });
+        })
+        .catch(error => {
+            modeloSelect.innerHTML = '<option disabled selected>Error al cargar modelos</option>';
+            console.error('Error al obtener modelos:', error);
         });
-      })
-      .catch(error => {
-        modeloSelect.innerHTML = '<option disabled selected>Error al cargar modelos</option>';
-        console.error('Error al obtener modelos:', error);
-      });
-  }
-
-  // Escuchamos cambios en ambos selects
-  marcaSelect.addEventListener('change', cargarModelosSiCorresponde);
-  anioSelect.addEventListener('change', cargarModelosSiCorresponde);
-
+    }
+    
+    // Escuchamos cambios en ambos selects
+    marcaSelect.addEventListener('change', cargarModelosSiCorresponde);
+    anioSelect.addEventListener('change', cargarModelosSiCorresponde);
+});
+    
 </script>
