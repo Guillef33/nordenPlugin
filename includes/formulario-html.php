@@ -41,7 +41,7 @@
                         <input type="radio" id="0km" name="condicion" value="" />
                         <label for="0km">0km</label> 
                     </div>
-                    
+
                     <div>
                         <input type="radio" id="usado" name="condicion" value="email" />
                         <label for="Usado">Usado</label> 
@@ -78,8 +78,8 @@
                 <label for="gnc">Usa GNC</label> 
                 <select type="text" name="gnc"id="gnc" for="gnc" required>
                     <option value="" disabled="">Usa GNC</option>
-                    <option value="0km">NO</option>
-                    <option value="usado">SI</option>
+                    <option value="No">NO</option>
+                    <option value="SI">SI</option>
                 </select>
             </div>
         </div>
