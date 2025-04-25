@@ -181,6 +181,8 @@ condicion.addEventListener('change', () => {
   // Obtener el valor del radio button seleccionado
   const selectedValue = this.value;
 
+  console.log(selectedValue)
+
   if(selectedValue==="usado"){
     aniosDiv.classList.remove("hidden");
 }else{
