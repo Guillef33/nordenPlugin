@@ -1,7 +1,7 @@
 <?php
 
 function obtener_codigos_postales($token, $provincias) {
-    $url_base = 'https://newuibi.norden.com.ar/api/general/ubicacion/listacodigopostal';
+    $url_base = 'https://quickbi4.norden.com.ar/api/general/ubicacion/listacodigopostal';
 
     $url = $url_base . '?' . http_build_query([
         'Pais' => '054',
