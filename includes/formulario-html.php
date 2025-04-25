@@ -95,10 +95,10 @@
             </div>
             <div>
                 <label for="codigo_postal"></label> 
-                <select type="text" name="codigo_postal"id="codigo_postal" for="codigo_postal" required>
+                <select type="text" name="codigo_postal" id="codigo_postal" for="codigo_postal" required>
                 <option value="" disabled selected>Selecciona un codigo postal</option>
                     <?php foreach ($codigos_postales["Data"] as $codigo): ?>
-                        <option value="<?= esc_attr($codigo['Values']); ?>">
+                        <option value="<?= esc_attr($codigo['Value']); ?>">
                             <?= esc_html($codigo['Text']); ?>
                         </option>
                     <?php endforeach; ?>

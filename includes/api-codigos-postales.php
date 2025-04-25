@@ -5,7 +5,7 @@ function obtener_codigos_postales($token, $provincia = '02') {
 
     $url = $url_base . '?' . http_build_query([
         'Pais' => '054',
-        'Provincia' => $provincia,
+        'Provincia' => '02',
     ]);
 
     $args = [
@@ -18,7 +18,9 @@ function obtener_codigos_postales($token, $provincia = '02') {
     $response = wp_remote_get($url, $args);
 
     if (is_wp_error($response)) {
-        error_log('Error al obtener códigos postales: ' . $response->get_error_message());
+        echo '<pre>Error al obtener codigos postales: ';
+        print_r($response->get_error_message());
+        echo '</pre>';
         return [];
     }
 
