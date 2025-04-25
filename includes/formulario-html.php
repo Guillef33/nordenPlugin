@@ -10,7 +10,7 @@
             <div></div>
             <div>
                 <label for="anio">Año</label> 
-                <select type="text" name="anio" name="anio" id="anio" for="anio" required>
+                <select type="text" name="anio" id="anio" for="anio" required>
                     <option value="" disabled="">Selecciona un año</option>
                     <option value="2025">2025</option>
                     <option value="2024">2024</option>
@@ -166,6 +166,10 @@ document.addEventListener('DOMContentLoaded', function () {
   const provinciaSelect = document.querySelector('select[name="provincia"]');
   const cpSelect = document.querySelector('#codigo_postal');
 
+
+  const marcaSelect = document.querySelector('#marca');
+  const anioSelect = document.querySelector('#anio');
+
   console.log(provinciaSelect)
   console.log(cpSelect)
 
@@ -196,4 +200,38 @@ document.addEventListener('DOMContentLoaded', function () {
       });
   });
 });
+
+// ********************************************* Logica get marcas *********************************************
+
+function cargarModelosSiCorresponde() {
+    const marcaId = marcaSelect.value;
+    const anio = anioSelect.value;
+
+    if (!marcaId || !anio) {
+      return;
+    }
+
+    modeloSelect.innerHTML = '<option disabled selected>Cargando modelos...</option>';
+
+    fetch(`${miPluginData.rest_url}modelos?marca=${marcaId}&anio=${anio}`)
+      .then(res => res.json())
+      .then(data => {
+        modeloSelect.innerHTML = '<option disabled selected>Selecciona un modelo</option>';
+        data.Data.forEach(modelo => {
+          const option = document.createElement('option');
+          option.value = modelo.Value;
+          option.textContent = modelo.Text;
+          modeloSelect.appendChild(option);
+        });
+      })
+      .catch(error => {
+        modeloSelect.innerHTML = '<option disabled selected>Error al cargar modelos</option>';
+        console.error('Error al obtener modelos:', error);
+      });
+  }
+
+  // Escuchamos cambios en ambos selects
+  marcaSelect.addEventListener('change', cargarModelosSiCorresponde);
+  anioSelect.addEventListener('change', cargarModelosSiCorresponde);
+  
 </script>
