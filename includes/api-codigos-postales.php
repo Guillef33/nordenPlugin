@@ -5,7 +5,7 @@ function obtener_codigos_postales($token, $provincias) {
 
     $url = $url_base . '?' . http_build_query([
         'Pais' => '054',
-        'Provincia' => $provincias,
+        'Provincia' => "02",
     ]);
 
     $args = [
@@ -25,5 +25,5 @@ function obtener_codigos_postales($token, $provincias) {
 
     $body = json_decode(wp_remote_retrieve_body($response), true);
 
-    return !empty($body['Data']) ? $body['Data'] : [];
+    return is_array($body) ? $body : [];
 }
