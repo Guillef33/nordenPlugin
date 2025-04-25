@@ -13,12 +13,12 @@
                 <label for="condicion">Condicion</label>
                 <div class="radio-condicion">
                     <div>
-                        <input type="radio" id="0km" name="condicion" value="" />
+                        <input type="radio" id="0km" name="condicion" value="0km" selected />
                         <label for="0km">0km</label> 
                     </div>
 
                     <div>
-                        <input type="radio" id="usado" name="condicion" value="email" />
+                        <input type="radio" id="usado" name="condicion" value="Usado" />
                         <label for="Usado">Usado</label> 
                     </div>
                 </div>
