@@ -86,7 +86,7 @@
                 <select name="provincia" required>
                     <?php if (!empty($provincias)): ?>
                     <?php foreach ($provincias['Data'] as $prov): ?>
-                    <option value="<?php echo esc_attr($prov['Value']) ?>"><?php echo esc_html($prov['Text']) ?></option>
+                    <option value="<?= esc_attr($prov['Value']) ?>"><?= esc_html($prov['Text']) ?></option>
                 <?php endforeach; ?>
                     <?php else: ?>
                         <option value="">No se pudieron cargar las provincias</option>
@@ -98,8 +98,8 @@
                 <select type="text" name="codigo_postal"id="codigo_postal" for="codigo_postal" required>
                 <option value="" disabled selected>Selecciona un codigo postal</option>
                     <?php foreach ($codigos_postales["Data"] as $codigo): ?>
-                        <option value="<?php echo esc_attr($codigo['Codigo']); ?>">
-                            <?php echo esc_html($codigo['Nombre']); ?>
+                        <option value="<?= esc_attr($codigo['Values']); ?>">
+                            <?= esc_html($codigo['Text']); ?>
                         </option>
                     <?php endforeach; ?>
                 </select>
