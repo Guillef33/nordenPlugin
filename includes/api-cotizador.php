@@ -18,7 +18,7 @@ function resultado_cotizador_auto() {
 
         // Metodo Sancor
 
-        $provincia_sancor=obtener_provincia_sancor();
+        $provincia_sancor=obtener_provincia_sancor(sanitize_text_field($_POST['provincia']));
 
         echo '<pre>Respuesta API: ';
         print_r($provincia_sancor);
