@@ -2,7 +2,7 @@
 
 if (!defined('ABSPATH')) exit;
 
-function obtener_provincia_sancor($provincia) {
+function obtener_provincia_sancor($provincia, $token) {
     $url_base = "https://quickbi4.norden.com.ar/api/conversion/sancor/provincia";
     
         $args = [
