@@ -16,6 +16,16 @@ function resultado_cotizador_auto() {
             echo '<p style="color:green;">Se ha autenticado correctamente.</p>';
         }
 
+        // Metodo Sancor
+
+        $provincia_sancor=obtener_provincia_sancor();
+
+        echo '<pre>Respuesta API: ';
+        print_r($provincia_sancor);
+        echo '</pre>';
+
+        // Fin metodo Sancor
+
         $url_cotizar = 'https://quickbi4.norden.com.ar/api_externa/autos/cotizador/cotizar';
 
         $params = [
