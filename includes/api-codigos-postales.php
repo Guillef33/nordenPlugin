@@ -47,7 +47,7 @@ function obtener_codigos_postales($token, $provincia = '02') {
 
     $body = json_decode(wp_remote_retrieve_body($response), true);
 
-    sort($body);
+    sort($body["Data"]);
 
     return is_array($body) ? $body : [];
 }
