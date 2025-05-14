@@ -89,7 +89,7 @@ function resultado_cotizador_auto() {
             echo '<pre>La URL con parametros enviada fue: ';
             print_r( $url_with_params);
             echo '</pre>';
-            return null;
+            // return null;
         }
         
         print_r("alsdklasdklsakdlaskdlaskdl");
