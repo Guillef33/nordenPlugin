@@ -211,7 +211,8 @@ condicion.addEventListener('change', (e) => {
 
         data.Data.forEach(codigo => {
           const option = document.createElement('option');
-          option.value = codigo.Value;
+          const newValue=codigo.Value+" "+codigo.Text.split(" ");
+          option.value = newValue;
           option.textContent = codigo.Text;
           cpSelect.appendChild(option);
         });
@@ -240,8 +241,7 @@ condicion.addEventListener('change', (e) => {
             modeloSelect.innerHTML = '<option disabled selected>Selecciona un modelo</option>';
             data.Data.forEach(modelo => {
                 const option = document.createElement('option');
-                const newValue=modelo.Value+" "+modelo.Text.split(" ");
-                option.value = modelo.newValue;
+                option.value = modelo.Value;
                 option.textContent = modelo.Text;
                 modeloSelect.appendChild(option);
             });
