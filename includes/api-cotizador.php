@@ -8,13 +8,6 @@ function resultado_cotizador_auto() {
         echo '</pre>';
 
         $token = obtener_token_norden();
-
-        if (!$token) {
-            echo '<p style="color:red;">Error de autenticación. Intente más tarde.</p>';
-            return;
-        } else {
-            echo '<p style="color:green;">Se ha autenticado correctamente.</p>';
-        }
         
         $arr=explode(" - ",$_POST['codigo_postal']);
         $intId=$arr[0];
@@ -23,17 +16,15 @@ function resultado_cotizador_auto() {
 
         // Metodo Sancor
 
-
         $provincia_sancor=obtener_provincia_sancor(sanitize_text_field($_POST['provincia']), $token);
         $localidades_sancor=obtener_localidad_sancor(sanitize_text_field($cp), $token);
 
         
         $sancorLocalidad=compare_strings($cpName,$localidades_sancor)["Value"];
 
-
-        echo '<pre>Respuesta API sancor: ';
-        print_r($sancorLocalidad);
-        echo '</pre>';
+        // echo '<pre>Respuesta API sancor: ';
+        // print_r($sancorLocalidad);
+        // echo '</pre>';
 
         // Fin metodo Sancor
 
