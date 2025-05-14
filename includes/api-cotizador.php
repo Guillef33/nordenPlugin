@@ -23,6 +23,7 @@ function resultado_cotizador_auto() {
 
         echo '<pre>Respuesta API: ';
         print_r($provincia_sancor);
+        print_r($_POST['codigo_postal']);
         print_r($localidades_sancor);
         echo '</pre>';
 
