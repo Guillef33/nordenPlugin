@@ -42,7 +42,7 @@ function resultado_cotizador_auto() {
                 "TipoFacturacion" => "M",
                 "TipoIva" => "CF",
                 "TipoPersona" => "P",
-                "FechaNacimiento" => sanitize_text_field($_POST['fecha_nacimiento'] ?? ''),
+                "FechaNacimiento" => sanitize_text_field($_POST['fecha_nac'] ?? ''),
                 "Sexo" => sanitize_text_field($_POST['sexo'] ?? ''),
                 "EstadoCivil" => sanitize_text_field($_POST['estado_civil'] ?? ''),
                 "SnGNC" => "N",
