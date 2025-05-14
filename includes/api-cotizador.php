@@ -100,7 +100,7 @@ function resultado_cotizador_auto() {
             'timeout' => 20,
         ];
 
-        $response = wp_remote_post($url_with_params,$args);
+        $response = wp_remote_post($url_cotizar,$args);
 
 
         if (is_wp_error($response)) {
