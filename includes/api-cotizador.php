@@ -16,7 +16,7 @@ function resultado_cotizador_auto() {
             echo '<p style="color:green;">Se ha autenticado correctamente.</p>';
         }
         
-        $arr=explode($_POST['codigo_postal']);
+        $arr=explode(" - ",$_POST['codigo_postal']);
         $intId=$arr[0];
         $cp=$arr[1];
 
