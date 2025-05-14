@@ -32,7 +32,7 @@ function resultado_cotizador_auto() {
 
 
         echo '<pre>Respuesta API: ';
-        print_r($result);
+        print_r($sancorLocalidad);
         echo '</pre>';
 
         // Fin metodo Sancor
