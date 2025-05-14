@@ -208,7 +208,7 @@ condicion.addEventListener('change', (e) => {
 
         data.Data.forEach(codigo => {
           const option = document.createElement('option');
-          const newValue=codigo.Value+" "+codigo.Text.split(" - ")[0];
+          const newValue=codigo.Value+" - "+codigo.Text.split(" ")[0];
           option.value = newValue;
           option.textContent = codigo.Text;
           cpSelect.appendChild(option);
