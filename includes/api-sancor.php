@@ -43,7 +43,7 @@ function obtener_provincia_sancor($provincia, $token) {
 
         $url = $url_base . '?' . http_build_query([
             'idProductor' => '208',
-            'codigopostal' => $provincia,
+            'codigopostal' => $codigoPostal,
         ]);
     
     
