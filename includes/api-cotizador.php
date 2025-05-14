@@ -28,7 +28,7 @@ function resultado_cotizador_auto() {
         $localidades_sancor=obtener_localidad_sancor(sanitize_text_field($cp), $token);
 
         
-        $result=compare_strings($cpName,$localidades_sancor);
+        $sancorLocalidad=compare_strings($cpName,$localidades_sancor)["Value"];
 
 
         echo '<pre>Respuesta API: ';
@@ -67,7 +67,7 @@ function resultado_cotizador_auto() {
                     "PlanDePago" => "0",
                     "FechaEmisionValor" => "2025-04-23 00:00:00",
                     "Provincia" => "01",
-                    "Localidad" => "001",
+                    "Localidad" => $sancorLocalidad,
                     "Menor25Años" => "2",
                     "DescuentoEspecial" => "0",
                     "TipoFacturacionCustom" => ""
