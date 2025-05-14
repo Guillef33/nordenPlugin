@@ -93,6 +93,7 @@ function resultado_cotizador_auto() {
 
         $url_with_params = add_query_arg(['data' => json_encode($params)], $url_cotizar);
 
+        print_r("alsdklasdklsakdlaskdlaskdl");
         
         if (($url_with_params)) {
             echo '<pre>La URL con parametros enviada fue: ';
@@ -101,7 +102,6 @@ function resultado_cotizador_auto() {
             return null;
         }
 
-        print_r("alsdklasdklsakdlaskdlaskdl");
 
         $args = [
             'headers' => [
