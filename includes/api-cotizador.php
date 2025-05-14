@@ -112,6 +112,8 @@ function resultado_cotizador_auto() {
 
         $response = wp_remote_get($url_with_params, $args);
 
+        print_r("alsdklasdklsakdlaskdlaskdl");
+
         if (is_wp_error($response)) {
             echo '<pre>Error WP: ';
             print_r($response->get_error_message());
