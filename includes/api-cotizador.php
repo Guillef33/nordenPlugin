@@ -92,7 +92,7 @@ function resultado_cotizador_auto() {
         // }
         
         $args = [
-            'body'=> $bodyReq,
+            'body'=> json_encode($bodyReq),
             'headers' => [
                 'Authorization' => 'Bearer ' . $token,
                 'Content-Type' => 'application/json',
