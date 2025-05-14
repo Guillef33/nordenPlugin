@@ -31,7 +31,7 @@ function resultado_cotizador_auto() {
         $sancorLocalidad=compare_strings($cpName,$localidades_sancor)["Value"];
 
 
-        echo '<pre>Respuesta API: ';
+        echo '<pre>Respuesta API sancor: ';
         print_r($sancorLocalidad);
         echo '</pre>';
 
@@ -125,16 +125,16 @@ function resultado_cotizador_auto() {
         print_r($body);
         echo '</pre>';
 
-        if (!empty($body['Data']['Cotizaciones'])) {
+        // if (!empty($body['Data']['Cotizaciones'])) {
             ob_start();
             echo '<h3>Resultados de Cotización</h3>';
             foreach ($body['Data']['Cotizaciones'] as $coti) {
                 echo '<p>Plan: ' . esc_html($coti['DescripcionPlan']) . ' - Prima: $' . esc_html($coti['Prima']) . '</p>';
             }
             return ob_get_clean();
-        } else {
-            return '<p>No se encontraron cotizaciones disponibles.</p>';
-        }
+        // } else {
+        //     return '<p>No se encontraron cotizaciones disponibles.</p>';
+        // }
     }
 
     return '<p>Formulario no enviado.</p>';
