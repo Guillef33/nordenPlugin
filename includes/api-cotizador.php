@@ -22,7 +22,7 @@ function resultado_cotizador_auto() {
         $localidades_sancor=obtener_localidad_sancor(sanitize_text_field($_POST['codigo_postal']), $token);
 
         echo '<pre>Respuesta API: ';
-        print_r($localidades_sancor["text"]);
+        print_r($localidades_sancor["Text"]);
         echo '</pre>';
 
         // Fin metodo Sancor
