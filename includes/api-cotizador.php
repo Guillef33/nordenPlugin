@@ -30,7 +30,7 @@ function resultado_cotizador_auto() {
 
         $url_cotizar = 'https://quickbi4.norden.com.ar/api_externa/autos/cotizador/cotizar';
 
-        $params = [
+        $bodyReq = [
             "ParametrosGenerales" => [
                 "ProductorVendedor" => "208",
                 "Año" => sanitize_text_field($_POST['anio'] ?? ''),
@@ -56,8 +56,8 @@ function resultado_cotizador_auto() {
                     "KilometrosAnuales" => "1",
                     "TipoIva" => "4",
                     "PlanDePago" => "0",
-                    "FechaEmisionValor" => "2025-04-23 00:00:00",
-                    "Provincia" => "01",
+                    "FechaEmisionValor" => "2025-05-14 00:00:00",
+                    "Provincia" => "1",
                     "Localidad" => $sancorLocalidad,
                     "Menor25Años" => "2",
                     "DescuentoEspecial" => "0",
@@ -82,16 +82,17 @@ function resultado_cotizador_auto() {
             ]
         ];
 
-        $url_with_params = add_query_arg(['data' => json_encode($params)], $url_cotizar);
+        // $url_with_params = add_query_arg(['data' => json_encode($params)], $url_cotizar);
 
         
-        if (($url_with_params)) {
-            echo '<pre>La URL con parametros enviada fue: ';
-            print_r( $url_with_params);
-            echo '</pre>';
-        }
+        // if (($url_with_params)) {
+        //     echo '<pre>La URL con parametros enviada fue: ';
+        //     print_r( $url_with_params);
+        //     echo '</pre>';
+        // }
         
         $args = [
+            'body'=> $bodyReq,
             'headers' => [
                 'Authorization' => 'Bearer ' . $token,
                 'Content-Type' => 'application/json',
@@ -99,7 +100,7 @@ function resultado_cotizador_auto() {
             'timeout' => 20,
         ];
 
-        $response = wp_remote_get($url_with_params, $args);
+        $response = wp_remote_post($url_with_params,$args);
 
 
         if (is_wp_error($response)) {
