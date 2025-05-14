@@ -61,6 +61,6 @@ function obtener_provincia_sancor($provincia, $token) {
             print_r($body);
 
     
-        return $body["Data"][0]["Value"] ? $body["Data"][0]["Value"] : [];
+        return $body["Data"][0] ? $body["Data"][0] : [];
     }
     
