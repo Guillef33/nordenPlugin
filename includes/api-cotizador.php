@@ -35,9 +35,9 @@ function resultado_cotizador_auto() {
                 "ProductorVendedor" => "208",
                 "Año" => sanitize_text_field($_POST['anio'] ?? ''),
                 "CeroKm" => false,
-                "CodVehiculoExterno" => sanitize_text_field($_POST['cod_vehiculo'] ?? ''),
+                "CodVehiculoExterno" => sanitize_text_field($_POST['modelo'] ?? ''),
                 "Provincia" => sanitize_text_field($_POST['provincia'] ?? ''),
-                "Localidad" => sanitize_text_field($_POST['localidad'] ?? ''),
+                "Localidad" => $intId ?? '',
                 "MedioDePago" => "T",
                 "TipoFacturacion" => "M",
                 "TipoIva" => "CF",
@@ -89,11 +89,8 @@ function resultado_cotizador_auto() {
             echo '<pre>La URL con parametros enviada fue: ';
             print_r( $url_with_params);
             echo '</pre>';
-            // return null;
         }
         
-        print_r("alsdklasdklsakdlaskdlaskdl");
-
         $args = [
             'headers' => [
                 'Authorization' => 'Bearer ' . $token,
