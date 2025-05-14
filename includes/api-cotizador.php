@@ -15,11 +15,16 @@ function resultado_cotizador_auto() {
         } else {
             echo '<p style="color:green;">Se ha autenticado correctamente.</p>';
         }
+        
+        $arr=explode($_POST['codigo_postal']);
+        $intId=$arr[0];
+        $cp=$arr[1];
 
         // Metodo Sancor
 
+
         $provincia_sancor=obtener_provincia_sancor(sanitize_text_field($_POST['provincia']), $token);
-        $localidades_sancor=obtener_localidad_sancor(sanitize_text_field($_POST['codigo_postal']), $token);
+        $localidades_sancor=obtener_localidad_sancor(sanitize_text_field($cp), $token);
 
         echo '<pre>Respuesta API: ';
         print_r($localidades_sancor["Text"]);
