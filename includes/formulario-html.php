@@ -240,7 +240,8 @@ condicion.addEventListener('change', (e) => {
             modeloSelect.innerHTML = '<option disabled selected>Selecciona un modelo</option>';
             data.Data.forEach(modelo => {
                 const option = document.createElement('option');
-                option.value = modelo.Value;
+                const newValue=modelo.Value+" "+modelo.Text.split(" ");
+                option.value = modelo.newValue;
                 option.textContent = modelo.Text;
                 modeloSelect.appendChild(option);
             });
