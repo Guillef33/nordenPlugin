@@ -22,7 +22,9 @@ function resultado_cotizador_auto() {
         $localidades_sancor=obtener_localidad_sancor(sanitize_text_field($_POST['codigo_postal']), $token);
 
         echo '<pre>Respuesta API: ';
+        print_r("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
         print_r($provincia_sancor);
+        print_r("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
         print_r($_POST['codigo_postal']);
         print_r($localidades_sancor);
         echo '</pre>';
