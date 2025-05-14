@@ -19,9 +19,11 @@ function resultado_cotizador_auto() {
         // Metodo Sancor
 
         $provincia_sancor=obtener_provincia_sancor(sanitize_text_field($_POST['provincia']), $token);
+        $localidades_sancor=obtener_localidad_sancor(sanitize_text_field($_POST['codigo_postal']), $token);
 
         echo '<pre>Respuesta API: ';
         print_r($provincia_sancor);
+        print_r($localidades_sancor);
         echo '</pre>';
 
         // Fin metodo Sancor
