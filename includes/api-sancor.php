@@ -59,6 +59,6 @@ function obtener_provincia_sancor($provincia, $token) {
         $body = json_decode(wp_remote_retrieve_body($response), true);
 
     
-        return $body["Data"][0] ? $body["Data"][0] : [];
+        return $body["Data"] ? $body["Data"] : [];
     }
     

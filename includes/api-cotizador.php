@@ -19,6 +19,7 @@ function resultado_cotizador_auto() {
         $arr=explode(" - ",$_POST['codigo_postal']);
         $intId=$arr[0];
         $cp=$arr[1];
+        $cpName=$arr[2];
 
         // Metodo Sancor
 
@@ -26,8 +27,12 @@ function resultado_cotizador_auto() {
         $provincia_sancor=obtener_provincia_sancor(sanitize_text_field($_POST['provincia']), $token);
         $localidades_sancor=obtener_localidad_sancor(sanitize_text_field($cp), $token);
 
+        
+        $result=compare_strings($cpName,$localidades_sancor);
+
+
         echo '<pre>Respuesta API: ';
-        print_r($localidades_sancor["Text"]);
+        print_r($result);
         echo '</pre>';
 
         // Fin metodo Sancor
@@ -133,4 +138,19 @@ function resultado_cotizador_auto() {
     }
 
     return '<p>Formulario no enviado.</p>';
+}
+
+function compare_strings($fraseObjetivo, $resultados) {
+    $mejorSimilitud = -1;
+    $mejorCoincidencia = null;
+
+    foreach ($resultados as $oracion) {
+        similar_text($fraseObjetivo, $oracion["Text"], $porcentaje);
+        if ($porcentaje > $mejorSimilitud) {
+            $mejorSimilitud = $porcentaje;
+            $mejorCoincidencia = $oracion;
+        }
+    }
+
+    return $mejorCoincidencia;
 }

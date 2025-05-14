@@ -100,7 +100,7 @@
                 <select type="text" name="codigo_postal" id="codigo_postal" for="codigo_postal" searchable required>
                 <option value="" disabled selected>Selecciona un codigo postal</option>
                     <?php foreach ($codigos_postales["Data"] as $codigo): ?>
-                        <option value="<?= esc_attr($codigo['Value'])." - ".explode(" ",$codigo['Text'])[0]; ?>">
+                        <option value="<?= esc_attr($codigo['Value'])." - ".$codigo['Text']; ?>">
                             <?= esc_html($codigo['Text']); ?>
                         </option>
                     <?php endforeach; ?>
@@ -208,7 +208,7 @@ condicion.addEventListener('change', (e) => {
 
         data.Data.forEach(codigo => {
           const option = document.createElement('option');
-          const newValue=codigo.Value+" - "+codigo.Text.split(" ")[0];
+          const newValue=codigo.Value+" - "+codigo.Text;
           option.value = newValue;
           option.textContent = codigo.Text;
           cpSelect.appendChild(option);
