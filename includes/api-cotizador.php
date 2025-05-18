@@ -28,11 +28,7 @@ function resultado_cotizador_auto() {
         $localidades_experta=obtener_localidad_experta(sanitize_text_field($cp), $provincia_experta, $token);  
         $expertaLocalidad=compare_strings($cpName,$localidades_experta)["Value"];
 
-        echo '<pre>Respuesta API sancor: ';
-        print_r($cpName);
-        print_r($localidades_experta);
-        print_r($expertaLocalidad);
-        echo '</pre>';
+        $fechaActual = (new DateTime())->format('Y-m-d') . ' 00:00:00';
 
         // Fin metodo Sancor
 
@@ -64,7 +60,7 @@ function resultado_cotizador_auto() {
                     "KilometrosAnuales" => "1",
                     "TipoIva" => "4",
                     "PlanDePago" => "0",
-                    "FechaEmisionValor" => "2025-05-14 00:00:00",
+                    "FechaEmisionValor" => $fechaActual,
                     "Provincia" => $provincia_sancor,
                     "Localidad" => $sancorLocalidad,
                     "Menor25Años" => "2",
@@ -91,7 +87,7 @@ function resultado_cotizador_auto() {
                     "TipoFacturacionCustom" => "",
                     "TipoDocumento" => sanitize_text_field($_POST['tipo_doc']), 
                     "NroDocumento" => sanitize_text_field($_POST['nro_doc']), 
-                    "FechaInicioVigencia" => "2025-05-18 00:00:00", 
+                    "FechaInicioVigencia" => $fechaActual, 
                     "CantidadCuotas" => "12", 
                     "ClausulaAjuste" => "10", 
                     "AlternativaComercial" => "5", 
@@ -101,7 +97,7 @@ function resultado_cotizador_auto() {
                  "Experta" => [
                     "Localidad" => $expertaLocalidad,
                     "Comision" => "EX0",
-                    "FechaInicioVigencia" => "2025-04-28 00:00:00",
+                    "FechaInicioVigencia" => $fechaActual,
                     "TipoFacturacionCustom" => "M",
                     "PlanPago" => "1"
                 ]
