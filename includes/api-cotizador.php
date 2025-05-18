@@ -24,7 +24,7 @@ function resultado_cotizador_auto() {
         $sancorLocal=compare_strings($cpName,$localidades_sancor)["Value"];
 
         echo '<pre>Respuesta API sancor: ';
-        print_r($cpname);
+        print_r($cpName);
         print_r($sancorLocal);
         echo '</pre>';
 
