@@ -47,6 +47,7 @@
             <div>
                 <label>Marcas</label>
                 <select name="marcas" id="marca" required>
+                    <option value="" disabled selected>Seleccionar Marca</option>
                     <?php if (!empty($marcas)): ?>
                     <?php foreach ($marcas['Data'] as $marca): ?>
                     <option value="<?= esc_attr($marca['Value']) ?>"><?= esc_html($marca['Text']) ?></option>
@@ -201,6 +202,12 @@ condicion.addEventListener('change', (e) => {
 }else{
     aniosDiv.classList.add("hidden");
     anioSelect.value= new Date().getFullYear()
+  }
+
+  if(marcaSelect==""){
+    modeloSelect.disabled=true;
+  }else{
+    modeloSelect.disabled=false;
   }
   
 });
