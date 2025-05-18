@@ -28,7 +28,7 @@ function obtener_provincia_experta($provincia, $token) {
     
         $body = json_decode(wp_remote_retrieve_body($response), true);
     
-        return $body["Data"][0]["Value"] ? $body["Data"][0]["Value"] : [];
+        return $body["Data"] ? $body["Data"] : [];
     }
     
     function obtener_localidad_experta($codigoPostal, $provincia, $token) {
