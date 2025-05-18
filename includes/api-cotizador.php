@@ -20,8 +20,8 @@ function resultado_cotizador_auto() {
         $localidades_sancor=obtener_localidad_sancor(sanitize_text_field($cp), $provincia_sancor, $token);
         $sancorLocalidad=compare_strings($cpName,$localidades_sancor)["Value"];
 
-        $provincia_zurich=obtener_provincia_sancor(sanitize_text_field($_POST['provincia']), $token);
-        $localidades_zurich=obtener_localidad_sancor(sanitize_text_field($cp), $provincia_zurich, $token);  
+        $provincia_zurich=obtener_provincia_zurich(sanitize_text_field($_POST['provincia']), $token);
+        $localidades_zurich=obtener_localidad_zurich(sanitize_text_field($cp), $provincia_zurich, $token);  
         $zurichLocalidad=compare_strings($cpName,$localidades_zurich)["Value"];
 
         // echo '<pre>Respuesta API sancor: ';
@@ -61,7 +61,7 @@ function resultado_cotizador_auto() {
                     "TipoIva" => "4",
                     "PlanDePago" => "0",
                     "FechaEmisionValor" => "2025-05-14 00:00:00",
-                    "Provincia" => "1",
+                    "Provincia" => $provincia_sancor,
                     "Localidad" => $sancorLocalidad,
                     "Menor25Años" => "2",
                     "DescuentoEspecial" => "0",
