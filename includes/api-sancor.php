@@ -31,8 +31,8 @@ function obtener_provincia_sancor($provincia, $token) {
         return $body["Data"][0]["Value"] ? $body["Data"][0]["Value"] : [];
     }
     
-    function obtener_localidad_sancor($codigoPostal, $token) {
-    $url_base = "https://quickbi4.norden.com.ar/api/conversion/sancor/localidadRest";
+    function obtener_localidad_sancor($codigoPostal, $provincia, $token) {
+    $url_base = "https://quickbi4.norden.com.ar/api/conversion/sancor/localidad";
     
         $args = [
             'headers' => [
@@ -42,7 +42,7 @@ function obtener_provincia_sancor($provincia, $token) {
         ];
 
         $url = $url_base . '?' . http_build_query([
-            'idProductor' => '208',
+            'provincia' => $provincia,
             'codigopostal' => $codigoPostal,
         ]);
     
