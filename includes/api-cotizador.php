@@ -104,11 +104,11 @@ function resultado_cotizador_auto() {
             ]
         ];
         
-        if (($bodyReq)) {
-            echo '<pre>La URL con parametros enviada fue: ';
-            print_r( $bodyReq);
-            echo '</pre>';
-        }
+        // if (($bodyReq)) {
+        //     echo '<pre>La URL con parametros enviada fue: ';
+        //     print_r( $bodyReq);
+        //     echo '</pre>';
+        // }
         
         $args = [
             'body'=> json_encode($bodyReq),
@@ -131,15 +131,15 @@ function resultado_cotizador_auto() {
 
         $body = json_decode(wp_remote_retrieve_body($response), true);
 
-        echo '<pre>Respuesta API: ';
-        print_r($body);
-        echo '</pre>';
+        // echo '<pre>Respuesta API: ';
+        // print_r($body);
+        // echo '</pre>';
 
         if (!empty($body['Data']['Cotizaciones'])) {
             ob_start();
             echo '<h3>Resultados de Cotización</h3>';
             foreach ($body["Data"]['Cotizaciones'] as $aseguradora){
-                '<h3>'.esc_html($aseguradora["Aseguradora"]).'</h3>';
+                echo '<h3>'.esc_html($aseguradora["Aseguradora"]).'</h3>';
                 foreach ($aseguradora['Coberturas'] as $coti) {
                     echo '<p>Plan: ' . esc_html($coti['DescCobertura']) . ' - Prima: $' . esc_html($coti['Prima']) . '</p>';
                 }
