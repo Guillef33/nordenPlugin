@@ -102,7 +102,7 @@ function resultado_cotizador_auto() {
                     "Localidad" => $expertaLocalidad,
                     "Comision" => "EX0",
                     "FechaInicioVigencia" => "2025-04-28 00:00:00",
-                    "TipoFacturacionCustom" => "",
+                    "TipoFacturacionCustom" => "M",
                     "PlanPago" => "1"
                 ]
             ]
