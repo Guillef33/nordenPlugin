@@ -24,6 +24,10 @@ function resultado_cotizador_auto() {
         $localidades_zurich=obtener_localidad_zurich(sanitize_text_field($cp), $provincia_zurich, $token);  
         $zurichLocalidad=compare_strings($cpName,$localidades_zurich)["Value"];
 
+        $provincia_experta=obtener_provincia_experta(sanitize_text_field($_POST['provincia']), $token);
+        $localidades_experta=obtener_localidad_experta(sanitize_text_field($cp), $provincia_experta, $token);  
+        $expertaLocalidad=compare_strings($cpName,$localidades_experta)["Value"];
+
         // echo '<pre>Respuesta API sancor: ';
         // print_r($cpName);
         // print_r($sancorLocal);
