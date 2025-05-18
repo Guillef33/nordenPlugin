@@ -85,7 +85,7 @@ function resultado_cotizador_auto() {
         // $url_with_params = add_query_arg(['data' => json_encode($params)], $url_cotizar);
 
         
-        if (($url_with_params)) {
+        if (($bodyReq)) {
             echo '<pre>La URL con parametros enviada fue: ';
             print_r( $bodyReq);
             echo '</pre>';
