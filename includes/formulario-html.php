@@ -199,9 +199,11 @@ condicion.addEventListener('change', (e) => {
 
   if(selectedValue==="usado"){
     aniosDiv.classList.remove("hidden");
+    cargarModelosSiCorresponde();
 }else{
     aniosDiv.classList.add("hidden");
-    anioSelect.value= new Date().getFullYear()
+    anioSelect.value= new Date().getFullYear();
+    cargarModelosSiCorresponde();
   }
 
   if(marcaSelect==""){
