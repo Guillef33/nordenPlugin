@@ -176,6 +176,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
 const condicion = document.querySelector('#condicion');
 
+
+if (condicion.value === "usado") {
+  aniosDiv.classList.remove("hidden");
+} else {
+  aniosDiv.classList.add("hidden");
+}
+
+// Al cargar la página: si ya hay marca y año, intentar cargar los modelos
+if (marcaSelect.value && anioSelect.value) {
+  cargarModelosSiCorresponde();
+}
+
 // Añadir el event listener
 condicion.addEventListener('change', (e) => {
   // Obtener el valor del radio button seleccionado

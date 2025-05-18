@@ -38,7 +38,7 @@ function resultado_cotizador_auto() {
             "ParametrosGenerales" => [
                 "ProductorVendedor" => "208",
                 "Año" => sanitize_text_field($_POST['anio'] ?? ''),
-                "CeroKm" => false,
+                "CeroKm" => sanitize_text_field($_POST['condicion'] == "0km" ? true : false),
                 "CodVehiculoExterno" => sanitize_text_field($_POST['modelo'] ?? ''),
                 "Provincia" => sanitize_text_field($_POST['provincia'] ?? ''),
                 "Localidad" => $intId ?? '',
@@ -49,7 +49,7 @@ function resultado_cotizador_auto() {
                 "FechaNacimiento" => sanitize_text_field($_POST['fecha_nac'] ?? ''),
                 "Sexo" => sanitize_text_field($_POST['sexo'] ?? ''),
                 "EstadoCivil" => sanitize_text_field($_POST['estado_civil'] ?? ''),
-                "SnGNC" => "N",
+                "SnGNC" => sanitize_text_field($_POST['gnc'] == "SI" ? 'S' : "N"),
                 "ValuacionGNC" => ""
             ],
             "ParametrosEspecificos" => [
