@@ -17,7 +17,7 @@ function resultado_cotizador_auto() {
         // Metodo Sancor
 
         $provincia_sancor=obtener_provincia_sancor(sanitize_text_field($_POST['provincia']), $token);
-        $localidades_sancor=obtener_localidad_sancor(sanitize_text_field($cp), sanitize_text_field($_POST['provincia']), $token);
+        $localidades_sancor=obtener_localidad_sancor(sanitize_text_field($cp), $provincia_sancor, $token);
 
         
         $sancorLocalidad=compare_strings($cpName,$localidades_sancor)["Value"];
