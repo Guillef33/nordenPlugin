@@ -23,6 +23,7 @@ require_once plugin_dir_path(__FILE__) . 'includes/api-marcas.php';
 require_once plugin_dir_path(__FILE__) . 'includes/api-codigos-postales.php';
 require_once plugin_dir_path(__FILE__) . 'includes/api-modelos.php';
 require_once plugin_dir_path(__FILE__) . 'includes/api-sancor.php';
+require_once plugin_dir_path(__FILE__) . 'includes/api-zurich.php';
 
 require_once plugin_dir_path(__FILE__) . 'includes/formulario-cotizacion.php';
 
