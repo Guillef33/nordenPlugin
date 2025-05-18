@@ -28,11 +28,11 @@ function resultado_cotizador_auto() {
         $localidades_experta=obtener_localidad_experta(sanitize_text_field($cp), $provincia_experta, $token);  
         $expertaLocalidad=compare_strings($cpName,$localidades_experta)["Value"];
 
-        // echo '<pre>Respuesta API sancor: ';
-        // print_r($cpName);
-        // print_r($sancorLocal);
-        // print_r($localidades_sancor);
-        // echo '</pre>';
+        echo '<pre>Respuesta API sancor: ';
+        print_r($cpName);
+        print_r($localidades_experta);
+        print_r($expertaLocalidad);
+        echo '</pre>';
 
         // Fin metodo Sancor
 
