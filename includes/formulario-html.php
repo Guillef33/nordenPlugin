@@ -12,7 +12,7 @@
             <div>
                 <label for="condicion">Condicion</label>
                 <select name="condicion" id="condicion">
-                    <option value="0km" selected>0KM</option>
+                    <option value="0km">0KM</option>
                     <option value="usado">Usado</option>
                 </select>
             </div>
@@ -181,6 +181,7 @@ if (condicion.value === "usado") {
   aniosDiv.classList.remove("hidden");
 } else {
   aniosDiv.classList.add("hidden");
+  anioSelect.value= new Date().getFullYear();
 }
 
 // Al cargar la página: si ya hay marca y año, intentar cargar los modelos
@@ -199,6 +200,7 @@ condicion.addEventListener('change', (e) => {
     aniosDiv.classList.remove("hidden");
 }else{
     aniosDiv.classList.add("hidden");
+    anioSelect.value= new Date().getFullYear()
   }
   
 });
