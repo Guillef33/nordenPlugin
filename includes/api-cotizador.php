@@ -53,36 +53,36 @@ function resultado_cotizador_auto() {
                 "ValuacionGNC" => ""
             ],
             "ParametrosEspecificos" => [
-                // "Sancor" => [
-                //     "ClausulaAjuste" => "0",
-                //     "NeumaticosAuxiliares" => "1",
-                //     "Garage" => "1",
-                //     "KilometrosAnuales" => "1",
-                //     "TipoIva" => "4",
-                //     "PlanDePago" => "0",
-                //     "FechaEmisionValor" => "2025-05-14 00:00:00",
-                //     "Provincia" => $provincia_sancor,
-                //     "Localidad" => $sancorLocalidad,
-                //     "Menor25Años" => "2",
-                //     "DescuentoEspecial" => "0",
-                //     "TipoFacturacionCustom" => ""
-                // ],
-                // "Zurich" => [
-                //     "Beneficio" => "1",
-                //     "ClausulaAjuste" => "0",
-                //     "Descuento" => "10",
-                //     "Comision" => "10",
-                //     "DescuentoComision" => "10",
-                //     "PlanDePago" => "91",
-                //     "Rastreador" => "0",
-                //     "TipoIva" => "1",
-                //     "EstadoCivil" => "1",
-                //     "Provincia" => $provincia_zurich,
-                //     "IdPlan" => "350",
-                //     "Localidad" => $zurichLocalidad,
-                //     "Asistencia" => "31",
-                //     "TipoFacturacionCustom" => "M"
-                // ],
+                "Sancor" => [
+                    "ClausulaAjuste" => "0",
+                    "NeumaticosAuxiliares" => "1",
+                    "Garage" => "1",
+                    "KilometrosAnuales" => "1",
+                    "TipoIva" => "4",
+                    "PlanDePago" => "0",
+                    "FechaEmisionValor" => "2025-05-14 00:00:00",
+                    "Provincia" => $provincia_sancor,
+                    "Localidad" => $sancorLocalidad,
+                    "Menor25Años" => "2",
+                    "DescuentoEspecial" => "0",
+                    "TipoFacturacionCustom" => ""
+                ],
+                "Zurich" => [
+                    "Beneficio" => "1",
+                    "ClausulaAjuste" => "0",
+                    "Descuento" => "10",
+                    "Comision" => "10",
+                    "DescuentoComision" => "10",
+                    "PlanDePago" => "91",
+                    "Rastreador" => "0",
+                    "TipoIva" => "1",
+                    "EstadoCivil" => "1",
+                    "Provincia" => $provincia_zurich,
+                    "IdPlan" => "350",
+                    "Localidad" => $zurichLocalidad,
+                    "Asistencia" => "31",
+                    "TipoFacturacionCustom" => "M"
+                ],
                 "SanCristobal" => [
                     "TipoFacturacionCustom" => "",
                     "TipoDocumento" => sanitize_text_field($_POST['tipo_doc']), 
@@ -112,7 +112,7 @@ function resultado_cotizador_auto() {
                 'Authorization' => 'Bearer ' . $token,
                 'Content-Type' => 'application/json',
             ],
-            'timeout' => 20,
+            'timeout' => 100,
         ];
 
         $response = wp_remote_post($url_cotizar,$args);
