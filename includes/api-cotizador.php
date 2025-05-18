@@ -18,16 +18,17 @@ function resultado_cotizador_auto() {
 
         $provincia_sancor=obtener_provincia_sancor(sanitize_text_field($_POST['provincia']), $token);
         $localidades_sancor=obtener_localidad_sancor(sanitize_text_field($cp), $provincia_sancor, $token);
-
-        
         $sancorLocalidad=compare_strings($cpName,$localidades_sancor)["Value"];
-        $sancorLocal=compare_strings($cpName,$localidades_sancor);
 
-        echo '<pre>Respuesta API sancor: ';
-        print_r($cpName);
-        print_r($sancorLocal);
-        print_r($localidades_sancor);
-        echo '</pre>';
+        $provincia_zurich=obtener_provincia_sancor(sanitize_text_field($_POST['provincia']), $token);
+        $localidades_zurich=obtener_localidad_sancor(sanitize_text_field($cp), $provincia_zurich, $token);  
+        $zurichLocalidad=compare_strings($cpName,$localidades_sancor)["Value"];
+
+        // echo '<pre>Respuesta API sancor: ';
+        // print_r($cpName);
+        // print_r($sancorLocal);
+        // print_r($localidades_sancor);
+        // echo '</pre>';
 
         // Fin metodo Sancor
 
@@ -61,24 +62,24 @@ function resultado_cotizador_auto() {
                     "PlanDePago" => "0",
                     "FechaEmisionValor" => "2025-05-14 00:00:00",
                     "Provincia" => "1",
-                    "Localidad" => $sancorLocalidad,
+                    "Localidad" => $zurichLocalidad,
                     "Menor25Años" => "2",
                     "DescuentoEspecial" => "0",
                     "TipoFacturacionCustom" => ""
                 ],
                 "Zurich" => [
                     "Beneficio" => "1",
-                    "ClausulaAjuste" => "A",
+                    "ClausulaAjuste" => "0",
                     "Descuento" => "10",
                     "Comision" => "10",
                     "DescuentoComision" => "10",
                     "PlanDePago" => "91",
-                    "Rastreador" => "1",
+                    "Rastreador" => "0",
                     "TipoIva" => "1",
                     "EstadoCivil" => "1",
-                    "Provincia" => "01",
+                    "Provincia" => $provincia_zurich,
                     "IdPlan" => "350",
-                    "Localidad" => "001",
+                    "Localidad" => $zurichLocalidad,
                     "Asistencia" => "31",
                     "TipoFacturacionCustom" => "M"
                 ]
