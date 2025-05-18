@@ -26,6 +26,7 @@ function resultado_cotizador_auto() {
         echo '<pre>Respuesta API sancor: ';
         print_r($cpName);
         print_r($sancorLocal);
+        print_r($localidades_sanco);
         echo '</pre>';
 
         // Fin metodo Sancor
