@@ -21,10 +21,12 @@ function resultado_cotizador_auto() {
 
         
         $sancorLocalidad=compare_strings($cpName,$localidades_sancor)["Value"];
+        $sancorLocal=compare_strings($cpName,$localidades_sancor)["Value"];
 
-        // echo '<pre>Respuesta API sancor: ';
-        // print_r($sancorLocalidad);
-        // echo '</pre>';
+        echo '<pre>Respuesta API sancor: ';
+        print_r($cpname);
+        print_r($sancorLocal);
+        echo '</pre>';
 
         // Fin metodo Sancor
 
