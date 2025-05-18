@@ -99,10 +99,10 @@ function resultado_cotizador_auto() {
                     "GrupoAfinidad" => "pc:50502"
                 ],
                  "Experta" => [
-                    "Localidad" => "1602000",
+                    "Localidad" => $expertaLocalidad,
                     "Comision" => "EX0",
                     "FechaInicioVigencia" => "2025-04-28 00:00:00",
-                    "TipoFacturacionCustom" => "M",
+                    "TipoFacturacionCustom" => "",
                     "PlanPago" => "1"
                 ]
             ]
