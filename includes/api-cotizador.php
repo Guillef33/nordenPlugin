@@ -85,11 +85,11 @@ function resultado_cotizador_auto() {
         // $url_with_params = add_query_arg(['data' => json_encode($params)], $url_cotizar);
 
         
-        // if (($url_with_params)) {
-        //     echo '<pre>La URL con parametros enviada fue: ';
-        //     print_r( $url_with_params);
-        //     echo '</pre>';
-        // }
+        if (($url_with_params)) {
+            echo '<pre>La URL con parametros enviada fue: ';
+            print_r( $bodyReq);
+            echo '</pre>';
+        }
         
         $args = [
             'body'=> json_encode($bodyReq),
