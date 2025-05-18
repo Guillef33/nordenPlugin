@@ -138,8 +138,11 @@ function resultado_cotizador_auto() {
         if (!empty($body['Data']['Cotizaciones'])) {
             ob_start();
             echo '<h3>Resultados de Cotización</h3>';
-            foreach ($body['Data']['Cotizaciones'] as $coti) {
-                echo '<p>Plan: ' . esc_html($coti['DescCobertura']) . ' - Prima: $' . esc_html($coti['Prima']) . '</p>';
+            foreach ($body["Data"]['Cotizaciones'] as $aseguradora){
+                '<h3>'.esc_html($aseguradora["Aseguradora"]).'</h3>';
+                foreach ($aseguradora['Coberturas'] as $coti) {
+                    echo '<p>Plan: ' . esc_html($coti['DescCobertura']) . ' - Prima: $' . esc_html($coti['Prima']) . '</p>';
+                }
             }
             return ob_get_clean();
         } else {
