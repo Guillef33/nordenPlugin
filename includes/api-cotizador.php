@@ -82,6 +82,17 @@ function resultado_cotizador_auto() {
                     "Localidad" => $zurichLocalidad,
                     "Asistencia" => "31",
                     "TipoFacturacionCustom" => "M"
+                ],
+                "SanCristobal" => [
+                    "TipoFacturacionCustom" => "",
+                    "TipoDocumento" => sanitize_text_field($_POST['tipo_doc']), 
+                    "NroDocumento" => sanitize_text_field($_POST['nro_doc']), 
+                    "FechaInicioVigencia" => "2025-05-18 00:00:00", 
+                    "CantidadCuotas" => "12", 
+                    "ClausulaAjuste" => "10", 
+                    "AlternativaComercial" => "5", 
+                    "SnGPS" => false,
+                    "GrupoAfinidad" => "pc:50502"
                 ]
             ]
         ];
