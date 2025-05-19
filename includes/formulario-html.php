@@ -4,7 +4,7 @@
 			<p>Por favor, complete el siguiente formulario para cotizar su auto.</p>
 		</div>
 
-    <form method="POST" action="/cotizar-auto">
+    <form method="POST" action="/cotizar-auto" class="form-cotizar">
         <div class="form-line">
             <h3>Datos del vehículo</h3>
             <div></div>
