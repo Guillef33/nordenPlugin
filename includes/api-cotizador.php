@@ -135,19 +135,34 @@ function resultado_cotizador_auto() {
         // print_r($body);
         // echo '</pre>';
 
-        if (!empty($body['Data']['Cotizaciones'])) {
-            ob_start();
-            echo '<h3>Resultados de Cotización</h3>';
-            foreach ($body["Data"]['Cotizaciones'] as $aseguradora){
-                echo '<h3>'.esc_html($aseguradora["Aseguradora"]).'</h3>';
-                foreach ($aseguradora['Coberturas'] as $coti) {
-                    echo '<p>Plan: ' . esc_html($coti['DescCobertura']) . ' - Prima: $' . esc_html($coti['Prima']) . '</p>';
-                }
-            }
-            return ob_get_clean();
-        } else {
-            return '<p>No se encontraron cotizaciones disponibles.</p>';
+     if (!empty($body['Data']['Cotizaciones'])) {
+    ob_start();
+    echo '<h3>Resultados de Cotización</h3>';
+
+    foreach ($body["Data"]['Cotizaciones'] as $aseguradora){
+        echo '<div class="aseguradora">';
+        echo '<h4>' . esc_html($aseguradora["Aseguradora"]) . '</h4>';
+        echo '<ul class="coberturas-list">';
+
+        foreach ($aseguradora['Coberturas'] as $index => $coti) {
+            $id = 'cobertura_' . $index . '_' . md5($coti['DescCobertura']);
+            echo '<li class="cobertura-item">';
+            echo '<label for="' . $id . '">';
+            echo '<input type="checkbox" id="' . $id . '" name="coberturas[]" value="' . esc_attr($coti['DescCobertura']) . '">';
+            echo ' ' . esc_html($coti['DescCobertura']) . ' - $' . esc_html($coti['Prima']);
+            echo '</label>';
+            echo '</li>';
         }
+
+        echo '</ul>';
+        echo '</div>';
+    }
+
+        return ob_get_clean();
+    } else {
+        return '<p>No se encontraron cotizaciones disponibles.</p>';
+    }
+
     }
 
     return '<p>Formulario no enviado.</p>';

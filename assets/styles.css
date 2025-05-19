@@ -77,6 +77,27 @@
   column-gap: 2rem;
 }
 
+.aseguradora {
+    margin-bottom: 2rem;
+    padding: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: #f9f9f9;
+}
+
+.coberturas-list {
+    list-style: none;
+    padding: 0;
+}
+
+.cobertura-item {
+    margin-bottom: 0.5rem;
+}
+
+.cobertura-item input[type="checkbox"] {
+    margin-right: 0.5rem;
+}
+
 @media (max-width: 768px) {
   .form-cotizar {
     grid-template-columns: 1fr;
