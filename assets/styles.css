@@ -17,13 +17,14 @@
 } */
 
 .form-cotizar {
-  max-width: 900px;
+  max-width: 700px;
   margin: 2rem auto;
   padding: 2rem;
   background-color: #fdfdfd;
   border: 1px solid #ddd;
   border-radius: 10px;
   font-family: "Segoe UI", sans-serif;
+
 }
 
 .form-cotizar h3,
@@ -38,37 +39,56 @@
 
 .form-cotizar label {
   font-weight: 500;
-  margin-bottom: 0.3rem;
   color: #333;
+  margin-bottom: 0.5em;
+  font-weight: normal;
+  color: #000000;
+  font-size: 17px;
 }
 
 .form-cotizar input,
 .form-cotizar select {
   width: 100%;
   padding: 0.5rem 0.75rem;
-  border: 1px solid #ccc;
-  border-radius: 6px;
   margin-bottom: 1rem;
   font-size: 0.95rem;
-  background-color: #fff;
+    width: 100%;
+  padding: 12px 18px;
+  border: 1px solid #4A9699;
+  border-radius: 4px;
+  font-size: 17px;
+  line-height: 1.4;
+  background-color: #fafafa;
+  color: #717171; 
+  transition: border-color 0.3s, background-color 0.3s, color 0.3s;
+}
+
+.form-cotizar input:focus,
+.form-cotizar select:focus {
+   outline: none;
+  border-color: #4A9699;
+  background-color: #ffffff;
+  color: #000000; /* Color de la tipografía en negro */
+  transition: border-color 0.3s, background-color 0.3s, color 0.3s;
 }
 
 .form-cotizar button {
-  grid-column: 1 / -1;
-  padding: 0.75rem 1.5rem;
-  background-color: #0066cc;
-  color: white;
-  font-weight: bold;
+ display: inline-block;
+  background-color: #009ca5;
+  color: #ffffff;
+  padding: 14px 28px;
   border: none;
-  border-radius: 6px;
-  font-size: 1rem;
+  border-radius: 20px;
+  font-size: 17px;
+  font-weight: 600;
+  text-transform: uppercase;
   cursor: pointer;
-  margin-top: 1.5rem;
-  transition: background-color 0.2s ease-in-out;
+  transition: background-color 0.3s, transform 0.1s;
 }
 
 .form-cotizar button:hover {
-  background-color: #004a99;
+  background-color: #008a92;
+  transform: translateY(-1px);
 }
 
 .form-cotizar {
