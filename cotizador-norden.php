@@ -28,23 +28,31 @@ require_once plugin_dir_path(__FILE__) . 'includes/api-experta.php';
 
 require_once plugin_dir_path(__FILE__) . 'includes/formulario-cotizacion.php';
 
-// Encolar assets
+// Agregar assets de css y js, actualizando el nombre del archivo con ?ver=1.0 para que no se guarde en caché y se actualice
 function cotizador_norden_enqueue_assets() {
     $plugin_url = plugin_dir_url(__FILE__);
+    $plugin_path = plugin_dir_path(__FILE__);
+
+    // Obtener la última fecha de modificación de los archivos
+    $style_path = $plugin_path . 'assets/styles.css';
+    $script_path = $plugin_path . 'assets/app.js';
+
+    $style_ver = file_exists($style_path) ? filemtime($style_path) : '1.0';
+    $script_ver = file_exists($script_path) ? filemtime($script_path) : '1.0';
 
     wp_enqueue_style(
         'cotizador-norden-style',
         $plugin_url . 'assets/styles.css',
         [],
-        '1.0'
+        $style_ver
     );
 
     wp_enqueue_script(
         'cotizador-norden-script',
         $plugin_url . 'assets/app.js',
-        ['jquery'], // Dependencias
-        '1.0',
-        true // Cargar en el footer
+        ['jquery'],
+        $script_ver,
+        true
     );
 
     wp_localize_script('cotizador-norden-script', 'miPluginData', array(
@@ -52,6 +60,7 @@ function cotizador_norden_enqueue_assets() {
     ));
 }
 add_action('wp_enqueue_scripts', 'cotizador_norden_enqueue_assets');
+
 
 add_action('rest_api_init', function () {
     register_rest_route('mi-plugin/v1', '/codigos-postales', array(
