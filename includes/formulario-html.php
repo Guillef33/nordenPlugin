@@ -1,13 +1,7 @@
 <section class="container">
-		<div class="form-header">
-			<h1>Formulario de Cotización</h1>
-			<p>Por favor, complete el siguiente formulario para cotizar su auto.</p>
-		</div>
-
     <form method="POST" action="/cotizar-auto" class="form-cotizar">
-        <div class="form-line">
             <h3>Datos del vehículo</h3>
-            <div></div>
+        <div class="form-line">
 
             <div>
                 <label for="condicion">Condicion</label>
@@ -80,9 +74,8 @@
             </div>
         </div>
 
-        <div class="form-line">
             <h3>Ubicacion</h3>
-            <div></div>
+        <div class="form-line">
             <div>
                 <label>Provincia</label>
                 <select name="provincia" required>
@@ -109,9 +102,8 @@
             </div>
         </div>
 
-        <div class="form-line">
             <h3>Datos de la persona</h3>
-            <div></div>
+        <div class="form-line">
             <div>
 
                 <label for="tipo_doc">Tipo de Documento</label> 
