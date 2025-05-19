@@ -90,7 +90,7 @@
             </div>
 
             <div>
-                <label for="codigo_postal"></label> 
+                <label for="codigo_postal">Código Postal</label> 
                 <select type="text" name="codigo_postal" id="codigo_postal" for="codigo_postal" searchable required>
                 <option value="" disabled selected>Selecciona un codigo postal</option>
                     <?php foreach ($codigos_postales["Data"] as $codigo): ?>
