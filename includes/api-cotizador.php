@@ -3,9 +3,9 @@
 if (!defined('ABSPATH')) exit;
 function resultado_cotizador_auto() {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        echo '<pre>';
-        print_r($_POST);
-        echo '</pre>';
+        // echo '<pre>';
+        // print_r($_POST);
+        // echo '</pre>';
 
         $token = obtener_token_norden();
         
@@ -122,12 +122,12 @@ function resultado_cotizador_auto() {
         $response = wp_remote_post($url_cotizar,$args);
 
 
-        if (is_wp_error($response)) {
-            echo '<pre>Error WP: ';
-            print_r($response->get_error_message());
-            echo '</pre>';
-            return null;
-        }
+        // if (is_wp_error($response)) {
+        //     echo '<pre>Error WP: ';
+        //     print_r($response->get_error_message());
+        //     echo '</pre>';
+        //     return null;
+        // }
 
         $body = json_decode(wp_remote_retrieve_body($response), true);
 
@@ -135,37 +135,44 @@ function resultado_cotizador_auto() {
         // print_r($body);
         // echo '</pre>';
 
-     if (!empty($body['Data']['Cotizaciones'])) {
+  if (!empty($body['Data']['Cotizaciones']) && is_array($body['Data']['Cotizaciones'])) {
     ob_start();
     echo '<h3>Resultados de Cotización</h3>';
 
-    foreach ($body["Data"]['Cotizaciones'] as $aseguradora){
+    foreach ($body["Data"]['Cotizaciones'] as $aseguradora) {
+        // Omitir resultados si la compañía es Sancor y no tiene coberturas
+        if (
+            isset($aseguradora['Aseguradora']) && 
+            $aseguradora['Aseguradora'] === 'Sancor' && 
+            empty($aseguradora['Coberturas'])
+        ) {
+            continue;
+        }
+
         echo '<div class="aseguradora">';
         echo '<h4>' . esc_html($aseguradora["Aseguradora"]) . '</h4>';
         echo '<ul class="coberturas-list">';
 
-        foreach ($aseguradora['Coberturas'] as $index => $coti) {
-            $id = 'cobertura_' . $index . '_' . md5($coti['DescCobertura']);
-            echo '<li class="cobertura-item">';
-            echo '<label for="' . $id . '">';
-            echo '<input type="checkbox" id="' . $id . '" name="coberturas[]" value="' . esc_attr($coti['DescCobertura']) . '">';
-            echo ' ' . esc_html($coti['DescCobertura']) . ' - $' . esc_html($coti['Prima']);
-            echo '</label>';
-            echo '</li>';
+        if (!empty($aseguradora['Coberturas']) && is_array($aseguradora['Coberturas'])) {
+            foreach ($aseguradora['Coberturas'] as $index => $coti) {
+                $id = 'cobertura_' . $index . '_' . md5($coti['DescCobertura']);
+                echo '<li class="cobertura-item">';
+                echo '<label for="' . $id . '">';
+                echo '<input type="checkbox" id="' . $id . '" name="coberturas[]" value="' . esc_attr($coti['DescCobertura']) . '">';
+                echo ' ' . esc_html($coti['DescCobertura']) . ' - $' . esc_html($coti['Prima']);
+                echo '</label>';
+                echo '</li>';
+            }
         }
 
         echo '</ul>';
         echo '</div>';
     }
 
-        return ob_get_clean();
-    } else {
-        return '<p>No se encontraron cotizaciones disponibles.</p>';
-    }
-
-    }
-
-    return '<p>Formulario no enviado.</p>';
+    return ob_get_clean();
+} else {
+    return ''; 
+}
 }
 
 function compare_strings($fraseObjetivo, $resultados) {
