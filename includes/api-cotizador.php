@@ -174,6 +174,7 @@ function resultado_cotizador_auto() {
     return ''; 
 }
 }
+}
 
 function compare_strings($fraseObjetivo, $resultados) {
     $mejorSimilitud = -1;
