@@ -128,13 +128,22 @@ function resultado_cotizador_auto() {
             echo '<h3>Resultados de Cotización</h3>';
 
       // Lista de planes permitidos por aseguradora
-    $planes_permitidos = [
-        'Sancor' => ['PREMIUM MAX', 'TODO RIESGO 2%', 'TODO RIESGO 4%'],
-        'Zurich' => ['CG PREMIUM CON GRANIZO', 'TODO RIESGO 2%', 'TODO RIESGO 4 %'],
-        'SanCristobal' => ['CM', 'TODO RIESGO 2%', 'TODO RIESGO 5%'],
-        'Experta' => ['PREMIUM MAX', 'TODO RIESGO 2%', 'TODO RIESGO 5%']
-    ];
-
+        $planes_permitidos = [
+            'Sancor' => ['PREMIUM MAX', 'TODO RIESGO 2%', 'TODO RIESGO 4%'],
+            'Zurich' => [
+                'CG PREMIUM CON GRANIZO',
+                'TODO RIESGO CON FRANQUICIA – PLAN D2 2%',
+                'TODO RIESGO CON FRANQUICIA – PLAN DV 4%',
+                'TR CON FRANQUICIA – TALLER ZURICH (DZ)'
+            ],
+            'SanCristobal' => ['CM', 'TODO RIESGO 2%', 'TODO RIESGO 5%'],
+            'Experta' => [
+                'PREMIUM MAX', 
+                'TODO RIESGO FRANQ. VARIABLE XL - 1%',
+                'TODO RIESGO 2%', 
+                'TODO RIESGO 5%'
+            ]
+        ];
     foreach ($body["Data"]['Cotizaciones'] as $aseguradora) {
         // Omitir resultados si la compañía es Sancor y no tiene coberturas
         if (
@@ -167,7 +176,7 @@ function resultado_cotizador_auto() {
                 echo ' ' . esc_html($coti['DescCobertura']) . ' - $' . esc_html($coti['Prima']);
                 echo '</label>';
                 echo '</li>';
-                
+
                 }
             }
         }
