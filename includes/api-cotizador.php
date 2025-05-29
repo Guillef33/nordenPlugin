@@ -104,12 +104,7 @@ function resultado_cotizador_auto() {
             ]
         ];
         
-        // if (($bodyReq)) {
-        //     echo '<pre>La URL con parametros enviada fue: ';
-        //     print_r( $bodyReq);
-        //     echo '</pre>';
-        // }
-        
+       
         $args = [
             'body'=> json_encode($bodyReq),
             'headers' => [
@@ -122,22 +117,23 @@ function resultado_cotizador_auto() {
         $response = wp_remote_post($url_cotizar,$args);
 
 
-        // if (is_wp_error($response)) {
-        //     echo '<pre>Error WP: ';
-        //     print_r($response->get_error_message());
-        //     echo '</pre>';
-        //     return null;
-        // }
-
         $body = json_decode(wp_remote_retrieve_body($response), true);
 
-        // echo '<pre>Respuesta API: ';
-        // print_r($body);
-        // echo '</pre>';
+        echo '<pre>Respuesta API: ';
+        print_r($body);
+        echo '</pre>';
 
-  if (!empty($body['Data']['Cotizaciones']) && is_array($body['Data']['Cotizaciones'])) {
-    ob_start();
-    echo '<h3>Resultados de Cotización</h3>';
+        if (!empty($body['Data']['Cotizaciones']) && is_array($body['Data']['Cotizaciones'])) {
+            ob_start();
+            echo '<h3>Resultados de Cotización</h3>';
+
+      // Lista de planes permitidos por aseguradora
+    $planes_permitidos = [
+        'Sancor' => ['PREMIUM MAX', 'TODO RIESGO 2%', 'TODO RIESGO 4%'],
+        'Zurich' => ['CG PREMIUM CON GRANIZO', 'TODO RIESGO 2%', 'TODO RIESGO 4 %'],
+        'SanCristobal' => ['CM', 'TODO RIESGO 2%', 'TODO RIESGO 5%'],
+        'Experta' => ['PREMIUM MAX', 'TODO RIESGO 2%', 'TODO RIESGO 5%']
+    ];
 
     foreach ($body["Data"]['Cotizaciones'] as $aseguradora) {
         // Omitir resultados si la compañía es Sancor y no tiene coberturas
