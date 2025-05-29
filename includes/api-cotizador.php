@@ -119,9 +119,9 @@ function resultado_cotizador_auto() {
 
         $body = json_decode(wp_remote_retrieve_body($response), true);
 
-        echo '<pre>Respuesta API: ';
-        print_r($body);
-        echo '</pre>';
+        // echo '<pre>Respuesta API: ';
+        // print_r($body);
+        // echo '</pre>';
 
         if (!empty($body['Data']['Cotizaciones']) && is_array($body['Data']['Cotizaciones'])) {
             ob_start();
@@ -163,26 +163,33 @@ function resultado_cotizador_auto() {
 
         echo '<div class="aseguradora">';
         echo '<h4>' . esc_html($nombre_aseguradora) . '</h4>';
-        echo '<ul class="coberturas-list">';
 
-        if (!empty($aseguradora['Coberturas']) && is_array($aseguradora['Coberturas'])) {
-            foreach ($aseguradora['Coberturas'] as $index => $coti) {
-                if (in_array($coti['DescCobertura'], $planes_permitidos[$nombre_aseguradora])) {
+        if (!empty($aseguradora['Coberturas'])) {
+                 echo '<ul class="coberturas-list">';
 
-                $id = 'cobertura_' . $index . '_' . md5($coti['DescCobertura']);
-                echo '<li class="cobertura-item">';
-                echo '<label for="' . $id . '">';
-                echo '<input type="checkbox" id="' . $id . '" name="coberturas[]" value="' . esc_attr($coti['DescCobertura']) . '">';
-                echo ' ' . esc_html($coti['DescCobertura']) . ' - $' . esc_html($coti['Prima']);
-                echo '</label>';
-                echo '</li>';
+                if (!empty($aseguradora['Coberturas']) && is_array($aseguradora['Coberturas'])) {
+                    foreach ($aseguradora['Coberturas'] as $index => $coti) {
+                        if (in_array($coti['DescCobertura'], $planes_permitidos[$nombre_aseguradora])) {
 
+                        $id = 'cobertura_' . $index . '_' . md5($coti['DescCobertura']);
+                        echo '<li class="cobertura-item">';
+                        echo '<label for="' . $id . '">';
+                        echo '<input type="checkbox" id="' . $id . '" name="coberturas[]" value="' . esc_attr($coti['DescCobertura']) . '">';
+                        echo ' ' . esc_html($coti['DescCobertura']) . ' - $' . esc_html($coti['Prima']);
+                        echo '</label>';
+                        echo '</li>';
+
+                        }
+                    }
                 }
-            }
-        }
 
-        echo '</ul>';
-        echo '</div>';
+                echo '</ul>';
+            echo '</div>';  
+
+        }   else {
+            echo '<p>No se encontraron coberturas para ' . esc_html($nombre_aseguradora) . '.</p>';
+        }
+       
     }
 
     return ob_get_clean();
