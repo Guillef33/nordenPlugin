@@ -144,53 +144,54 @@ function resultado_cotizador_auto() {
                 'TODO RIESGO 5%'
             ]
         ];
-    foreach ($body["Data"]['Cotizaciones'] as $aseguradora) {
-        // Omitir resultados si la compañía es Sancor y no tiene coberturas
-        if (
-            isset($aseguradora['Aseguradora']) && 
-            $aseguradora['Aseguradora'] === 'Sancor' && 
-            empty($aseguradora['Coberturas'])
-        ) {
-            continue;
-        }
+        
+        foreach ($body["Data"]['Cotizaciones'] as $aseguradora) {
+            // Omitir resultados si la compañía es Sancor y no tiene coberturas
+            if (
+                isset($aseguradora['Aseguradora']) && 
+                $aseguradora['Aseguradora'] === 'Sancor' && 
+                empty($aseguradora['Coberturas'])
+            ) {
+                continue;
+            }
 
-        $nombre_aseguradora = $aseguradora["Aseguradora"];
+            $nombre_aseguradora = $aseguradora["Aseguradora"];
 
-        if (!isset($planes_permitidos[$nombre_aseguradora])) {
-            continue; // Saltar aseguradoras no permitidas
-        }
+            if (!isset($planes_permitidos[$nombre_aseguradora])) {
+                continue; // Saltar aseguradoras no permitidas
+            }
 
 
-        echo '<div class="aseguradora">';
-        echo '<h4>' . esc_html($nombre_aseguradora) . '</h4>';
+            echo '<div class="aseguradora">';
+            echo '<h4>' . esc_html($nombre_aseguradora) . '</h4>';
 
-        if (!empty($aseguradora['Coberturas'])) {
-                 echo '<ul class="coberturas-list">';
+            if (!empty($aseguradora['Coberturas'])) {
+                    echo '<ul class="coberturas-list">';
 
-                if (!empty($aseguradora['Coberturas']) && is_array($aseguradora['Coberturas'])) {
-                    foreach ($aseguradora['Coberturas'] as $index => $coti) {
-                        if (in_array($coti['DescCobertura'], $planes_permitidos[$nombre_aseguradora])) {
+                    if (!empty($aseguradora['Coberturas']) && is_array($aseguradora['Coberturas'])) {
+                        foreach ($aseguradora['Coberturas'] as $index => $coti) {
+                            if (in_array($coti['DescCobertura'], $planes_permitidos[$nombre_aseguradora])) {
 
-                        $id = 'cobertura_' . $index . '_' . md5($coti['DescCobertura']);
-                        echo '<li class="cobertura-item">';
-                        echo '<label for="' . $id . '">';
-                        echo '<input type="checkbox" id="' . $id . '" name="coberturas[]" value="' . esc_attr($coti['DescCobertura']) . '">';
-                        echo ' ' . esc_html($coti['DescCobertura']) . ' - $' . esc_html($coti['Prima']);
-                        echo '</label>';
-                        echo '</li>';
+                            $id = 'cobertura_' . $index . '_' . md5($coti['DescCobertura']);
+                            echo '<li class="cobertura-item">';
+                            echo '<label for="' . $id . '">';
+                            echo '<input type="checkbox" id="' . $id . '" name="coberturas[]" value="' . esc_attr($coti['DescCobertura']) . '">';
+                            echo ' ' . esc_html($coti['DescCobertura']) . ' - $' . esc_html($coti['Prima']);
+                            echo '</label>';
+                            echo '</li>';
 
+                            }
                         }
                     }
-                }
 
-                echo '</ul>';
-            echo '</div>';  
+                    echo '</ul>';
+                echo '</div>';  
 
-        }   else {
-            echo '<p>No se encontraron coberturas para ' . esc_html($nombre_aseguradora) . '.</p>';
+            }   else {
+                echo '<p>No se encontraron coberturas para ' . esc_html($nombre_aseguradora) . '.</p>';
+            }
+        
         }
-       
-    }
 
     return ob_get_clean();
 } else {
