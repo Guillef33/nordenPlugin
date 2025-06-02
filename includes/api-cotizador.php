@@ -186,20 +186,17 @@ function resultado_cotizador_auto() {
                             $id = 'cobertura_' . $index . '_' . md5($coti['DescCobertura']);
 
                             echo '<li class="cobertura-item">';
-
                                 echo '<div class="cobertura-content">';
-                                    echo '<label for="' . esc_attr($id) . '">';
-                                        echo '<input type="checkbox" id="' . esc_attr($id) . '" name="coberturas[]" value="' . esc_attr($coti['DescCobertura']) . '"> ';
-                                       echo '<p>' . esc_html($coti['DescCobertura']) . '</p>';
-                                       echo '<h5>$' . esc_html($coti['Prima']) . '</h5>';
+                                  echo '<p>' . esc_html($coti['DescCobertura']) . '</p>';
+                                  echo '<h5>$' . esc_html($coti['Prima']) . '</h5>';
+                                  echo '<a href="#" class="btn-mas-info">Más información</a>';
+                            echo '</div>';
+                        echo '</li>';
+                               //     echo '<label for="' . esc_attr($id) . '">';
+                               //         echo '<input type="checkbox" id="' . esc_attr($id) . '" name="coberturas[]" value="' . esc_attr($coti['DescCobertura']) . '"> ';
+                              //  echo '</label>';
 
-                                    echo '</label>';
-
-                                    // Botón de más información
-                                    echo '<a href="#" class="btn-mas-info">Más información</a>';
-                                echo '</div>';
-
-                            echo '</li>';
+                                
                         }
                     }
 
