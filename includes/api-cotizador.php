@@ -125,7 +125,7 @@ function resultado_cotizador_auto() {
 
         if (!empty($body['Data']['Cotizaciones']) && is_array($body['Data']['Cotizaciones'])) {
             ob_start();
-            echo '<h3>Resultados de Cotización</h3>';
+            // echo '<h3>Resultados de Cotización</h3>';
 
       // Lista de planes permitidos por aseguradora
         $planes_permitidos = [
@@ -160,36 +160,57 @@ function resultado_cotizador_auto() {
             if (!isset($planes_permitidos[$nombre_aseguradora])) {
                 continue; // Saltar aseguradoras no permitidas
             }
+            
+            $logos = [
+                'Sancor' => plugin_dir_url(__FILE__) . 'assets/logos/sancor.webp',
+                'Zurich' => plugin_dir_url(__FILE__) . 'assets/logos/zurich.png',
+                'SanCristobal' => plugin_dir_url(__FILE__) . 'assets/logos/sancristobal.png',
+                'Experta' => plugin_dir_url(__FILE__) . 'assets/logos/experta.jpg'
+            ];
 
+            $logo_url = isset($logos[$nombre_aseguradora]) ? $logos[$nombre_aseguradora] : '';
 
-            echo '<div class="aseguradora">';
-            echo '<h4>' . esc_html($nombre_aseguradora) . '</h4>';
+            if (!empty($aseguradora['Coberturas']) && is_array($aseguradora['Coberturas'])) {
+                echo '<div class="aseguradora">';
+                    echo '<h4>' . esc_html($nombre_aseguradora) . '</h4>';
 
-            if (!empty($aseguradora['Coberturas'])) {
+                    // Mostrar logo si existe
+                    if (!empty($logo_url)) {
+                        echo '<img src="' . esc_url($logo_url) . '" alt="' . esc_attr($nombre_aseguradora) . ' logo" class="aseguradora-logo" style="max-height:50px;margin-bottom:10px;">';
+                    }
+
                     echo '<ul class="coberturas-list">';
 
-                    if (!empty($aseguradora['Coberturas']) && is_array($aseguradora['Coberturas'])) {
-                        foreach ($aseguradora['Coberturas'] as $index => $coti) {
-                            if (in_array($coti['DescCobertura'], $planes_permitidos[$nombre_aseguradora])) {
-
+                    foreach ($aseguradora['Coberturas'] as $index => $coti) {
+                        if (in_array($coti['DescCobertura'], $planes_permitidos[$nombre_aseguradora])) {
                             $id = 'cobertura_' . $index . '_' . md5($coti['DescCobertura']);
-                            echo '<li class="cobertura-item">';
-                            echo '<label for="' . $id . '">';
-                            echo '<input type="checkbox" id="' . $id . '" name="coberturas[]" value="' . esc_attr($coti['DescCobertura']) . '">';
-                            echo ' ' . esc_html($coti['DescCobertura']) . ' - $' . esc_html($coti['Prima']);
-                            echo '</label>';
-                            echo '</li>';
 
-                            }
+                            echo '<li class="cobertura-item" style="display:flex;align-items:flex-start;gap:10px;margin-bottom:15px;">';
+
+                                // Imagen ilustrativa por cobertura (puedes cambiar a algo dinámico si lo necesitas)
+                                echo '<img src="https://via.placeholder.com/60" alt="Cobertura" class="cobertura-img" style="width:60px;height:auto;">';
+
+                                echo '<div class="cobertura-content" style="display:flex;flex-direction:column;">';
+                                    echo '<label for="' . esc_attr($id) . '">';
+                                        echo '<input type="checkbox" id="' . esc_attr($id) . '" name="coberturas[]" value="' . esc_attr($coti['DescCobertura']) . '"> ';
+                                        echo esc_html($coti['DescCobertura']) . ' - $' . esc_html($coti['Prima']);
+                                    echo '</label>';
+
+                                    // Botón de más información
+                                    echo '<button type="button" class="btn-mas-info" onclick="mostrarMasInfo(\'' . esc_js($coti['DescCobertura']) . '\')" style="margin-top:5px;padding:4px 10px;background-color:#007bff;color:#fff;border:none;cursor:pointer;font-size:0.85rem;">Más información</button>';
+                                echo '</div>';
+
+                            echo '</li>';
                         }
                     }
 
                     echo '</ul>';
                 echo '</div>';  
-
-            }   else {
+            } else {
                 echo '<p>No se encontraron coberturas para ' . esc_html($nombre_aseguradora) . '.</p>';
             }
+
+
         
         }
 
