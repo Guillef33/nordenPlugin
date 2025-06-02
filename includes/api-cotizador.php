@@ -185,7 +185,7 @@ function resultado_cotizador_auto() {
                         if (in_array($coti['DescCobertura'], $planes_permitidos[$nombre_aseguradora])) {
                             $id = 'cobertura_' . $index . '_' . md5($coti['DescCobertura']);
 
-                            echo '<li class="cobertura-item" style="display:flex;align-items:flex-start;gap:10px;margin-bottom:15px;">';
+                            echo '<li class="cobertura-item">';
 
                                 echo '<div class="cobertura-content">';
                                     echo '<label for="' . esc_attr($id) . '">';

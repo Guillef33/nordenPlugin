@@ -88,13 +88,14 @@
   transform: translateY(-1px);
 }
 
-
+/* Aca empieza el div de cada aseguradora */
 .aseguradora {
   margin-bottom: 2rem;
   padding: 1rem;
-  border: 1px solid #ccc;
+  /* border: 1px solid #ccc;
   border-radius: 6px;
-  background-color: #f9f9f9;
+  background-color: #f9f9f9;*/
+  display: flex;
 }
 
 .coberturas-list {
@@ -109,7 +110,7 @@
   width: 100%;
   padding: 20px 20px;
     font-family: "Segoe UI", sans-serif;
-
+    flex-direction: column;
 }
 
 
@@ -147,6 +148,10 @@
 
 .cobertura-item {
   margin-bottom: 0.5rem;
+  display:flex;
+  align-items:flex-start;
+  gap:10px;
+  margin-bottom:15px;
 }
 
 .cobertura-item input[type="checkbox"] {
