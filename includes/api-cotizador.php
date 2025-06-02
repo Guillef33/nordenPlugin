@@ -164,7 +164,7 @@ function resultado_cotizador_auto() {
             $logos = [
                 'Sancor' => plugin_dir_url(__FILE__) . 'assets/logos/sancor.webp',
                 'Zurich' => plugin_dir_url(__FILE__) . 'assets/logos/zurich.png',
-                'SanCristobal' => plugin_dir_url(__FILE__) . 'assets/logos/sancristobal.png',
+                'SanCristobal' => plugin_dir_url(__FILE__) . 'assets/logos/san_cristobal.png',
                 'Experta' => plugin_dir_url(__FILE__) . 'assets/logos/experta.jpg'
             ];
 
@@ -172,7 +172,7 @@ function resultado_cotizador_auto() {
 
             if (!empty($aseguradora['Coberturas']) && is_array($aseguradora['Coberturas'])) {
                 echo '<div class="aseguradora">';
-                    echo '<h4>' . esc_html($nombre_aseguradora) . '</h4>';
+                    // echo '<h4>' . esc_html($nombre_aseguradora) . '</h4>';
 
                     // Mostrar logo si existe
                     if (!empty($logo_url)) {
@@ -187,17 +187,14 @@ function resultado_cotizador_auto() {
 
                             echo '<li class="cobertura-item" style="display:flex;align-items:flex-start;gap:10px;margin-bottom:15px;">';
 
-                                // Imagen ilustrativa por cobertura (puedes cambiar a algo dinámico si lo necesitas)
-                                echo '<img src="https://via.placeholder.com/60" alt="Cobertura" class="cobertura-img" style="width:60px;height:auto;">';
-
-                                echo '<div class="cobertura-content" style="display:flex;flex-direction:column;">';
+                                echo '<div class="cobertura-content">';
                                     echo '<label for="' . esc_attr($id) . '">';
                                         echo '<input type="checkbox" id="' . esc_attr($id) . '" name="coberturas[]" value="' . esc_attr($coti['DescCobertura']) . '"> ';
                                         echo esc_html($coti['DescCobertura']) . ' - $' . esc_html($coti['Prima']);
                                     echo '</label>';
 
                                     // Botón de más información
-                                    echo '<button type="button" class="btn-mas-info" onclick="mostrarMasInfo(\'' . esc_js($coti['DescCobertura']) . '\')" style="margin-top:5px;padding:4px 10px;background-color:#007bff;color:#fff;border:none;cursor:pointer;font-size:0.85rem;">Más información</button>';
+                                    echo '<a href="#" class="btn-mas-info">Más información</a>';
                                 echo '</div>';
 
                             echo '</li>';

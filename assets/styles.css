@@ -102,6 +102,35 @@
   padding: 0;
 }
 
+
+.coberturas-content {
+  display: flex;    
+  justify-content: space-between;
+   width: 100%;
+}
+
+
+.coberturas-content button {
+  display: inline-block;
+  background-color: #009ca5;
+  color: #ffffff;
+  padding: 14px 28px;
+  border: none;
+  border-radius: 20px;
+  font-size: 17px;
+  font-weight: 600;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.1s;
+  font-family: "Segoe UI", sans-serif;
+
+}
+
+
+;
+    /* flex-direction: column; */
+
+
 .cobertura-item {
   margin-bottom: 0.5rem;
 }
