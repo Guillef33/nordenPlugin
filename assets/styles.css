@@ -129,9 +129,20 @@
 
 }
 
+.cobertura-content p {
+  font-size: 13px;
+    font-family: "Segoe UI", sans-serif;
+    font-weight: 400 
 
-;
-    /* flex-direction: column; */
+}
+
+.cobertura-content h5 {
+  font-size: 18px;
+    font-family: "Segoe UI", sans-serif;
+    font-weight: bold;
+  color: #333; 
+
+}
 
 
 .cobertura-item {

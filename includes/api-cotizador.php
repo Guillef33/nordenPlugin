@@ -190,7 +190,9 @@ function resultado_cotizador_auto() {
                                 echo '<div class="cobertura-content">';
                                     echo '<label for="' . esc_attr($id) . '">';
                                         echo '<input type="checkbox" id="' . esc_attr($id) . '" name="coberturas[]" value="' . esc_attr($coti['DescCobertura']) . '"> ';
-                                        echo esc_html($coti['DescCobertura']) . ' - $' . esc_html($coti['Prima']);
+                                       echo '<p>' . esc_html($coti['DescCobertura']) . '</p>';
+                                       echo '<h5>$' . esc_html($coti['Prima']) . '</h5>';
+
                                     echo '</label>';
 
                                     // Botón de más información
