@@ -99,7 +99,7 @@
   padding: 1rem;
   display: grid;
   grid-template-columns: 1fr 3fr;
-  grid-gap: 20px;
+  grid-gap: 40px;
 }
 
 .aseguradora-logo-wrapper {
@@ -113,7 +113,7 @@
 .aseguradora-logo {
   width: auto;
   height: 150px !important;
-  object-fit: cover;
+ object-fit: contain;;
 }
 
 .coberturas-list {
@@ -122,7 +122,7 @@
   margin: 0;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
-      grid-gap: 20px;
+  grid-gap: 20px;
 }
 
 
@@ -130,7 +130,7 @@
   display: flex;    
   justify-content: space-between;
   width: 100%;
-  padding: 20px 20px;
+  padding: 25px;
   font-family: "Segoe UI", sans-serif;
   flex-direction: column;
   background-color: white;
@@ -157,7 +157,7 @@
   display: inline-block;
   background-color: #4A9699;
   color: #ffffff;
-  padding: 8px 25px;
+  padding: 8px 20px;
   border: none;
   border-radius: 20px;
   font-size: 11px;
@@ -177,7 +177,7 @@
 }
 
 .cobertura-content p {
-  font-size: 14px;
+  font-size: 12px;
   font-family: "Segoe UI", sans-serif;
   font-weight: bold;
   text-align: center;

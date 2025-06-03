@@ -311,39 +311,39 @@ function resultado_cotizador_auto() {
                         }
 
                       
-                        $permitido = false;
-foreach ($planes_permitidos[$nombre_aseguradora] as $plan) {
-    if (stripos($coti['DescCobertura'], $plan) !== false) {
-        $permitido = true;
-        break;
-    }
-}
-
-                        if ($permitido) {
-                            $id = 'cobertura_' . $index . '_' . md5($coti['DescCobertura']);
-
-                            echo '<li class="cobertura-item">';
-                            echo '<div class="cobertura-content">';
-                            echo '<p>' . esc_html($coti['DescCobertura']) . '</p>';
-                            echo '<h5>$ ' . number_format((float) $coti['Prima'], 2, ',', '.') . '</h5>';
-
-                             echo '<a href="#" class="btn-mas-info"> 
-                                <span> 
-                                    <img src="' . plugin_dir_url(dirname(__FILE__)) . 'assets/whatsapp-icon.png" width="15px" height="15px" alt="icono-whatsapp" /> 
-                                </span>
-                                Contratar ahora
-                            </a>';
-                            echo '</div>';
-                            echo '</li>';
-                        }
-                    }
-
-                    echo '</ul>';
-                    echo '</div>';
-                } else {
-                    echo '<p>No se encontraron coberturas para ' . esc_html($nombre_aseguradora) . '.</p>';
-                }
+        $permitido = false;
+        foreach ($planes_permitidos[$nombre_aseguradora] as $plan) {
+            if (stripos($coti['DescCobertura'], $plan) !== false) {
+                $permitido = true;
+                break;
+            }
         }
+
+        if ($permitido) {
+            $id = 'cobertura_' . $index . '_' . md5($coti['DescCobertura']);
+
+            echo '<li class="cobertura-item">';
+            echo '<div class="cobertura-content">';
+            echo '<p>' . esc_html($coti['DescCobertura']) . '</p>';
+            echo '<h5>$ ' . number_format((float) $coti['Prima'], 2, ',', '.') . '</h5>';
+
+                echo '<a href="#" class="btn-mas-info"> 
+                <span> 
+                    <img src="' . plugin_dir_url(dirname(__FILE__)) . 'assets/whatsapp-icon.png" width="15px" height="15px" alt="icono-whatsapp" /> 
+                </span>
+                Contratar ahora
+            </a>';
+            echo '</div>';
+            echo '</li>';
+        }
+    }
+
+            echo '</ul>';
+            echo '</div>';
+        } else {
+            echo '<p>No se encontraron coberturas para ' . esc_html($nombre_aseguradora) . '.</p>';
+        }
+    }
     echo '</div>';
 
 
