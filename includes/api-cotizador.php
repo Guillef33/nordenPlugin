@@ -329,7 +329,7 @@ foreach ($planes_permitidos[$nombre_aseguradora] as $plan) {
 
                              echo '<a href="#" class="btn-mas-info"> 
                                 <span> 
-                                    <img src="' . plugin_dir_url(dirname(__FILE__)) . 'assets/whatsapp-icon.png" width="20px" height="20px" alt="icono-whatsapp" /> 
+                                    <img src="' . plugin_dir_url(dirname(__FILE__)) . 'assets/whatsapp-icon.png" width="15px" height="15px" alt="icono-whatsapp" /> 
                                 </span>
                                 Contratar ahora
                             </a>';
