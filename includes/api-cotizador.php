@@ -306,11 +306,11 @@ function resultado_cotizador_auto() {
 
                     foreach ($aseguradora['Coberturas'] as $index => $coti) {
                         // Validar estructura de cobertura
-                        // if (!isset($coti['DescCobertura']) || !isset($coti['Prima'])) {
-                        //     continue;
-                        // }
+                        if (!isset($coti['DescCobertura']) || !isset($coti['Prima'])) {
+                            continue;
+                        }
 
-                        if (in_array($coti['DescCobertura'], $planes_permitidos[$nombre_aseguradora])) {
+                        if (true) {
                             $id = 'cobertura_' . $index . '_' . md5($coti['DescCobertura']);
 
                             echo '<li class="cobertura-item">';
