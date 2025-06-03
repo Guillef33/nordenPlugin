@@ -282,9 +282,9 @@ function resultado_cotizador_auto() {
 
             $nombre_aseguradora = $aseguradora["Aseguradora"];
 
-            if (!isset($planes_permitidos[$nombre_aseguradora])) {
-                continue; // Saltar aseguradoras no permitidas
-            }
+            // if (!isset($planes_permitidos[$nombre_aseguradora])) {
+            //     continue; // Saltar aseguradoras no permitidas
+            // }
 
             $logos = [
                 'Sancor' => plugin_dir_url(dirname(__FILE__)) . 'assets/logos/sancor.webp',
