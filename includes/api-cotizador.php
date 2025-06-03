@@ -282,9 +282,9 @@ function resultado_cotizador_auto() {
 
             $nombre_aseguradora = $aseguradora["Aseguradora"];
 
-            // if (!isset($planes_permitidos[$nombre_aseguradora])) {
-            //     continue; // Saltar aseguradoras no permitidas
-            // }
+            if (!isset($planes_permitidos[$nombre_aseguradora])) {
+                continue; // Saltar aseguradoras no permitidas
+            }
 
             $logos = [
                 'Sancor' => plugin_dir_url(dirname(__FILE__)) . 'assets/logos/sancor.webp',
@@ -306,9 +306,9 @@ function resultado_cotizador_auto() {
 
                     foreach ($aseguradora['Coberturas'] as $index => $coti) {
                         // Validar estructura de cobertura
-                        if (!isset($coti['DescCobertura']) || !isset($coti['Prima'])) {
-                            continue;
-                        }
+                        // if (!isset($coti['DescCobertura']) || !isset($coti['Prima'])) {
+                        //     continue;
+                        // }
 
                         if (in_array($coti['DescCobertura'], $planes_permitidos[$nombre_aseguradora])) {
                             $id = 'cobertura_' . $index . '_' . md5($coti['DescCobertura']);
