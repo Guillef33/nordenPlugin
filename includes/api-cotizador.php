@@ -316,7 +316,8 @@ function resultado_cotizador_auto() {
                             echo '<li class="cobertura-item">';
                             echo '<div class="cobertura-content">';
                             echo '<p>' . esc_html($coti['DescCobertura']) . '</p>';
-                            echo '<h5>$' . esc_html($coti['Prima']) . '</h5>';
+                            echo '<h5>$ ' . number_format((float) $coti['Prima'], 2, ',', '.') . '</h5>';
+
                              echo '<a href="#" class="btn-mas-info"> 
                                 <span> 
                                     <img src="' . plugin_dir_url(dirname(__FILE__)) . 'assets/whatsapp-icon.png" width="20px" height="20px" alt="icono-whatsapp" /> 

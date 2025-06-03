@@ -157,12 +157,12 @@
 .cobertura-content p {
   font-size: 18px;
   font-family: "Segoe UI", sans-serif;
-  font-weight: 400;
   font-weight: bold;
+  text-align: center;
 }
 
 .cobertura-content h5 {
-  font-size: 22px;
+  font-size: 26px;
   font-family: "Segoe UI", sans-serif;
   font-weight: bold;
   color: #801f80; 
