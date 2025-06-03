@@ -98,7 +98,8 @@
   margin-bottom: 2rem;
   padding: 1rem;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-columns: 1fr 3fr;
+  grid-gap: 20px;
 }
 
 .aseguradora-logo-wrapper {
@@ -107,11 +108,7 @@
   align-items: center;
 }
 
-@media screen and (max-width: 768px) {
-  .aseguradora {
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-  }
-}
+
 
 .aseguradora-logo {
   width: auto;
@@ -123,6 +120,8 @@
   list-style: none;
   padding: 0;
   margin: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
 }
 
 
@@ -138,6 +137,17 @@
   min-height: 230px;
   align-items: center;
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+
+}
+
+@media screen and (max-width: 768px) {
+  .aseguradora {
+    grid-template-columns: 1fr;
+  }
+
+  .coberturas-list {
+  grid-template-columns: 1fr;
+}
 
 }
 
