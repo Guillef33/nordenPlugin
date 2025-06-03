@@ -3,9 +3,9 @@
 if (!defined('ABSPATH')) exit;
 function resultado_cotizador_auto() {
 
-     // echo '<pre>';
-    // print_r($_POST);
-    // echo '</pre>';
+     echo '<pre>';
+    print_r($_POST);
+    echo '</pre>';
     
     // Validar que sea una petición POST
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
