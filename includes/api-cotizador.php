@@ -306,9 +306,9 @@ function resultado_cotizador_auto() {
 
                     foreach ($aseguradora['Coberturas'] as $index => $coti) {
                         // Validar estructura de cobertura
-                        if (!isset($coti['DescCobertura']) || !isset($coti['Prima'])) {
-                            continue;
-                        }
+                        // if (!isset($coti['DescCobertura']) || !isset($coti['Prima'])) {
+                        //     continue;
+                        // }
 
                         if (true) {
                             $id = 'cobertura_' . $index . '_' . md5($coti['DescCobertura']);
