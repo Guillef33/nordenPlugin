@@ -2,6 +2,11 @@
 
 if (!defined('ABSPATH')) exit;
 function resultado_cotizador_auto() {
+
+     // echo '<pre>';
+    // print_r($_POST);
+    // echo '</pre>';
+    
     // Validar que sea una petición POST
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
         return '<p>Error: Método de petición no válido.</p>';
@@ -283,9 +288,9 @@ function resultado_cotizador_auto() {
 
             $logos = [
                 'Sancor' => plugin_dir_url(dirname(__FILE__)) . 'assets/logos/sancor.webp',
-                'Zurich' => plugin_dir_url(dirname(__FILE__)) . 'assets/logos/zurich.png',
-                'SanCristobal' => plugin_dir_url(dirname(__FILE__)) . 'assets/logos/san_cristobal.png',
-                'Experta' => plugin_dir_url(dirname(__FILE__)) . 'assets/logos/experta.jpg'
+                'Zurich' => plugin_dir_url(dirname(__FILE__)) . 'assets/logos/zurich.webp',
+                'SanCristobal' => plugin_dir_url(dirname(__FILE__)) . 'assets/logos/sanCristobal.webp',
+                'Experta' => plugin_dir_url(dirname(__FILE__)) . 'assets/logos/experta.webp'
             ];
 
             $logo_url = isset($logos[$nombre_aseguradora]) ? $logos[$nombre_aseguradora] : '';
@@ -294,7 +299,7 @@ function resultado_cotizador_auto() {
 
                     // Mostrar logo si existe
                     if (!empty($logo_url)) {
-                        echo '<img src="' . esc_url($logo_url) . '" alt="' . esc_attr($nombre_aseguradora) . ' logo" class="aseguradora-logo" style="max-height:50px;margin-bottom:10px;">';
+                        echo '<img src="' . esc_url($logo_url) . '" alt="' . esc_attr($nombre_aseguradora) . ' logo" class="aseguradora-logo">';
                     }
 
                     echo '<ul class="coberturas-list">';
@@ -312,7 +317,12 @@ function resultado_cotizador_auto() {
                             echo '<div class="cobertura-content">';
                             echo '<p>' . esc_html($coti['DescCobertura']) . '</p>';
                             echo '<h5>$' . esc_html($coti['Prima']) . '</h5>';
-                            echo '<a href="#" class="btn-mas-info">Más información</a>';
+                             echo '<a href="#" class="btn-mas-info"> 
+                                <span> 
+                                    <img src="' . plugin_dir_url(dirname(__FILE__)) . 'assets/whatsapp-icon.png" width="30px" height="30px" alt="icono-whatsapp" /> 
+                                </span>
+                                Contratar ahora
+                            </a>';
                             echo '</div>';
                             echo '</li>';
                         }

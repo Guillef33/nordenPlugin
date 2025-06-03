@@ -97,15 +97,26 @@
 .aseguradora {
   margin-bottom: 2rem;
   padding: 1rem;
-  /* border: 1px solid #ccc;
-  border-radius: 6px;
-  background-color: #f9f9f9;*/
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
+@media screen and (max-width: 768px) {
+    .aseguradora {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
+}
+
+.aseguradora-logo {
+  height: 100%;
+  width: 100%;
 }
 
 .coberturas-list {
   list-style: none;
   padding: 0;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  margin: 0;
 }
 
 
@@ -114,19 +125,23 @@
   justify-content: space-between;
   width: 100%;
   padding: 20px 20px;
-    font-family: "Segoe UI", sans-serif;
-    flex-direction: column;
+  font-family: "Segoe UI", sans-serif;
+  flex-direction: column;
+  background-color: white;
+  border-radius: 50px;
+  min-height: 230px;
+  align-items: center;
 }
 
 
 .cobertura-content a {
   display: inline-block;
-  background-color: #009ca5;
+  background-color: #4A9699;
   color: #ffffff;
-  padding: 14px 28px;
+  padding: 10px 30px;
   border: none;
   border-radius: 20px;
-  font-size: 17px;
+  font-size: 13px;
   font-weight: 600;
   text-transform: uppercase;
   cursor: pointer;
@@ -137,16 +152,16 @@
 
 .cobertura-content p {
   font-size: 13px;
-    font-family: "Segoe UI", sans-serif;
-    font-weight: 400 
+  font-family: "Segoe UI", sans-serif;
+  font-weight: 400 
 
 }
 
 .cobertura-content h5 {
-  font-size: 18px;
-    font-family: "Segoe UI", sans-serif;
-    font-weight: bold;
-  color: #333; 
+  font-size: 22px;
+  font-family: "Segoe UI", sans-serif;
+  font-weight: bold;
+  color: #801f80; 
 
 }
 
