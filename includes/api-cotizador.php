@@ -299,7 +299,7 @@ function resultado_cotizador_auto() {
 
                     // Mostrar logo si existe
                     if (!empty($logo_url)) {
-                        echo '<img src="' . esc_url($logo_url) . '" alt="' . esc_attr($nombre_aseguradora) . ' logo" class="aseguradora-logo">';
+                        echo '<div class="aseguradora-logo-wrapper"> <img src="' . esc_url($logo_url) . '" alt="' . esc_attr($nombre_aseguradora) . ' logo" class="aseguradora-logo"></div>';
                     }
 
                     echo '<ul class="coberturas-list">';

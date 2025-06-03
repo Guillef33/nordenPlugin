@@ -101,6 +101,11 @@
   grid-template-columns: 1fr 1fr 1fr 1fr;
 }
 
+.aseguradora-logo-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
 @media screen and (max-width: 768px) {
     .aseguradora {
     grid-template-columns: 1fr 1fr 1fr 1fr;
@@ -108,8 +113,9 @@
 }
 
 .aseguradora-logo {
-  height: 100%;
-  width: 100%;
+  width: auto;
+    height: 150px;
+    object-fit: cover;
 }
 
 .coberturas-list {
