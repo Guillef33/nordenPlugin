@@ -310,7 +310,16 @@ function resultado_cotizador_auto() {
                             continue;
                         }
 
-                        if (in_array($coti['DescCobertura'], $planes_permitidos[$nombre_aseguradora])) {
+                      
+                        $permitido = false;
+foreach ($planes_permitidos[$nombre_aseguradora] as $plan) {
+    if (stripos($coti['DescCobertura'], $plan) !== false) {
+        $permitido = true;
+        break;
+    }
+}
+
+                        if ($permitido) {
                             $id = 'cobertura_' . $index . '_' . md5($coti['DescCobertura']);
 
                             echo '<li class="cobertura-item">';
