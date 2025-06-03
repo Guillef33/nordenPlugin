@@ -104,18 +104,19 @@
 .aseguradora-logo-wrapper {
   display: flex;
   justify-content: center;
+  align-items: center;
 }
 
 @media screen and (max-width: 768px) {
-    .aseguradora {
+  .aseguradora {
     grid-template-columns: 1fr 1fr 1fr 1fr;
   }
 }
 
 .aseguradora-logo {
   width: auto;
-    height: 150px;
-    object-fit: cover;
+  height: 150px !important;
+  object-fit: cover;
 }
 
 .coberturas-list {
