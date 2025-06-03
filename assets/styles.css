@@ -115,7 +115,6 @@
 .coberturas-list {
   list-style: none;
   padding: 0;
-  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
   margin: 0;
 }
 
@@ -131,6 +130,8 @@
   border-radius: 50px;
   min-height: 230px;
   align-items: center;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+
 }
 
 
@@ -138,7 +139,7 @@
   display: inline-block;
   background-color: #4A9699;
   color: #ffffff;
-  padding: 10px 30px;
+  padding: 8px 25px;
   border: none;
   border-radius: 20px;
   font-size: 13px;
@@ -147,14 +148,17 @@
   cursor: pointer;
   transition: background-color 0.3s, transform 0.1s;
   font-family: "Segoe UI", sans-serif;
-
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
 }
 
 .cobertura-content p {
-  font-size: 13px;
+  font-size: 18px;
   font-family: "Segoe UI", sans-serif;
-  font-weight: 400 
-
+  font-weight: 400;
+  font-weight: bold;
 }
 
 .cobertura-content h5 {
@@ -162,7 +166,6 @@
   font-family: "Segoe UI", sans-serif;
   font-weight: bold;
   color: #801f80; 
-
 }
 
 

@@ -319,7 +319,7 @@ function resultado_cotizador_auto() {
                             echo '<h5>$' . esc_html($coti['Prima']) . '</h5>';
                              echo '<a href="#" class="btn-mas-info"> 
                                 <span> 
-                                    <img src="' . plugin_dir_url(dirname(__FILE__)) . 'assets/whatsapp-icon.png" width="30px" height="30px" alt="icono-whatsapp" /> 
+                                    <img src="' . plugin_dir_url(dirname(__FILE__)) . 'assets/whatsapp-icon.png" width="20px" height="20px" alt="icono-whatsapp" /> 
                                 </span>
                                 Contratar ahora
                             </a>';
