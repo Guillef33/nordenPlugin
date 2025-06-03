@@ -88,6 +88,11 @@
   transform: translateY(-1px);
 }
 
+.aseguradoras-container {
+  background-color: #f5f5f5;
+  padding: 2rem 0rem;
+}
+
 /* Aca empieza el div de cada aseguradora */
 .aseguradora {
   margin-bottom: 2rem;

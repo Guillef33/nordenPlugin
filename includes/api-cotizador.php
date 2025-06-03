@@ -288,41 +288,42 @@ function resultado_cotizador_auto() {
             ];
 
             $logo_url = isset($logos[$nombre_aseguradora]) ? $logos[$nombre_aseguradora] : '';
+            echo '<div class="aseguradoras-container">';
+                if (!empty($aseguradora['Coberturas']) && is_array($aseguradora['Coberturas'])) {
+                    echo '<div class="aseguradora">';
 
-            if (!empty($aseguradora['Coberturas']) && is_array($aseguradora['Coberturas'])) {
-                echo '<div class="aseguradora">';
-
-                // Mostrar logo si existe
-                if (!empty($logo_url)) {
-                    echo '<img src="' . esc_url($logo_url) . '" alt="' . esc_attr($nombre_aseguradora) . ' logo" class="aseguradora-logo" style="max-height:50px;margin-bottom:10px;">';
-                }
-
-                echo '<ul class="coberturas-list">';
-
-                foreach ($aseguradora['Coberturas'] as $index => $coti) {
-                    // Validar estructura de cobertura
-                    if (!isset($coti['DescCobertura']) || !isset($coti['Prima'])) {
-                        continue;
+                    // Mostrar logo si existe
+                    if (!empty($logo_url)) {
+                        echo '<img src="' . esc_url($logo_url) . '" alt="' . esc_attr($nombre_aseguradora) . ' logo" class="aseguradora-logo" style="max-height:50px;margin-bottom:10px;">';
                     }
 
-                    if (in_array($coti['DescCobertura'], $planes_permitidos[$nombre_aseguradora])) {
-                        $id = 'cobertura_' . $index . '_' . md5($coti['DescCobertura']);
+                    echo '<ul class="coberturas-list">';
 
-                        echo '<li class="cobertura-item">';
-                        echo '<div class="cobertura-content">';
-                        echo '<p>' . esc_html($coti['DescCobertura']) . '</p>';
-                        echo '<h5>$' . esc_html($coti['Prima']) . '</h5>';
-                        echo '<a href="#" class="btn-mas-info">Más información</a>';
-                        echo '</div>';
-                        echo '</li>';
+                    foreach ($aseguradora['Coberturas'] as $index => $coti) {
+                        // Validar estructura de cobertura
+                        if (!isset($coti['DescCobertura']) || !isset($coti['Prima'])) {
+                            continue;
+                        }
+
+                        if (in_array($coti['DescCobertura'], $planes_permitidos[$nombre_aseguradora])) {
+                            $id = 'cobertura_' . $index . '_' . md5($coti['DescCobertura']);
+
+                            echo '<li class="cobertura-item">';
+                            echo '<div class="cobertura-content">';
+                            echo '<p>' . esc_html($coti['DescCobertura']) . '</p>';
+                            echo '<h5>$' . esc_html($coti['Prima']) . '</h5>';
+                            echo '<a href="#" class="btn-mas-info">Más información</a>';
+                            echo '</div>';
+                            echo '</li>';
+                        }
                     }
-                }
 
-                echo '</ul>';
-                echo '</div>';
-            } else {
-                echo '<p>No se encontraron coberturas para ' . esc_html($nombre_aseguradora) . '.</p>';
-            }
+                    echo '</ul>';
+                    echo '</div>';
+                } else {
+                    echo '<p>No se encontraron coberturas para ' . esc_html($nombre_aseguradora) . '.</p>';
+                }
+             echo '</div>';
         }
 
         return ob_get_clean();
