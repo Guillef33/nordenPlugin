@@ -259,6 +259,7 @@ function resultado_cotizador_auto() {
                 'TODO RIESGO 5%'
             ]
         ];
+    echo '<div class="aseguradoras-container">';
 
         foreach ($body["Data"]['Cotizaciones'] as $aseguradora) {
             // Validar estructura de aseguradora
@@ -288,7 +289,6 @@ function resultado_cotizador_auto() {
             ];
 
             $logo_url = isset($logos[$nombre_aseguradora]) ? $logos[$nombre_aseguradora] : '';
-            echo '<div class="aseguradoras-container">';
                 if (!empty($aseguradora['Coberturas']) && is_array($aseguradora['Coberturas'])) {
                     echo '<div class="aseguradora">';
 
@@ -323,8 +323,9 @@ function resultado_cotizador_auto() {
                 } else {
                     echo '<p>No se encontraron coberturas para ' . esc_html($nombre_aseguradora) . '.</p>';
                 }
-             echo '</div>';
         }
+    echo '</div>';
+
 
         return ob_get_clean();
 
