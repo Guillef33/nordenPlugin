@@ -1,5 +1,5 @@
 <section class="container">
-    <form method="POST" action="/cotizar-auto" class="form-cotizar">
+    <form method="POST" action="/cotizar-auto" class="form-cotizar" onsubmit="mostrarLoader(event)">
             <h3>Datos del vehículo</h3>
         <div class="form-line">
 
@@ -267,4 +267,30 @@ condicion.addEventListener('change', (e) => {
     anioSelect.addEventListener('change', cargarModelosSiCorresponde);
 });
     
+</script>
+
+<script>
+function mostrarLoader(event) {
+    // Evita que se envíe el formulario inmediatamente
+    event.preventDefault();
+
+    // Mostrar SweetAlert2 con loader y logo
+    Swal.fire({
+        title: 'Enviando solicitud...',
+        html: `
+            <img src="https://chocolate-hyena-849814.hostingersite.com/wp-content/uploads/2025/03/LogoQuick.png" alt="Logo Banco" style="width: 100px; margin-bottom: 1rem;">
+            <p>Estamos procesando tu solicitud. Por favor, espera unos segundos.</p>
+        `,
+        allowOutsideClick: false,
+        showConfirmButton: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
+
+    // Enviar el formulario después de mostrar el loader
+    setTimeout(() => {
+        event.target.submit();
+    }, 1000); 
+}
 </script>

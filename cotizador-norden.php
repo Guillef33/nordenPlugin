@@ -50,8 +50,16 @@ function cotizador_norden_enqueue_assets() {
     wp_enqueue_script(
         'cotizador-norden-script',
         $plugin_url . 'assets/app.js',
-        ['jquery'],
+        ['jquery', 'sweetalert2'],
         $script_ver,
+        true
+    );
+
+    wp_enqueue_script(
+        'sweetalert2',
+        'https://cdn.jsdelivr.net/npm/sweetalert2@11',
+        [],
+        null,
         true
     );
 
