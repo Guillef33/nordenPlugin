@@ -484,4 +484,5 @@ condicion.addEventListener('change', (e) => {
             if (mes < 0 || (mes === 0 && hoy.getDate() < nacimiento.getDate())) {
                 edad--;
             }
+        }
 </script>
