@@ -270,27 +270,218 @@ condicion.addEventListener('change', (e) => {
 </script>
 
 <script>
-function mostrarLoader(event) {
-    // Evita que se envíe el formulario inmediatamente
-    event.preventDefault();
-
-    // Mostrar SweetAlert2 con loader y logo
-    Swal.fire({
-        title: 'Enviando solicitud...',
-        html: `
-            <img src="https://chocolate-hyena-849814.hostingersite.com/wp-content/uploads/2025/03/LogoQuick.png" alt="Logo Banco" style="width: 100px; margin-bottom: 1rem;">
-            <p>Estamos procesando tu solicitud. Por favor, espera unos segundos.</p>
-        `,
-        allowOutsideClick: false,
-        showConfirmButton: false,
-        didOpen: () => {
-            Swal.showLoading();
+  // Función principal para mostrar loader con validación previa
+        function mostrarLoader(event) {
+            // Evita que se envíe el formulario inmediatamente
+            event.preventDefault();
+            
+            // Validar formulario antes de mostrar el loader
+            const errores = validarFormulario();
+            
+            if (errores.length > 0) {
+                // Mostrar errores con Sweet Alert
+                mostrarErrores(errores);
+                return;
+            }
+            
+            // Si no hay errores, mostrar loader y enviar
+            mostrarLoaderYEnviar(event);
         }
-    });
 
-    // Enviar el formulario después de mostrar el loader
-    setTimeout(() => {
-        event.target.submit();
-    }, 1000); 
-}
+        // Función para validar todos los campos del formulario
+        function validarFormulario() {
+            const errores = [];
+            
+            // Validar condición del vehículo
+            const condicion = document.getElementById('condicion').value;
+            if (!condicion) {
+                errores.push('La condición del vehículo es requerida');
+            }
+            
+            // Validar año (solo si es usado)
+            const anio = document.getElementById('anio').value;
+            const aniosDiv = document.getElementById('div-anios');
+            if (condicion === 'usado' && !aniosDiv.classList.contains('hidden')) {
+                if (!anio) {
+                    errores.push('El año del vehículo es requerido');
+                } else {
+                    const anioNum = parseInt(anio);
+                    const anioActual = new Date().getFullYear();
+                    if (anioNum < 1900 || anioNum > (anioActual + 1)) {
+                        errores.push(`El año del vehículo debe estar entre 1900 y ${anioActual + 1}`);
+                    }
+                }
+            }
+            
+            // Validar marca
+            const marca = document.getElementById('marca').value;
+            if (!marca) {
+                errores.push('La marca del vehículo es requerida');
+            }
+            
+            // Validar modelo
+            const modelo = document.getElementById('modelo').value;
+            if (!modelo) {
+                errores.push('El modelo del vehículo es requerido');
+            }
+            
+            // Validar GNC
+            const gnc = document.getElementById('gnc').value;
+            if (!gnc) {
+                errores.push('Debe especificar si usa GNC');
+            }
+            
+            // Validar provincia
+            const provincia = document.getElementById('provincia').value;
+            if (!provincia) {
+                errores.push('La provincia es requerida');
+            }
+            
+            // Validar código postal
+            const codigoPostal = document.getElementById('codigo_postal').value;
+            if (!codigoPostal) {
+                errores.push('El código postal es requerido');
+            } else {
+                // Validar formato del código postal
+                const arr = codigoPostal.split(' - ');
+                if (arr.length < 3) {
+                    errores.push('El formato del código postal es incorrecto');
+                } else {
+                    const intId = arr[0].trim();
+                    if (!intId || !isNumeric(intId)) {
+                        errores.push('El ID de localidad no es válido');
+                    }
+                }
+            }
+            
+            // Validar tipo de documento
+            const tipoDoc = document.getElementById('tipo_doc').value;
+            if (!tipoDoc) {
+                errores.push('El tipo de documento es requerido');
+            }
+            
+            // Validar número de documento
+            const nroDoc = document.getElementById('nro_doc').value;
+            if (!nroDoc) {
+                errores.push('El número de documento es requerido');
+            } else if (!isNumeric(nroDoc)) {
+                errores.push('El número de documento debe ser numérico');
+            } else if (nroDoc.length < 7 || nroDoc.length > 8) {
+                errores.push('El número de documento debe tener entre 7 y 8 dígitos');
+            }
+            
+            // Validar estado civil
+            const estadoCivil = document.getElementById('estado_civil').value;
+            if (!estadoCivil) {
+                errores.push('El estado civil es requerido');
+            }
+            
+            // Validar sexo
+            const sexo = document.getElementById('sexo').value;
+            if (!sexo) {
+                errores.push('El sexo es requerido');
+            }
+            
+            // Validar fecha de nacimiento
+            const fechaNac = document.getElementById('fecha_nac').value;
+            if (!fechaNac) {
+                errores.push('La fecha de nacimiento es requerida');
+            } else {
+                // Validar formato de fecha
+                const fechaRegex = /^\d{4}-\d{2}-\d{2}$/;
+                if (!fechaRegex.test(fechaNac)) {
+                    errores.push('El formato de fecha de nacimiento es incorrecto');
+                } else {
+                    // Validar que la fecha sea válida y no sea futura
+                    const fecha = new Date(fechaNac);
+                    const hoy = new Date();
+                    if (fecha > hoy) {
+                        errores.push('La fecha de nacimiento no puede ser futura');
+                    }
+                    
+                    // Validar edad mínima (18 años)
+                    const edad = calcularEdad(fecha);
+                    if (edad < 18) {
+                        errores.push('Debe ser mayor de 18 años para contratar un seguro');
+                    }
+                }
+            }
+            
+            return errores;
+        }
+
+        // Función para mostrar errores con Sweet Alert
+        function mostrarErrores(errores) {
+            let listaErrores = '<ul style="text-align: left; padding-left: 20px;">';
+            errores.forEach(error => {
+                listaErrores += `<li style="margin-bottom: 8px; line-height: 1.4;">${error}</li>`;
+            });
+            listaErrores += '</ul>';
+            
+            Swal.fire({
+                icon: 'error',
+                title: 'Por favor, corrige los siguientes errores:',
+                html: listaErrores,
+                confirmButtonText: 'Entendido',
+                confirmButtonColor: '#d33',
+                width: '600px',
+                customClass: {
+                    popup: 'error-popup'
+                }
+            });
+        }
+
+        // Función para mostrar loader y enviar formulario
+        function mostrarLoaderYEnviar(event) {
+            Swal.fire({
+                title: 'Enviando solicitud...',
+                html: `
+                    <img src="https://chocolate-hyena-849814.hostingersite.com/wp-content/uploads/2025/03/LogoQuick.png" 
+                         alt="Logo Banco" 
+                         style="width: 100px; margin-bottom: 1rem;">
+                    <p>Estamos procesando tu solicitud. Por favor, espera unos segundos.</p>
+                    <div class="progress-bar-container" style="width: 100%; background-color: #f0f0f0; border-radius: 10px; margin-top: 20px;">
+                        <div class="progress-bar" style="width: 0%; height: 20px; background-color: #007bff; border-radius: 10px; transition: width 0.3s ease;"></div>
+                    </div>
+                `,
+                allowOutsideClick: false,
+                showConfirmButton: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                    
+                    // Simular progreso de la barra
+                    const progressBar = document.querySelector('.progress-bar');
+                    let width = 0;
+                    const interval = setInterval(() => {
+                        width += 10;
+                        if (progressBar) {
+                            progressBar.style.width = width + '%';
+                        }
+                        if (width >= 90) {
+                            clearInterval(interval);
+                        }
+                    }, 100);
+                }
+            });
+
+            // Enviar el formulario después de mostrar el loader
+            setTimeout(() => {
+                event.target.submit();
+            }, 1000);
+        }
+
+        // Funciones auxiliares
+        function isNumeric(str) {
+            return /^\d+$/.test(str);
+        }
+
+        function calcularEdad(fechaNacimiento) {
+            const hoy = new Date();
+            const nacimiento = new Date(fechaNacimiento);
+            let edad = hoy.getFullYear() - nacimiento.getFullYear();
+            const mes = hoy.getMonth() - nacimiento.getMonth();
+            
+            if (mes < 0 || (mes === 0 && hoy.getDate() < nacimiento.getDate())) {
+                edad--;
+            }
 </script>

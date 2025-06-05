@@ -3,9 +3,6 @@
 if (!defined('ABSPATH')) exit;
 function resultado_cotizador_auto() {
 
-    //  echo '<pre>';
-    // print_r($_POST);
-    // echo '</pre>';
     
     // Validar que sea una petición POST
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -20,29 +17,29 @@ function resultado_cotizador_auto() {
         }
         
         // Validar que exista codigo_postal
-        if (!isset($_POST['codigo_postal']) || empty($_POST['codigo_postal'])) {
-            return '<p>Error: Código postal no proporcionado.</p>';
-        }
+        // if (!isset($_POST['codigo_postal']) || empty($_POST['codigo_postal'])) {
+        //     return '<p>Error: Código postal no proporcionado.</p>';
+        // }
 
-        // Validar formato del código postal
-        $arr = explode(" - ", $_POST['codigo_postal']);
-        if (count($arr) < 3) {
-            return '<p>Error: Formato de código postal incorrecto. Debe ser: ID - CP - Nombre</p>';
-        }
+        // // Validar formato del código postal
+        // $arr = explode(" - ", $_POST['codigo_postal']);
+        // if (count($arr) < 3) {
+        //     return '<p>Error: Formato de código postal incorrecto. Debe ser: ID - CP - Nombre</p>';
+        // }
 
         $intId = trim($arr[0]);
         $cp = trim($arr[1]);
         $cpName = trim($arr[2]);
 
         // Validar que intId sea numérico
-        if (!is_numeric($intId)) {
-            return '<p>Error: ID de localidad no válido.</p>';
-        }
+        // if (!is_numeric($intId)) {
+        //     return '<p>Error: ID de localidad no válido.</p>';
+        // }
 
-        // Validar que exista provincia
-        if (!isset($_POST['provincia']) || empty($_POST['provincia'])) {
-            return '<p>Error: Provincia no proporcionada.</p>';
-        }
+        // // Validar que exista provincia
+        // if (!isset($_POST['provincia']) || empty($_POST['provincia'])) {
+        //     return '<p>Error: Provincia no proporcionada.</p>';
+        // }
 
         $provincia_sanitized = sanitize_text_field($_POST['provincia']);
 
@@ -124,22 +121,22 @@ function resultado_cotizador_auto() {
         }
 
         // Validar formato de fecha de nacimiento
-        $fecha_nac = sanitize_text_field($_POST['fecha_nac']);
-        if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $fecha_nac)) {
-            return '<p>Error: Formato de fecha de nacimiento incorrecto (debe ser YYYY-MM-DD).</p>';
-        }
+        // $fecha_nac = sanitize_text_field($_POST['fecha_nac']);
+        // if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $fecha_nac)) {
+        //     return '<p>Error: Formato de fecha de nacimiento incorrecto (debe ser YYYY-MM-DD).</p>';
+        // }
 
-        // Validar año del vehículo
-        $anio = sanitize_text_field($_POST['anio']);
-        if (!is_numeric($anio) || $anio < 1900 || $anio > (date('Y') + 1)) {
-            return '<p>Error: Año del vehículo no válido.</p>';
-        }
+        // // Validar año del vehículo
+        // $anio = sanitize_text_field($_POST['anio']);
+        // if (!is_numeric($anio) || $anio < 1900 || $anio > (date('Y') + 1)) {
+        //     return '<p>Error: Año del vehículo no válido.</p>';
+        // }
 
-        // Validar número de documento
-        $nro_doc = sanitize_text_field($_POST['nro_doc']);
-        if (!is_numeric($nro_doc) || strlen($nro_doc) < 7 || strlen($nro_doc) > 8) {
-            return '<p>Error: Número de documento no válido.</p>';
-        }
+        // // Validar número de documento
+        // $nro_doc = sanitize_text_field($_POST['nro_doc']);
+        // if (!is_numeric($nro_doc) || strlen($nro_doc) < 7 || strlen($nro_doc) > 8) {
+        //     return '<p>Error: Número de documento no válido.</p>';
+        // }
 
         $url_cotizar = 'https://quickbi4.norden.com.ar/api_externa/autos/cotizador/cotizar';
 
