@@ -268,23 +268,19 @@ condicion.addEventListener('change', (e) => {
 });
     
 </script>
-
+<!-- 
 <script>
   // Función principal para mostrar loader con validación previa
         function mostrarLoader(event) {
-            // Evita que se envíe el formulario inmediatamente
             event.preventDefault();
             
-            // Validar formulario antes de mostrar el loader
             const errores = validarFormulario();
             
             if (errores.length > 0) {
-                // Mostrar errores con Sweet Alert
                 mostrarErrores(errores);
                 return;
             }
             
-            // Si no hay errores, mostrar loader y enviar
             mostrarLoaderYEnviar(event);
         }
 
@@ -485,4 +481,56 @@ condicion.addEventListener('change', (e) => {
                 edad--;
             }
         }
+</script> -->
+
+<script>
+function mostrarLoader(event) {
+    event.preventDefault();
+
+    // Obtener todos los campos del formulario
+    const form = event.target;
+    const inputs = form.querySelectorAll('input, select, textarea');
+    let valid = true;
+
+    // Verificamos que todos tengan algún valor
+    inputs.forEach(input => {
+        if (!input.value.trim()) {
+            valid = false;
+            input.classList.add('campo-vacio'); // Opcional: para marcar el campo
+        } else {
+            input.classList.remove('campo-vacio');
+        }
+    });
+
+    // Si falta algún campo, mostramos un alerta y no seguimos
+    if (!valid) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Campos incompletos',
+            text: 'Por favor completa todos los campos antes de continuar.'
+        });
+        return;
+    }
+
+    // Mostrar SweetAlert2 con loader y logo
+    Swal.fire({
+        title: 'Enviando solicitud...',
+        html: `
+            <img src="https://chocolate-hyena-849814.hostingersite.com/wp-content/uploads/2025/03/LogoQuick.png" alt="Logo Banco" style="width: 100px; margin-bottom: 1rem;">
+            <p>Estamos procesando tu solicitud. Por favor, espera unos segundos.</p>
+        `,
+        allowOutsideClick: false,
+        showConfirmButton: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
+
+    // Enviar el formulario después de mostrar el loader
+    setTimeout(() => {
+        form.submit();
+    }, 1000);
+}
 </script>
+
+
