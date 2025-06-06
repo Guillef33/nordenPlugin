@@ -149,7 +149,7 @@ $hoy = new DateTime();
 
 $edad = $fechaNacimientoDate->diff($hoy)->y;
 
-$menor25anos = $edad < 25 ? 2 : 1;
+$menor25anos = $edad < 25 ? 1 : 2;
 
         $url_cotizar = 'https://quickbi4.norden.com.ar/api_externa/autos/cotizador/cotizar';
 
