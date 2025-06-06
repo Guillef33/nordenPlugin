@@ -143,6 +143,14 @@ $fechaActual = $fecha->format('Y-m-d') . ' 00:00:00';
             return '<p>Error: Número de documento no válido.</p>';
         }
 
+$fechaNacimiento = $_POST['fecha_nac']; // por ejemplo: "2002-06-06"
+$fechaNacimientoDate = new DateTime($fechaNacimiento);
+$hoy = new DateTime();
+
+$edad = $fechaNacimientoDate->diff($hoy)->y;
+
+$menor25anos = $edad < 25 ? 2 : 1;
+
         $url_cotizar = 'https://quickbi4.norden.com.ar/api_externa/autos/cotizador/cotizar';
 
         $bodyReq = [
@@ -174,7 +182,7 @@ $fechaActual = $fecha->format('Y-m-d') . ' 00:00:00';
                     "FechaEmisionValor" => $fechaActual,
                     "Provincia" => $provincia_sancor,
                     "Localidad" => $sancorLocalidad,
-                    "Menor25Años" => "2",
+                    "Menor25Años" => $menor25anos,
                     "DescuentoEspecial" => "0",
                     "TipoFacturacionCustom" => "M",
                     "Deducible" => "0",
