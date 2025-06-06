@@ -177,8 +177,8 @@ $fechaActual = $fecha->format('Y-m-d') . ' 00:00:00';
                     "Menor25Años" => "2",
                     "DescuentoEspecial" => "0",
                     "TipoFacturacionCustom" => "M",
-                    "Deducible" => "",
-                    "DescuentoPromocional" => 0,
+                    "Deducible" => "0",
+                    "DescuentoPromocional" => "0",
                 ],
                 "Zurich" => [
                     "Beneficio" => "1",
@@ -253,6 +253,10 @@ $fechaActual = $fecha->format('Y-m-d') . ' 00:00:00';
         
 echo '<pre>';
 var_dump($bodyReq);
+echo '</pre>';
+
+echo '<pre>';
+var_dump($token);
 echo '</pre>';
 
         // Lista de planes permitidos por aseguradora
