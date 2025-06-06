@@ -272,13 +272,13 @@ function resultado_cotizador_auto() {
                 continue;
             }
 
-            // Omitir resultados si la compañía es Sancor y no tiene coberturas
-            if (
-                $aseguradora['Aseguradora'] === 'Sancor' &&
-                empty($aseguradora['Coberturas'])
-            ) {
-                continue;
-            }
+            // // Omitir resultados si la compañía es Sancor y no tiene coberturas
+            // if (
+            //     $aseguradora['Aseguradora'] === 'Sancor' &&
+            //     empty($aseguradora['Coberturas'])
+            // ) {
+            //     continue;
+            // }
 
             $nombre_aseguradora = $aseguradora["Aseguradora"];
 
@@ -319,7 +319,7 @@ function resultado_cotizador_auto() {
             }
         }
 
-        if ($permitido) {
+        if (true) {
             $id = 'cobertura_' . $index . '_' . md5($coti['DescCobertura']);
 
             echo '<li class="cobertura-item">';
