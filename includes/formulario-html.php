@@ -1,5 +1,5 @@
 <section class="container">
-    <form method="POST" action="/cotizar-auto" class="form-cotizar">
+    <form method="POST" action="/cotizar-auto" class="form-cotizar"  onsubmit="mostrarLoader(event)">
             <h3>Datos del vehículo</h3>
         <div class="form-line">
 
@@ -236,117 +236,76 @@ condicion.addEventListener('change', (e) => {
   
   // ********************************************* Logica get marcas *********************************************
   
-  function cargarModelosSiCorresponde() {
-      const marcaId = marcaSelect.value;
-      const anio = anioSelect.value;
-      
-      if (!marcaId || !anio) {
-          return;
-        }
+    function cargarModelosSiCorresponde() {
+        const marcaId = marcaSelect.value;
+        const anio = anioSelect.value;
         
-        modeloSelect.innerHTML = '<option value="" disabled selected>Cargando modelos...</option>';
-        
-        fetch(`${miPluginData.rest_url}modelos?marca=${marcaId}&anio=${anio}`)
-        .then(res => res.json())
-        .then(data => {
-if (!Array.isArray(data.Data) || data.Data.length === 0) {
-            modeloSelect.innerHTML = '<option value="" disabled selected>No existen modelos disponibles para esta marca</option>';
+        if (!marcaId || !anio) {
             return;
-        }
-            modeloSelect.innerHTML = '<option value="" disabled selected>Selecciona un modelo</option>';
-            data.Data.forEach(modelo => {
-                const option = document.createElement('option');
-                option.value = modelo.Value;
-                option.textContent = modelo.Text;
-                modeloSelect.appendChild(option);
+            }
+            
+            modeloSelect.innerHTML = '<option value="" disabled selected>Cargando modelos...</option>';
+            
+            fetch(`${miPluginData.rest_url}modelos?marca=${marcaId}&anio=${anio}`)
+            .then(res => res.json())
+            .then(data => {
+    if (!Array.isArray(data.Data) || data.Data.length === 0) {
+                modeloSelect.innerHTML = '<option value="" disabled selected>No existen modelos disponibles para esta marca</option>';
+                return;
+            }
+                modeloSelect.innerHTML = '<option value="" disabled selected>Selecciona un modelo</option>';
+                data.Data.forEach(modelo => {
+                    const option = document.createElement('option');
+                    option.value = modelo.Value;
+                    option.textContent = modelo.Text;
+                    modeloSelect.appendChild(option);
+                });
+            })
+            .catch(error => {
+                modeloSelect.innerHTML = '<option disabled selected>Error al cargar modelos</option>';
+                console.error('Error al obtener modelos:', error);
             });
-        })
-        .catch(error => {
-            modeloSelect.innerHTML = '<option disabled selected>Error al cargar modelos</option>';
-            console.error('Error al obtener modelos:', error);
-        });
-    }
-    
-    // Escuchamos cambios en ambos selects
-    marcaSelect.addEventListener('change', cargarModelosSiCorresponde);
-    anioSelect.addEventListener('change', cargarModelosSiCorresponde);
+        }
+        
+        // Escuchamos cambios en ambos selects
+        marcaSelect.addEventListener('change', cargarModelosSiCorresponde);
+        anioSelect.addEventListener('change', cargarModelosSiCorresponde);
 
-      // Ejecutar al cargar si ya hay valores seleccionados
-  if (marcaSelect.value) {
-    if( !anioSelect.value){
-        anioSelect.value="2025";
+        // Ejecutar al cargar si ya hay valores seleccionados
+    if (marcaSelect.value) {
+        if( !anioSelect.value){
+            anioSelect.value="2025";
+        }
+        cargarModelosSiCorresponde();
     }
-    cargarModelosSiCorresponde();
-  }
-});
+    });
+
+        
+    function mostrarLoader(event) {
+        // Evita que se envíe el formulario inmediatamente
+        event.preventDefault();
+
+        // Mostrar SweetAlert2 con loader y logo
+        Swal.fire({
+            title: 'Enviando solicitud...',
+            html: `
+                <img src="https://chocolate-hyena-849814.hostingersite.com/wp-content/uploads/2025/03/LogoQuick.png" alt="Logo Banco" style="width: 100px; margin-bottom: 1rem;">
+                <p>Estamos procesando tu solicitud. Por favor, espera unos segundos.</p>
+            `,
+            allowOutsideClick: false,
+            showConfirmButton: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+
+        // Enviar el formulario después de mostrar el loader
+        setTimeout(() => {
+            event.target.submit();
+        }, 1000); 
+    }
     
 </script>
 
-<!-- <script>
-function mostrarLoader(event) {
-    event.preventDefault();
-
-    // Obtener todos los campos del formulario
-    const form = event.target;
-    const inputs = form.querySelectorAll('input, select, textarea');
-    let valid = true;
-
-    // Verificamos que todos tengan algún valor
-    inputs.forEach(input => {
-        if (!input.value.trim() || input.disabled) {
-            if (!input.value.trim() && !input.disabled) {
-                valid = false;
-                input.classList.add('campo-vacio'); // Opcional: para marcar el campo
-            } else {
-                input.classList.remove('campo-vacio');
-            }
-        } else {
-            input.classList.remove('campo-vacio');
-        }
-    });
-
-    // Validación específica para el campo modelo
-    const modeloSelect = form.querySelector('#modelo');
-    if (!modeloSelect || modeloSelect.disabled || !modeloSelect.value.trim()) {
-        valid = false;
-        if (modeloSelect) modeloSelect.classList.add('campo-vacio');
-        Swal.fire({
-            icon: 'warning',
-            title: 'Modelo del vehículo es requerido',
-            text: 'Por favor selecciona un modelo antes de continuar.'
-        });
-        return;
-    }
-
-    // Si falta algún campo, mostramos un alerta y no seguimos
-    if (!valid) {
-        Swal.fire({
-            icon: 'warning',
-            title: 'Campos incompletos',
-            text: 'Por favor completa todos los campos antes de continuar.'
-        });
-        return;
-    }
-
-    // Mostrar SweetAlert2 con loader y logo
-    Swal.fire({
-        title: 'Enviando solicitud...',
-        html: `
-            <img src="https://chocolate-hyena-849814.hostingersite.com/wp-content/uploads/2025/03/LogoQuick.png" alt="Logo Banco" style="width: 100px; margin-bottom: 1rem;">
-            <p>Estamos procesando tu solicitud. Por favor, espera unos segundos.</p>
-        `,
-        allowOutsideClick: false,
-        showConfirmButton: false,
-        didOpen: () => {
-            Swal.showLoading();
-        }
-    });
-
-    // Enviar el formulario después de mostrar el loader
-    setTimeout(() => {
-        form.submit();
-    }, 1000);
-}
-</script> -->
 
 

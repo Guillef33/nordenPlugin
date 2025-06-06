@@ -161,6 +161,24 @@
   grid-template-columns: 1fr;
 }
 
+.form-line {
+   grid-template-columns: 1fr;
+}
+
+.form-cotizar h3, .form-cotizar h4 {
+  font-size: 0.8rem;
+  margin-top: 1rem;
+}
+
+.form-cotizar label  {
+  font-size: 0.8rem;
+
+}
+
+.form-cotizar input, .form-cotizar select {
+   font-size: 0.8rem;
+}
+
 }
 
 
@@ -246,21 +264,3 @@
   }
         
 
-/* @media (max-width: 768px) {
-  .form-cotizar {
-    grid-template-columns: 1fr;
-  }
-} */
-
-.site-header,
-.site-footer {
-  display: none;
-}
-
-.site-logo {
-  width: 100px;
-}
-
-.hidden {
-  display: none;
-}
