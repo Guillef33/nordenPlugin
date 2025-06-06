@@ -248,7 +248,11 @@ condicion.addEventListener('change', (e) => {
         fetch(`${miPluginData.rest_url}modelos?marca=${marcaId}&anio=${anio}`)
         .then(res => res.json())
         .then(data => {
-            modeloSelect.innerHTML = '<option disabled selected>Selecciona un modelo</option>';
+        if(data.Data=[]){
+            modeloSelect.innerHTML = '<option value="" disabled selected>No existen modelos disponibles para esta marca</option>';
+            return;
+        }
+            modeloSelect.innerHTML = '<option value="" disabled selected>Selecciona un modelo</option>';
             data.Data.forEach(modelo => {
                 const option = document.createElement('option');
                 option.value = modelo.Value;
