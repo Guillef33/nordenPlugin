@@ -174,7 +174,9 @@ function resultado_cotizador_auto() {
                     "Localidad" => $sancorLocalidad,
                     "Menor25Años" => "2",
                     "DescuentoEspecial" => "0",
-                    "TipoFacturacionCustom" => ""
+                    "TipoFacturacionCustom" => "",
+                    "Deducible" => "",
+                    "DescuentoPromocional" => 0,
                 ],
                 "Zurich" => [
                     "Beneficio" => "1",
@@ -240,12 +242,14 @@ function resultado_cotizador_auto() {
         if (!$body || !isset($body['Data']) || !isset($body['Data']['Cotizaciones'])) {
             return '<p>Error: Respuesta del servicio de cotización no válida.</p>';
         }
-
+        
         if (!is_array($body['Data']['Cotizaciones']) || empty($body['Data']['Cotizaciones'])) {
             return '<p>No se encontraron cotizaciones disponibles para los datos proporcionados.</p>';
         }
-
+        
         ob_start();
+        
+        echo($bodyReq);
 
         // Lista de planes permitidos por aseguradora
         $planes_permitidos = [
@@ -271,6 +275,7 @@ function resultado_cotizador_auto() {
             if (!isset($aseguradora['Aseguradora'])) {
                 continue;
             }
+
 
             // // Omitir resultados si la compañía es Sancor y no tiene coberturas
             // if (
