@@ -243,7 +243,7 @@ condicion.addEventListener('change', (e) => {
           return;
         }
         
-        modeloSelect.innerHTML = '<option disabled selected>Cargando modelos...</option>';
+        modeloSelect.innerHTML = '<option value="" disabled selected>Selecciona un modelo</option>';
         
         fetch(`${miPluginData.rest_url}modelos?marca=${marcaId}&anio=${anio}`)
         .then(res => res.json())
