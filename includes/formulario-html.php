@@ -195,6 +195,10 @@ condicion.addEventListener('change', (e) => {
     anioSelect.value= new Date().getFullYear();
     cargarModelosSiCorresponde();
   }
+  
+  ///prueba
+  marcaSelect.value='6';
+  ///borrar arriba
 
   if(marcaSelect==""){
     modeloSelect.disabled=true;
@@ -206,6 +210,7 @@ condicion.addEventListener('change', (e) => {
   /////////////////////////////////////////////////////////////////
 
   provinciaSelect.addEventListener('change', function () {
+
     const provinciaId = this.value;
 
     // Limpiar opciones anteriores
