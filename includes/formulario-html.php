@@ -287,10 +287,10 @@ condicion.addEventListener('change', (e) => {
 
         // Mostrar SweetAlert2 con loader y logo
         Swal.fire({
-            title: 'Enviando solicitud...',
+            // title: 'Enviando solicitud...',
             html: `
                 <img src="https://chocolate-hyena-849814.hostingersite.com/wp-content/uploads/2025/03/LogoQuick.png" alt="Logo Banco" style="width: 100px; margin-bottom: 1rem;">
-                <p>Estamos procesando tu solicitud. Por favor, espera unos segundos.</p>
+                <p style="font-family:"Gotham Book">Estamos procesando tu solicitud. Por favor, espera unos segundos.</p>
             `,
             allowOutsideClick: false,
             showConfirmButton: false,
