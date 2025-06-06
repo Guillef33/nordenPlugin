@@ -99,7 +99,9 @@ function resultado_cotizador_auto() {
 
         // Validar fecha actual
         try {
-            $fechaActual = (new DateTime())->format('Y-m-d') . ' 00:00:00';
+            $fecha = new DateTime();
+$fecha->modify('+1 day');
+$fechaActual = $fecha->format('Y-m-d') . ' 00:00:00';
         } catch (Exception $e) {
             return '<p>Error: No se pudo generar la fecha actual.</p>';
         }
@@ -168,13 +170,13 @@ function resultado_cotizador_auto() {
                     "Garage" => "1",
                     "KilometrosAnuales" => "1",
                     "TipoIva" => "4",
-                    "PlanDePago" => "0",
+                    "PlanDePago" => "1",
                     "FechaEmisionValor" => $fechaActual,
                     "Provincia" => $provincia_sancor,
                     "Localidad" => $sancorLocalidad,
                     "Menor25Años" => "2",
                     "DescuentoEspecial" => "0",
-                    "TipoFacturacionCustom" => "",
+                    "TipoFacturacionCustom" => "M",
                     "Deducible" => "",
                     "DescuentoPromocional" => 0,
                 ],
