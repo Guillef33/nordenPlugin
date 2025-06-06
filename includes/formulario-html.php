@@ -41,7 +41,7 @@
             <div>
                 <label>Marcas</label>
                 <select name="marcas" id="marca" required>
-                    <option value="" disabled selected>Seleccionar Marca</option>
+                    <option value="">Seleccionar Marca</option>
                     <?php if (!empty($marcas)): ?>
                     <?php foreach ($marcas['Data'] as $marca): ?>
                     <option value="<?= esc_attr($marca['Value']) ?>"><?= esc_html($marca['Text']) ?></option>
