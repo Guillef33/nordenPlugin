@@ -169,6 +169,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
 const condicion = document.querySelector('#condicion');
 
+///prueba
+console.log("pasa");
+marcaSelect.value='6';
+console.log(marcaSelect.value);
+///borrar arriba
 
 if (condicion.value === "usado") {
   aniosDiv.classList.remove("hidden");
@@ -196,11 +201,6 @@ condicion.addEventListener('change', (e) => {
     cargarModelosSiCorresponde();
   }
   
-  ///prueba
-  console.log("pasa");
-  marcaSelect.value='6';
-  console.log(marcaSelect.value);
-  ///borrar arriba
 
   if(marcaSelect==""){
     modeloSelect.disabled=true;
