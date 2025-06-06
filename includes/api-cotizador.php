@@ -251,6 +251,14 @@ $fechaActual = $fecha->format('Y-m-d') . ' 00:00:00';
         
         ob_start();
 
+        echo '<pre>';
+var_dump($bodyReq);
+echo '</pre>';
+
+echo '<pre>';
+var_dump($token);
+echo '</pre>';
+
         // Lista de planes permitidos por aseguradora
         $planes_permitidos = [
             'Sancor' => ['PREMIUM MAX', 'TODO RIESGO 2%', 'TODO RIESGO 4%'],
