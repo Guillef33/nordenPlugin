@@ -197,7 +197,9 @@ condicion.addEventListener('change', (e) => {
   }
   
   ///prueba
+  console.log("pasa");
   marcaSelect.value='6';
+  console.log(marcaSelect.value);
   ///borrar arriba
 
   if(marcaSelect==""){
