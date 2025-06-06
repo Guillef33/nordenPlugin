@@ -250,14 +250,6 @@ $fechaActual = $fecha->format('Y-m-d') . ' 00:00:00';
         }
         
         ob_start();
-        
-echo '<pre>';
-var_dump($bodyReq);
-echo '</pre>';
-
-echo '<pre>';
-var_dump($token);
-echo '</pre>';
 
         // Lista de planes permitidos por aseguradora
         $planes_permitidos = [
@@ -332,7 +324,7 @@ echo '</pre>';
             }
         }
 
-        if (true) {
+        if ($permitido) {
             $id = 'cobertura_' . $index . '_' . md5($coti['DescCobertura']);
 
             echo '<li class="cobertura-item">';
