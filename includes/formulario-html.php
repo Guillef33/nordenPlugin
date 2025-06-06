@@ -269,6 +269,14 @@ if (!Array.isArray(data.Data) || data.Data.length === 0) {
     // Escuchamos cambios en ambos selects
     marcaSelect.addEventListener('change', cargarModelosSiCorresponde);
     anioSelect.addEventListener('change', cargarModelosSiCorresponde);
+
+      // Ejecutar al cargar si ya hay valores seleccionados
+  if (marcaSelect.value) {
+    if( !anioSelect.value){
+        anioSelect.value="2025";
+    }
+    cargarModelosSiCorresponde();
+  }
 });
     
 </script>
