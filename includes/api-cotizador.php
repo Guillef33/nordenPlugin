@@ -260,7 +260,7 @@ $fechaActual = $fecha->format('Y-m-d') . ' 00:00:00';
                 'TODO RIESGO CON FRANQUICIA – PLAN DV 4%',
                 'TR CON FRANQUICIA – TALLER ZURICH (DZ)'
             ],
-            'SanCristobal' => ['CM', 'TODO RIESGO 2%', 'TODO RIESGO 5%',"a","e","o"],
+            'San Cristobal' => ['CM', 'TODO RIESGO 2%', 'TODO RIESGO 5%',"a","e","o"],
             'Experta' => [
                 'PREMIUM MAX',
                 'TODO RIESGO FRANQ. VARIABLE XL - 1%',
