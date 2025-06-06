@@ -355,7 +355,7 @@ $menor25anos = $edad < 25 ? 1 : 2;
             echo '</ul>';
             echo '</div>';
         } else {
-            echo '<p>No se encontraron coberturas para ' . esc_html($nombre_aseguradora) . '.</p>';
+            // echo '<p>No se encontraron coberturas para ' . esc_html($nombre_aseguradora) . '.</p>';
         }
     }
     echo '</div>';
