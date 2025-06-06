@@ -248,7 +248,7 @@ condicion.addEventListener('change', (e) => {
         fetch(`${miPluginData.rest_url}modelos?marca=${marcaId}&anio=${anio}`)
         .then(res => res.json())
         .then(data => {
-        if(data.Data=[]){
+if (!Array.isArray(data.Data) || data.Data.length === 0) {
             modeloSelect.innerHTML = '<option value="" disabled selected>No existen modelos disponibles para esta marca</option>';
             return;
         }
