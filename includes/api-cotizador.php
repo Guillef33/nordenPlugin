@@ -294,7 +294,7 @@ $fechaActual = $fecha->format('Y-m-d') . ' 00:00:00';
             $logos = [
                 'Sancor' => plugin_dir_url(dirname(__FILE__)) . 'assets/logos/sancor.webp',
                 'Zurich' => plugin_dir_url(dirname(__FILE__)) . 'assets/logos/zurich.webp',
-                'SanCristobal' => plugin_dir_url(dirname(__FILE__)) . 'assets/logos/SanCristobal.webp',
+                'San Cristobal' => plugin_dir_url(dirname(__FILE__)) . 'assets/logos/SanCristobal.webp',
                 'Experta' => plugin_dir_url(dirname(__FILE__)) . 'assets/logos/experta.webp'
             ];
 
