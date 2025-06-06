@@ -249,7 +249,9 @@ function resultado_cotizador_auto() {
         
         ob_start();
         
-        echo($bodyReq);
+echo '<pre>';
+var_dump($bodyReq);
+echo '</pre>';
 
         // Lista de planes permitidos por aseguradora
         $planes_permitidos = [
