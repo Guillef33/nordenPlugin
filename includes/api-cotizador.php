@@ -50,6 +50,7 @@ $prov_codigos = get_multiple_provincias($provincia_sanitized, $token);
 $localidades = get_multiple_localidades($cp, $cpName, $prov_codigos, $token);
 
 echo '<pre>';
+print_r($prov_codigos);
 print_r($localidades);
 echo '</pre>';
 
