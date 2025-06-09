@@ -271,9 +271,17 @@ foreach ($curlHandles as $aseguradora => $ch) {
 
 curl_multi_close($multiHandle);
 
+$allCotizaciones = [];
+
+foreach ($responses as $response) {
+    if (isset($response['Data']['Cotizaciones'])) {
+        $allCotizaciones = array_merge($allCotizaciones, $response['Data']['Cotizaciones']);
+    }
+}
+
 $body = [
     'Data' => [
-        'Cotizaciones' => array_values($responses) // si querés que sea un array numérico
+        'Cotizaciones' => array_values($allCotizaciones)
     ]
 ];
 
