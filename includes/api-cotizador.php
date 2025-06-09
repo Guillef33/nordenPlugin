@@ -46,56 +46,8 @@ function resultado_cotizador_auto() {
 
         $provincia_sanitized = sanitize_text_field($_POST['provincia']);
 
-        // Validaciones para Sancor
-        $provincia_sancor = null;
-        $sancorLocalidad = null;
-        try {
-            $provincia_sancor = obtener_provincia_sancor($provincia_sanitized, $token);
-            if ($provincia_sancor) {
-                $localidades_sancor = obtener_localidad_sancor(sanitize_text_field($cp), $provincia_sancor, $token);
-                if ($localidades_sancor && is_array($localidades_sancor)) {
-                    $result_sancor = compare_strings($cpName, $localidades_sancor);
-                    $sancorLocalidad = isset($result_sancor["Value"]) ? $result_sancor["Value"] : null;
-                }
-            }
-        } catch (Exception $e) {
-            error_log("Error obteniendo datos de Sancor: " . $e->getMessage());
-            $sancorLocalidad = null;
-        }
-
-        // Validaciones para Zurich
-        $provincia_zurich = null;
-        $zurichLocalidad = null;
-        try {
-            $provincia_zurich = obtener_provincia_zurich($provincia_sanitized, $token);
-            if ($provincia_zurich) {
-                $localidades_zurich = obtener_localidad_zurich(sanitize_text_field($cp), $provincia_zurich, $token);
-                if ($localidades_zurich && is_array($localidades_zurich)) {
-                    $result_zurich = compare_strings($cpName, $localidades_zurich);
-                    $zurichLocalidad = isset($result_zurich["Value"]) ? $result_zurich["Value"] : null;
-                }
-            }
-        } catch (Exception $e) {
-            error_log("Error obteniendo datos de Zurich: " . $e->getMessage());
-            $zurichLocalidad = null;
-        }
-
-        // Validaciones para Experta
-        $provincia_experta = null;
-        $expertaLocalidad = null;
-        try {
-            $provincia_experta = obtener_provincia_experta($provincia_sanitized, $token);
-            if ($provincia_experta) {
-                $localidades_experta = obtener_localidad_experta(sanitize_text_field($cp), $provincia_experta, $token);
-                if ($localidades_experta && is_array($localidades_experta)) {
-                    $result_experta = compare_strings($cpName, $localidades_experta);
-                    $expertaLocalidad = isset($result_experta["Value"]) ? $result_experta["Value"] : null;
-                }
-            }
-        } catch (Exception $e) {
-            error_log("Error obteniendo datos de Experta: " . $e->getMessage());
-            $expertaLocalidad = null;
-        }
+$prov_codigos = get_multiple_provincias($provincia_sanitized, $token);
+$localidades = get_multiple_localidades($cp, $cpName, $prov_codigos, $token);
 
         // Validar fecha actual
         try {
