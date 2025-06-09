@@ -98,6 +98,9 @@ function obtener_provincia_sancor($provincia, $token) {
     foreach ($curl_handles as $key => $ch) {
         $body = curl_multi_getcontent($ch);
         $response = json_decode($body, true);
+        echo '<pre>';
+print_r($response);
+echo '</pre>';
         $results[$key] = $response["Data"][0]["Value"] ?? null;
         curl_multi_remove_handle($mh, $ch);
         curl_close($ch);
