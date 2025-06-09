@@ -237,11 +237,6 @@ $body = [
     ]
 ];
 
-
-// $responses tiene los resultados por aseguradora
-// Ejemplo: $responses['Sancor'], $responses['Zurich'], etc.
-
-
 $errores = [];
 
 foreach ($curlHandles as $aseguradora => $ch) {
@@ -276,6 +271,8 @@ if (!empty($errores)) {
         }
         
         ob_start();
+
+        print_r($body);
 
         // Lista de planes permitidos por aseguradora
         $planes_permitidos = [
