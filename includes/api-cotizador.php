@@ -282,17 +282,29 @@ $body = [
 // Ejemplo: $responses['Sancor'], $responses['Zurich'], etc.
 
 
-        // Validar respuesta HTTP
-        if (is_wp_error($response)) {
-            return '<p>Error: No se pudo conectar con el servicio de cotización.</p>';
-        }
+$errores = [];
 
-        $http_code = wp_remote_retrieve_response_code($response);
-        if ($http_code !== 200) {
-            return '<p>Error: El servicio de cotización respondió con código ' . $http_code . '</p>';
-        }
+foreach ($curlHandles as $aseguradora => $ch) {
+    $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $error_msg = curl_error($ch);
 
-        $body = json_decode(wp_remote_retrieve_body($response), true);
+    if ($error_msg || $http_code !== 200) {
+        $errores[] = "<p>Error en $aseguradora: " . ($error_msg ?: "Código HTTP $http_code") . "</p>";
+        unset($responses[$aseguradora]); // quitamos esa cotización del resultado
+    }
+}
+
+// Si todas fallaron
+if (empty($responses)) {
+    return '<p>Error: No se pudo conectar con ninguna aseguradora.</p>' . implode('', $errores);
+}
+
+// Si alguna falló pero otras funcionaron
+if (!empty($errores)) {
+    // Podés loguearlas o mostrarlas según tu necesidad
+    // return implode('', $errores); // para mostrar errores parciales
+}
+
 
         // Validar estructura de la respuesta
         if (!$body || !isset($body['Data']) || !isset($body['Data']['Cotizaciones'])) {
