@@ -266,12 +266,16 @@ $menor25anos = $edad < 25 ? 1 : 2;
                 'CG PREMIUM CON GRANIZO',
                 'TODO RIESGO CON FRANQUICIA – PLAN D2 2%',
                 'TODO RIESGO CON FRANQUICIA – PLAN DV 4%',
-                'TR CON FRANQUICIA – TALLER ZURICH (DZ)'
+                // 'TR CON FRANQUICIA – TALLER ZURICH (DZ)'
             ],
-            'San Cristobal' => ['CM', 'TODO RIESGO 2%', 'Todo riesgo con franq. del 5','Todo riesgo con franq. del 2', "D102", "D101"],
+            'San Cristobal' => ['CM', 'TODO RIESGO 2%', 
+            'Todo riesgo con franq. del 5',
+            'Todo riesgo con franq. del 2', 
+            // "D102", "D101"
+        ],
             'Experta' => [
                 'PREMIUM MAX',
-                'TODO RIESGO FRANQ. VARIABLE XL - 1%',
+                // 'TODO RIESGO FRANQ. VARIABLE XL - 1%',
                 'TODO RIESGO 2%',
                 'TODO RIESGO 5%'
             ]
@@ -341,9 +345,9 @@ $menor25anos = $edad < 25 ? 1 : 2;
             echo '<p>' . esc_html($coti['DescCobertura']) . '</p>';
             echo '<h5>$ ' . number_format((float) $coti['Prima'], 2, ',', '.') . '</h5>';
 
-                echo '<a href="#" class="btn-mas-info"> 
+                echo '<a href="#"> 
                 <span> 
-                    <img src="' . plugin_dir_url(dirname(__FILE__)) . 'assets/whatsapp-icon.png" width="15px" height="15px" alt="icono-whatsapp" /> 
+                    <img class="whatsapp-icon" src="' . plugin_dir_url(dirname(__FILE__)) . 'assets/whatsapp-icon.png" width="19px" height="19px" alt="icono-whatsapp" /> 
                 </span>
                 Contratar ahora
             </a>';

@@ -3,7 +3,7 @@
  * Plugin Name:       Formulario de Cotizacion Norden API 
  * Plugin URI:        https://somosvalencia.com/
  * Description:       Plugin para la generacion de formularios de cotizacion con Norden API
- * Version:           1.0
+ * Version:           1.1
  * Requires PHP:      7.2
  * Author:            Somos Valencia, Guillermo Flores y Martin Rotela
  * Author URI:        https://somosvalencia.com/
