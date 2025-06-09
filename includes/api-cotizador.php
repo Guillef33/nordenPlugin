@@ -49,11 +49,6 @@ function resultado_cotizador_auto() {
 $prov_codigos = get_multiple_provincias($provincia_sanitized, $token);
 $localidades = get_multiple_localidades($cp, $cpName, $prov_codigos, $token);
 
-echo '<pre>';
-print_r($prov_codigos);
-print_r($localidades);
-echo '</pre>';
-
         // Validar fecha actual
         try {
             $fecha = new DateTime();
@@ -138,8 +133,8 @@ $aseguradoras = [
         "TipoIva" => "4",
         "PlanDePago" => "1",
         "FechaEmisionValor" => $fechaActual,
-        "Provincia" => $provincia_sancor,
-        "Localidad" => $sancorLocalidad,
+        "Provincia" => $prov_codigos["sancor"],
+        "Localidad" => $localidades["sancor"],
         "Menor25Años" => $menor25anos,
         "DescuentoEspecial" => "0",
         "TipoFacturacionCustom" => "M",
@@ -156,9 +151,9 @@ $aseguradoras = [
         "Rastreador" => "0",
         "TipoIva" => "1",
         "EstadoCivil" => "1",
-        "Provincia" => $provincia_zurich,
+        "Provincia" => $prov_codigos["zurich"],
         "IdPlan" => "350",
-        "Localidad" => $zurichLocalidad,
+        "Localidad" => $localidades["zurich"],
         "Asistencia" => "31",
         "TipoFacturacionCustom" => "M"
     ],
@@ -174,7 +169,7 @@ $aseguradoras = [
         "GrupoAfinidad" => "pc:50502"
     ],
     "Experta" => [
-        "Localidad" => $expertaLocalidad,
+        "Localidad" => $localidades["experta"],
         "Comision" => "EX0",
         "FechaInicioVigencia" => $fechaActual,
         "TipoFacturacionCustom" => "M",
