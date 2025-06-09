@@ -340,7 +340,7 @@ if (!empty($errores)) {
         ];
     echo '<div class="aseguradoras-container">';
 echo '<pre>';
-print_r($body["Data"]['Cotizaciones']);
+print_r($body);
 echo '</pre>';
 
         foreach ($body["Data"]['Cotizaciones'] as $aseguradora) {
