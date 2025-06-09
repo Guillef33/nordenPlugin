@@ -339,6 +339,7 @@ if (!empty($errores)) {
             ]
         ];
     echo '<div class="aseguradoras-container">';
+    dd($body["Data"]['Cotizaciones']);
 
         foreach ($body["Data"]['Cotizaciones'] as $aseguradora) {
             // Validar estructura de aseguradora
