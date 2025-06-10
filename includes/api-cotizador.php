@@ -272,7 +272,8 @@ if (!empty($errores)) {
         
         ob_start();
 
-        print_r($body);
+        print_r($generales);
+        print_r($aseguradoras);
 
         // Lista de planes permitidos por aseguradora
         $planes_permitidos = [
