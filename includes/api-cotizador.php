@@ -273,6 +273,8 @@ if (!empty($errores)) {
         ob_start();
 
         echo '<pre>';
+        
+        print_r($localidades);
         print_r($generales);
         print_r($aseguradoras);
 echo '</pre>';
