@@ -337,8 +337,6 @@ $menor25anos = $edad < 25 ? 1 : 2;
             }
         }
 
-        $permitido = true;
-
         if ($permitido) {
             $id = 'cobertura_' . $index . '_' . md5($coti['DescCobertura']);
 
