@@ -225,19 +225,6 @@ curl_multi_close($multiHandle);
 
 $allCotizaciones = [];
 
-if ($result === false) {
-    echo "Error con $aseguradora: " . curl_error($ch);
-} else {
-    $decoded = json_decode($result, true);
-    if (json_last_error() !== JSON_ERROR_NONE) {
-        echo "JSON inválido para $aseguradora: " . json_last_error_msg();
-    } elseif (!isset($decoded['Data']['Cotizaciones'])) {
-        echo "Sin cotizaciones para $aseguradora:\n";
-        print_r($decoded);
-    } else {
-        $responses[$aseguradora] = $decoded;
-    }
-}
 
 
 foreach ($responses as $response) {
