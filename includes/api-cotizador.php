@@ -209,19 +209,46 @@ foreach ($aseguradoras as $aseguradora => $parametros) {
 // Ejecutar en paralelo
 $running = null;
 do {
-    curl_multi_exec($multiHandle, $running);
-    curl_multi_select($multiHandle);
+    $status = curl_multi_exec($multiHandle, $running);
+    if ($status != CURLM_OK) {
+        break;
+    }
+
+    if (curl_multi_select($multiHandle) === -1) {
+        usleep(100); // Espera mínima para evitar CPU alta
+    }
 } while ($running > 0);
 
-// Recoger las respuestas
+// Recoger las respuestas con manejo de errores
 foreach ($curlHandles as $aseguradora => $ch) {
     $result = curl_multi_getcontent($ch);
-    $responses[$aseguradora] = json_decode($result, true); // o usar como string si preferís
+    $error = curl_error($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+    if ($error || $httpCode !== 200) {
+        $responses[$aseguradora] = [
+            'error' => $error,
+            'http_code' => $httpCode,
+            'response' => $result
+        ];
+    } else {
+        $data = json_decode($result, true);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            $responses[$aseguradora] = [
+                'json_error' => json_last_error_msg(),
+                'response' => $result
+            ];
+        } else {
+            $responses[$aseguradora] = $data;
+        }
+    }
+
     curl_multi_remove_handle($multiHandle, $ch);
     curl_close($ch);
 }
 
 curl_multi_close($multiHandle);
+
 
 $allCotizaciones = [];
 
