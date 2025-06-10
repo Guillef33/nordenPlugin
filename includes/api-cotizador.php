@@ -277,6 +277,8 @@ if (!empty($errores)) {
         print_r($localidades);
         print_r($generales);
         print_r($aseguradoras);
+        print_r($body);
+
 echo '</pre>';
 
         // Lista de planes permitidos por aseguradora
