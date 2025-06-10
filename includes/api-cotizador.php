@@ -239,6 +239,10 @@ $body = [
 
 $errores = [];
 
+echo 'Cantidad de aseguradoras: ' . count($aseguradoras);
+print_r(array_keys($aseguradoras));
+
+
 foreach ($curlHandles as $aseguradora => $ch) {
     $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     $error_msg = curl_error($ch);
@@ -271,15 +275,6 @@ if (!empty($errores)) {
         }
         
         ob_start();
-
-        echo '<pre>';
-        
-        print_r($localidades);
-        print_r($generales);
-        print_r($aseguradoras);
-        print_r($responses);
-
-echo '</pre>';
 
         // Lista de planes permitidos por aseguradora
         $planes_permitidos = [
