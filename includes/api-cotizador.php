@@ -277,7 +277,7 @@ if (!empty($errores)) {
         print_r($localidades);
         print_r($generales);
         print_r($aseguradoras);
-        print_r($body);
+        print_r($responses);
 
 echo '</pre>';
 
