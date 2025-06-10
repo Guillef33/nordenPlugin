@@ -253,6 +253,10 @@ curl_multi_close($multiHandle);
 $allCotizaciones = [];
 
 echo "<pre>";
+print_r($aseguradoras);
+echo "</pre>";
+
+echo "<pre>";
 print_r($responses);
 echo "</pre>";
 
