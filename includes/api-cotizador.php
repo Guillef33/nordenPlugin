@@ -180,46 +180,45 @@ $aseguradoras = [
 // Preparar multi-cURL
 $multiHandle = curl_multi_init();
 $curlHandles = [];
-$responses = [];
 
-foreach ($aseguradoras as $aseguradora => $parametros) {
-    $body = [
-        "ParametrosGenerales" => $generales,
-        "ParametrosEspecificos" => [
-            $aseguradora => $parametros
-        ]
-    ];
+foreach ($urls as $aseguradora => $url) {
+    $ch = curl_init();
 
-    $ch = curl_init($url_cotizar);
     curl_setopt_array($ch, [
+        CURLOPT_URL => $url,
         CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_TIMEOUT => 100,
         CURLOPT_POST => true,
-        CURLOPT_POSTFIELDS => json_encode($body),
+        CURLOPT_POSTFIELDS => json_encode($parametros[$aseguradora]),
         CURLOPT_HTTPHEADER => [
-            'Authorization: Bearer ' . $token,
-            'Content-Type: application/json'
-        ]
+            'Content-Type: application/json',
+            'Accept: application/json',
+        ],
+        CURLOPT_TIMEOUT => 100,
+        CURLOPT_CONNECTTIMEOUT => 10,
     ]);
 
     curl_multi_add_handle($multiHandle, $ch);
     $curlHandles[$aseguradora] = $ch;
 }
 
-// Ejecutar en paralelo
+// Ejecutar múltiples cURL en paralelo
 $running = null;
 do {
     $status = curl_multi_exec($multiHandle, $running);
-    if ($status != CURLM_OK) {
-        break;
+    if ($status > 0) {
+        error_log('cURL multi read error: ' . curl_multi_strerror($status));
     }
 
+    // Evitar uso excesivo de CPU si select devuelve -1
     if (curl_multi_select($multiHandle) === -1) {
-        usleep(100); // Espera mínima para evitar CPU alta
+        usleep(100);
     }
+
 } while ($running > 0);
 
-// Recoger las respuestas con manejo de errores
+// Recolectar respuestas
+$responses = [];
+
 foreach ($curlHandles as $aseguradora => $ch) {
     $result = curl_multi_getcontent($ch);
     $error = curl_error($ch);
@@ -229,36 +228,37 @@ foreach ($curlHandles as $aseguradora => $ch) {
         $responses[$aseguradora] = [
             'error' => $error,
             'http_code' => $httpCode,
-            'response' => $result
+            'response' => $result,
         ];
+        error_log("Error en $aseguradora: HTTP $httpCode - $error - Respuesta: $result");
     } else {
         $data = json_decode($result, true);
         if (json_last_error() !== JSON_ERROR_NONE) {
             $responses[$aseguradora] = [
                 'json_error' => json_last_error_msg(),
-                'response' => $result
+                'response' => $result,
             ];
+            error_log("JSON mal formado en $aseguradora: " . json_last_error_msg() . " - $result");
         } else {
             $responses[$aseguradora] = $data;
         }
     }
 
+    // Remover y cerrar el handle
     curl_multi_remove_handle($multiHandle, $ch);
     curl_close($ch);
 }
 
 curl_multi_close($multiHandle);
 
+// DEBUG: mostrar respuestas
+echo '<pre>';
+print_r($responses);
+echo '</pre>';
+
+
 
 $allCotizaciones = [];
-
-echo "<pre>";
-print_r($aseguradoras);
-echo "</pre>";
-
-echo "<pre>";
-print_r($responses);
-echo "</pre>";
 
 foreach ($responses as $response) {
     if (isset($response['Data']['Cotizaciones'])) {
@@ -336,15 +336,6 @@ if (!empty($errores)) {
             if (!isset($aseguradora['Aseguradora'])) {
                 continue;
             }
-
-
-            // // Omitir resultados si la compañía es Sancor y no tiene coberturas
-            // if (
-            //     $aseguradora['Aseguradora'] === 'Sancor' &&
-            //     empty($aseguradora['Coberturas'])
-            // ) {
-            //     continue;
-            // }
 
             $nombre_aseguradora = $aseguradora["Aseguradora"];
 
