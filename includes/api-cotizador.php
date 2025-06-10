@@ -252,7 +252,9 @@ curl_multi_close($multiHandle);
 
 $allCotizaciones = [];
 
-
+echo "<pre>";
+print_r($responses);
+echo "</pre>";
 
 foreach ($responses as $response) {
     if (isset($response['Data']['Cotizaciones'])) {
