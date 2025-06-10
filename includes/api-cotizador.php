@@ -46,8 +46,56 @@ function resultado_cotizador_auto() {
 
         $provincia_sanitized = sanitize_text_field($_POST['provincia']);
 
-$prov_codigos = get_multiple_provincias($provincia_sanitized, $token);
-$localidades = get_multiple_localidades($cp, $cpName, $prov_codigos, $token);
+        // Validaciones para Sancor
+        $provincia_sancor = null;
+        $sancorLocalidad = null;
+        try {
+            $provincia_sancor = obtener_provincia_sancor($provincia_sanitized, $token);
+            if ($provincia_sancor) {
+                $localidades_sancor = obtener_localidad_sancor(sanitize_text_field($cp), $provincia_sancor, $token);
+                if ($localidades_sancor && is_array($localidades_sancor)) {
+                    $result_sancor = compare_strings($cpName, $localidades_sancor);
+                    $sancorLocalidad = isset($result_sancor["Value"]) ? $result_sancor["Value"] : null;
+                }
+            }
+        } catch (Exception $e) {
+            error_log("Error obteniendo datos de Sancor: " . $e->getMessage());
+            $sancorLocalidad = null;
+        }
+
+        // Validaciones para Zurich
+        $provincia_zurich = null;
+        $zurichLocalidad = null;
+        try {
+            $provincia_zurich = obtener_provincia_zurich($provincia_sanitized, $token);
+            if ($provincia_zurich) {
+                $localidades_zurich = obtener_localidad_zurich(sanitize_text_field($cp), $provincia_zurich, $token);
+                if ($localidades_zurich && is_array($localidades_zurich)) {
+                    $result_zurich = compare_strings($cpName, $localidades_zurich);
+                    $zurichLocalidad = isset($result_zurich["Value"]) ? $result_zurich["Value"] : null;
+                }
+            }
+        } catch (Exception $e) {
+            error_log("Error obteniendo datos de Zurich: " . $e->getMessage());
+            $zurichLocalidad = null;
+        }
+
+        // Validaciones para Experta
+        $provincia_experta = null;
+        $expertaLocalidad = null;
+        try {
+            $provincia_experta = obtener_provincia_experta($provincia_sanitized, $token);
+            if ($provincia_experta) {
+                $localidades_experta = obtener_localidad_experta(sanitize_text_field($cp), $provincia_experta, $token);
+                if ($localidades_experta && is_array($localidades_experta)) {
+                    $result_experta = compare_strings($cpName, $localidades_experta);
+                    $expertaLocalidad = isset($result_experta["Value"]) ? $result_experta["Value"] : null;
+                }
+            }
+        } catch (Exception $e) {
+            error_log("Error obteniendo datos de Experta: " . $e->getMessage());
+            $expertaLocalidad = null;
+        }
 
         // Validar fecha actual
         try {
@@ -103,191 +151,102 @@ $edad = $fechaNacimientoDate->diff($hoy)->y;
 
 $menor25anos = $edad < 25 ? 1 : 2;
 
-       $url_cotizar = 'https://quickbi4.norden.com.ar/api_externa/autos/cotizador/cotizar';
+        $url_cotizar = 'https://quickbi4.norden.com.ar/api_externa/autos/cotizador/cotizar';
 
-$generales = [
-    "ProductorVendedor" => "208",
-    "Año" => $anio,
-    "CeroKm" => (sanitize_text_field($_POST['condicion']) == "0km"),
-    "CodVehiculoExterno" => sanitize_text_field($_POST['modelo']),
-    "Provincia" => $provincia_sanitized,
-    "Localidad" => $intId,
-    "MedioDePago" => "T",
-    "TipoFacturacion" => "M",
-    "TipoIva" => "CF",
-    "TipoPersona" => "P",
-    "FechaNacimiento" => $fecha_nac,
-    "Sexo" => sanitize_text_field($_POST['sexo']),
-    "EstadoCivil" => sanitize_text_field($_POST['estado_civil']),
-    "SnGNC" => (sanitize_text_field($_POST['gnc']) == "SI" ? 'S' : "N"),
-    "ValuacionGNC" => ""
-];
-
-// Parametrización por aseguradora
-$aseguradoras = [
-    "Sancor" => [
-        "ClausulaAjuste" => "0",
-        "NeumaticosAuxiliares" => "1",
-        "Garage" => "1",
-        "KilometrosAnuales" => "1",
-        "TipoIva" => "4",
-        "PlanDePago" => "1",
-        "FechaEmisionValor" => $fechaActual,
-        "Provincia" => $prov_codigos["sancor"],
-        "Localidad" => $localidades["sancor"],
-        "Menor25Años" => $menor25anos,
-        "DescuentoEspecial" => "0",
-        "TipoFacturacionCustom" => "M",
-        "Deducible" => "0",
-        "DescuentoPromocional" => "0",
-    ],
-    "Zurich" => [
-        "Beneficio" => "1",
-        "ClausulaAjuste" => "0",
-        "Descuento" => "10",
-        "Comision" => "10",
-        "DescuentoComision" => "10",
-        "PlanDePago" => "91",
-        "Rastreador" => "0",
-        "TipoIva" => "1",
-        "EstadoCivil" => "1",
-        "Provincia" => $prov_codigos["zurich"],
-        "IdPlan" => "350",
-        "Localidad" => $localidades["zurich"],
-        "Asistencia" => "31",
-        "TipoFacturacionCustom" => "M"
-    ],
-    "SanCristobal" => [
-        "TipoFacturacionCustom" => "",
-        "TipoDocumento" => sanitize_text_field($_POST['tipo_doc']),
-        "NroDocumento" => $nro_doc,
-        "FechaInicioVigencia" => $fechaActual,
-        "CantidadCuotas" => "12",
-        "ClausulaAjuste" => "10",
-        "AlternativaComercial" => "5",
-        "SnGPS" => false,
-        "GrupoAfinidad" => "pc:50502"
-    ],
-    "Experta" => [
-        "Localidad" => $localidades["experta"],
-        "Comision" => "EX0",
-        "FechaInicioVigencia" => $fechaActual,
-        "TipoFacturacionCustom" => "M",
-        "PlanPago" => "1"
-    ]
-];
-
-// Preparar multi-cURL
-$multiHandle = curl_multi_init();
-$curlHandles = [];
-$responses = [];
-
-foreach ($aseguradoras as $aseguradora => $parametros) {
-    $body = [
-        "ParametrosGenerales" => $generales,
-        "ParametrosEspecificos" => [
-            $aseguradora => $parametros
-        ]
-    ];
-
-    $ch = curl_init($url_cotizar);
-    curl_setopt_array($ch, [
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_TIMEOUT => 100,
-        CURLOPT_POST => true,
-        CURLOPT_POSTFIELDS => json_encode($body),
-        CURLOPT_HTTPHEADER => [
-            'Authorization: Bearer ' . $token,
-            'Content-Type: application/json'
-        ]
-    ]);
-
-    curl_multi_add_handle($multiHandle, $ch);
-    $curlHandles[$aseguradora] = $ch;
-}
-
-// Ejecutar en paralelo
-$running = null;
-do {
-    $status = curl_multi_exec($multiHandle, $running);
-    if ($status != CURLM_OK) {
-        break;
-    }
-
-    if (curl_multi_select($multiHandle) === -1) {
-        usleep(100); // Espera mínima para evitar CPU alta
-    }
-} while ($running > 0);
-
-// Recoger las respuestas con manejo de errores
-foreach ($curlHandles as $aseguradora => $ch) {
-    $result = curl_multi_getcontent($ch);
-    $error = curl_error($ch);
-    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-
-    if ($error || $httpCode !== 200) {
-        $responses[$aseguradora] = [
-            'error' => $error,
-            'http_code' => $httpCode,
-            'response' => $result
+        $bodyReq = [
+            "ParametrosGenerales" => [
+                "ProductorVendedor" => "208",
+                "Año" => $anio,
+                "CeroKm" => (sanitize_text_field($_POST['condicion']) == "0km"),
+                "CodVehiculoExterno" => sanitize_text_field($_POST['modelo']),
+                "Provincia" => $provincia_sanitized,
+                "Localidad" => $intId,
+                "MedioDePago" => "T",
+                "TipoFacturacion" => "M",
+                "TipoIva" => "CF",
+                "TipoPersona" => "P",
+                "FechaNacimiento" => $fecha_nac,
+                "Sexo" => sanitize_text_field($_POST['sexo']),
+                "EstadoCivil" => sanitize_text_field($_POST['estado_civil']),
+                "SnGNC" => (sanitize_text_field($_POST['gnc']) == "SI" ? 'S' : "N"),
+                "ValuacionGNC" => ""
+            ],
+            "ParametrosEspecificos" => [
+                "Sancor" => [
+                    "ClausulaAjuste" => "0",
+                    "NeumaticosAuxiliares" => "1",
+                    "Garage" => "1",
+                    "KilometrosAnuales" => "1",
+                    "TipoIva" => "4",
+                    "PlanDePago" => "1",
+                    "FechaEmisionValor" => $fechaActual,
+                    "Provincia" => $provincia_sancor,
+                    "Localidad" => $sancorLocalidad,
+                    "Menor25Años" => $menor25anos,
+                    "DescuentoEspecial" => "0",
+                    "TipoFacturacionCustom" => "M",
+                    "Deducible" => "0",
+                    "DescuentoPromocional" => "0",
+                ],
+                "Zurich" => [
+                    "Beneficio" => "1",
+                    "ClausulaAjuste" => "0",
+                    "Descuento" => "10",
+                    "Comision" => "10",
+                    "DescuentoComision" => "10",
+                    "PlanDePago" => "91",
+                    "Rastreador" => "0",
+                    "TipoIva" => "1",
+                    "EstadoCivil" => "1",
+                    "Provincia" => $provincia_zurich,
+                    "IdPlan" => "350",
+                    "Localidad" => $zurichLocalidad,
+                    "Asistencia" => "31",
+                    "TipoFacturacionCustom" => "M"
+                ],
+                "SanCristobal" => [
+                    "TipoFacturacionCustom" => "",
+                    "TipoDocumento" => sanitize_text_field($_POST['tipo_doc']),
+                    "NroDocumento" => $nro_doc,
+                    "FechaInicioVigencia" => $fechaActual,
+                    "CantidadCuotas" => "12",
+                    "ClausulaAjuste" => "10",
+                    "AlternativaComercial" => "5",
+                    "SnGPS" => false,
+                    "GrupoAfinidad" => "pc:50502"
+                ],
+                "Experta" => [
+                    "Localidad" => $expertaLocalidad,
+                    "Comision" => "EX0",
+                    "FechaInicioVigencia" => $fechaActual,
+                    "TipoFacturacionCustom" => "M",
+                    "PlanPago" => "1"
+                ]
+            ]
         ];
-    } else {
-        $data = json_decode($result, true);
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            $responses[$aseguradora] = [
-                'json_error' => json_last_error_msg(),
-                'response' => $result
-            ];
-        } else {
-            $responses[$aseguradora] = $data;
+
+        $args = [
+            'body' => json_encode($bodyReq),
+            'headers' => [
+                'Authorization' => 'Bearer ' . $token,
+                'Content-Type' => 'application/json',
+            ],
+            'timeout' => 100,
+        ];
+
+        $response = wp_remote_post($url_cotizar, $args);
+
+        // Validar respuesta HTTP
+        if (is_wp_error($response)) {
+            return '<p>Error: No se pudo conectar con el servicio de cotización.</p>';
         }
-    }
 
-    curl_multi_remove_handle($multiHandle, $ch);
-    curl_close($ch);
-}
+        $http_code = wp_remote_retrieve_response_code($response);
+        if ($http_code !== 200) {
+            return '<p>Error: El servicio de cotización respondió con código ' . $http_code . '</p>';
+        }
 
-curl_multi_close($multiHandle);
-
-
-$allCotizaciones = [];
-
-foreach ($responses as $response) {
-    if (isset($response['Data']['Cotizaciones'])) {
-        $allCotizaciones = array_merge($allCotizaciones, $response['Data']['Cotizaciones']);
-    }
-}
-
-$body = [
-    'Data' => [
-        'Cotizaciones' => array_values($allCotizaciones)
-    ]
-];
-
-$errores = [];
-
-
-foreach ($curlHandles as $aseguradora => $ch) {
-    $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    $error_msg = curl_error($ch);
-
-    if ($error_msg || $http_code !== 200) {
-        $errores[] = "<p>Error en $aseguradora: " . ($error_msg ?: "Código HTTP $http_code") . "</p>";
-        unset($responses[$aseguradora]); // quitamos esa cotización del resultado
-    }
-}
-
-// Si todas fallaron
-if (empty($responses)) {
-    return '<p>Error: No se pudo conectar con ninguna aseguradora.</p>' . implode('', $errores);
-}
-
-// Si alguna falló pero otras funcionaron
-if (!empty($errores)) {
-    // Podés loguearlas o mostrarlas según tu necesidad
-    // return implode('', $errores); // para mostrar errores parciales
-}
-
+        $body = json_decode(wp_remote_retrieve_body($response), true);
 
         // Validar estructura de la respuesta
         if (!$body || !isset($body['Data']) || !isset($body['Data']['Cotizaciones'])) {
@@ -328,6 +287,15 @@ if (!empty($errores)) {
             if (!isset($aseguradora['Aseguradora'])) {
                 continue;
             }
+
+
+            // // Omitir resultados si la compañía es Sancor y no tiene coberturas
+            // if (
+            //     $aseguradora['Aseguradora'] === 'Sancor' &&
+            //     empty($aseguradora['Coberturas'])
+            // ) {
+            //     continue;
+            // }
 
             $nombre_aseguradora = $aseguradora["Aseguradora"];
 
