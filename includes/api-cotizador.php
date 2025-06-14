@@ -253,7 +253,7 @@ function resultado_cotizador_auto()
 
         $response = wp_remote_post($url_cotizar, $args);
 
-        $BodyEnd = microtime(true);
+        // $BodyEnd = microtime(true);
 
         // $ResponseStart = microtime(true);
 
@@ -280,7 +280,7 @@ function resultado_cotizador_auto()
             return '<p>No se encontraron cotizaciones disponibles para los datos proporcionados.</p>';
         }
 
-        $CotizarEnd = microtime(true);
+        // $CotizarEnd = microtime(true);
 
         ob_start();
 
