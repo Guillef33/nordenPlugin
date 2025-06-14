@@ -3,44 +3,51 @@
 if (!defined('ABSPATH')) exit;
 
 // Clase para manejar mediciones de tiempo
-class TimeMeasurer {
+class TimeMeasurer
+{
     private static $times = [];
     private static $start_times = [];
-    
-    public static function start($key) {
+
+    public static function start($key)
+    {
         self::$start_times[$key] = microtime(true);
     }
-    
-    public static function end($key) {
+
+    public static function end($key)
+    {
         if (isset(self::$start_times[$key])) {
             $execution_time = microtime(true) - self::$start_times[$key];
             self::$times[$key] = $execution_time;
-            
+
             // Log del tiempo (opcional, para debug)
             error_log("Tiempo de ejecución [$key]: " . number_format($execution_time, 4) . " segundos");
-            
+
             return $execution_time;
         }
         return false;
     }
-    
-    public static function getTimes() {
+
+    public static function getTimes()
+    {
         return self::$times;
     }
-    
-    public static function getTotalTime() {
+
+    public static function getTotalTime()
+    {
         return array_sum(self::$times);
     }
-    
-    public static function reset() {
+
+    public static function reset()
+    {
         self::$times = [];
         self::$start_times = [];
     }
 }
 
-function validar_datos_iniciales() {
+function validar_datos_iniciales()
+{
     TimeMeasurer::start('validacion_inicial');
-    
+
     // Validar que sea una petición POST
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
         TimeMeasurer::end('validacion_inicial');
@@ -121,9 +128,10 @@ function validar_datos_iniciales() {
     return null; // Sin errores
 }
 
-function obtener_datos_sancor($provincia_sanitized, $cp, $cpName, $token) {
+function obtener_datos_sancor($provincia_sanitized, $cp, $cpName, $token)
+{
     TimeMeasurer::start('sancor_datos');
-    
+
     $provincia_sancor = null;
     $sancorLocalidad = null;
     try {
@@ -139,18 +147,19 @@ function obtener_datos_sancor($provincia_sanitized, $cp, $cpName, $token) {
         error_log("Error obteniendo datos de Sancor: " . $e->getMessage());
         $sancorLocalidad = null;
     }
-    
+
     TimeMeasurer::end('sancor_datos');
-    
+
     return [
         'provincia' => $provincia_sancor,
         'localidad' => $sancorLocalidad
     ];
 }
 
-function obtener_datos_zurich($provincia_sanitized, $cp, $cpName, $token) {
+function obtener_datos_zurich($provincia_sanitized, $cp, $cpName, $token)
+{
     TimeMeasurer::start('zurich_datos');
-    
+
     $provincia_zurich = null;
     $zurichLocalidad = null;
     try {
@@ -166,18 +175,19 @@ function obtener_datos_zurich($provincia_sanitized, $cp, $cpName, $token) {
         error_log("Error obteniendo datos de Zurich: " . $e->getMessage());
         $zurichLocalidad = null;
     }
-    
+
     TimeMeasurer::end('zurich_datos');
-    
+
     return [
         'provincia' => $provincia_zurich,
         'localidad' => $zurichLocalidad
     ];
 }
 
-function obtener_datos_experta($provincia_sanitized, $cp, $cpName, $token) {
+function obtener_datos_experta($provincia_sanitized, $cp, $cpName, $token)
+{
     TimeMeasurer::start('experta_datos');
-    
+
     $provincia_experta = null;
     $expertaLocalidad = null;
     try {
@@ -193,16 +203,17 @@ function obtener_datos_experta($provincia_sanitized, $cp, $cpName, $token) {
         error_log("Error obteniendo datos de Experta: " . $e->getMessage());
         $expertaLocalidad = null;
     }
-    
+
     TimeMeasurer::end('experta_datos');
-    
+
     return [
         'provincia' => $provincia_experta,
         'localidad' => $expertaLocalidad
     ];
 }
 
-function resultado_cotizador_auto() {
+function resultado_cotizador_auto()
+{
     try {
         // Resetear mediciones previas
         TimeMeasurer::reset();
@@ -218,7 +229,7 @@ function resultado_cotizador_auto() {
         TimeMeasurer::start('obtener_token');
         $token = obtener_token_norden();
         TimeMeasurer::end('obtener_token');
-        
+
         if (empty($token)) {
             return '<p>Error: No se pudo obtener el token de autorización.</p>';
         }
@@ -335,6 +346,8 @@ function resultado_cotizador_auto() {
 
         // Realizar petición HTTP
         TimeMeasurer::start('peticion_cotizacion');
+        TimeMeasurer::start('args');
+
         $args = [
             'body' => json_encode($bodyReq),
             'headers' => [
@@ -353,8 +366,11 @@ function resultado_cotizador_auto() {
             'stream' => false,      // No usar streaming para esta petición
             'cookies' => array()    // No enviar cookies
         ];
+        TimeMeasurer::end('args');
 
+        TimeMeasurer::start('remote post');
         $response = wp_remote_post($url_cotizar, $args);
+        TimeMeasurer::end('remote post');
         TimeMeasurer::end('peticion_cotizacion');
 
         // Validar respuesta HTTP
@@ -374,32 +390,36 @@ function resultado_cotizador_auto() {
         if (!$body || !isset($body['Data']) || !isset($body['Data']['Cotizaciones'])) {
             return '<p>Error: Respuesta del servicio de cotización no válida.</p>';
         }
-        
+
         if (!is_array($body['Data']['Cotizaciones']) || empty($body['Data']['Cotizaciones'])) {
             return '<p>No se encontraron cotizaciones disponibles para los datos proporcionados.</p>';
         }
-        
+
         ob_start();
 
         // Lista de planes permitidos por aseguradora
         $planes_permitidos = [
-            'Sancor' => ['PREMIUM MAX', 'TODO RIESGO 2%', 'TODO RIESGO 4%'],
-            'Zurich' => [
+            'Sancor' =>
+            ['PREMIUM MAX', 'TODO RIESGO 2%', 'TODO RIESGO 4%'],
+            'Zurich' =>
+            [
                 'CG PREMIUM CON GRANIZO',
                 'TODO RIESGO CON FRANQUICIA – PLAN D2 2%',
                 'TODO RIESGO CON FRANQUICIA – PLAN DV 4%',
             ],
-            'San Cristobal' => ['CM', 'TODO RIESGO 2%', 
-            'Todo riesgo con franq. del 5',
-            'Todo riesgo con franq. del 2', 
-        ],
+            'San Cristobal' => [
+                'CM',
+                'TODO RIESGO 2%',
+                'Todo riesgo con franq. del 5',
+                'Todo riesgo con franq. del 2',
+            ],
             'Experta' => [
                 'PREMIUM MAX',
                 'TODO RIESGO 2%',
                 'TODO RIESGO 5%'
             ]
         ];
-        
+
         echo '<div class="aseguradoras-container">';
 
         foreach ($body["Data"]['Cotizaciones'] as $aseguradora) {
@@ -422,7 +442,7 @@ function resultado_cotizador_auto() {
             ];
 
             $logo_url = isset($logos[$nombre_aseguradora]) ? $logos[$nombre_aseguradora] : '';
-            
+
             if (!empty($aseguradora['Coberturas']) && is_array($aseguradora['Coberturas'])) {
                 echo '<div class="aseguradora">';
 
@@ -472,14 +492,14 @@ function resultado_cotizador_auto() {
             }
         }
         echo '</div>';
-        
+
         TimeMeasurer::end('procesar_respuesta');
         TimeMeasurer::end('total_proceso');
 
         // Log resumen de tiempos al final
         $tiempos = TimeMeasurer::getTimes();
         $tiempo_total = TimeMeasurer::getTotalTime();
-        
+
         error_log("=== RESUMEN DE TIEMPOS DE EJECUCIÓN ===");
         foreach ($tiempos as $funcion => $tiempo) {
             error_log(sprintf("%-20s: %s segundos", $funcion, number_format($tiempo, 4)));
@@ -488,7 +508,6 @@ function resultado_cotizador_auto() {
         error_log("=======================================");
 
         return ob_get_clean();
-
     } catch (Exception $e) {
         error_log("Error en resultado_cotizador_auto: " . $e->getMessage());
         return '<p>Error interno: No se pudo procesar la cotización.</p>';
@@ -496,22 +515,24 @@ function resultado_cotizador_auto() {
 }
 
 // Función auxiliar para obtener reporte de tiempos (opcional)
-function get_execution_times_report() {
+function get_execution_times_report()
+{
     $tiempos = TimeMeasurer::getTimes();
     if (empty($tiempos)) {
         return "No hay mediciones disponibles.";
     }
-    
+
     $reporte = "Tiempos de ejecución:\n";
     foreach ($tiempos as $funcion => $tiempo) {
         $reporte .= sprintf("- %s: %s segundos\n", $funcion, number_format($tiempo, 4));
     }
     $reporte .= sprintf("Total: %s segundos", number_format(TimeMeasurer::getTotalTime(), 4));
-    
+
     return $reporte;
 }
 
-function compare_strings($fraseObjetivo, $resultados) {
+function compare_strings($fraseObjetivo, $resultados)
+{
     $mejorSimilitud = -1;
     $mejorCoincidencia = null;
 
