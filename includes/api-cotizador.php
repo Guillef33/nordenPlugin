@@ -169,6 +169,7 @@ function resultado_cotizador_auto()
 
         $url_cotizar = 'https://quickbi4.norden.com.ar/api_externa/autos/cotizador/cotizar';
 
+        $BodyStart = microtime(true);
         $bodyReq = [
             "ParametrosGenerales" => [
                 "ProductorVendedor" => "208",
@@ -241,7 +242,7 @@ function resultado_cotizador_auto()
             ]
         ];
 
-        $args = [
+        $args =   $BodyStart = microtime(true); [
             'body' => json_encode($bodyReq),
             'headers' => [
                 'Authorization' => 'Bearer ' . $token,
@@ -251,6 +252,10 @@ function resultado_cotizador_auto()
         ];
 
         $response = wp_remote_post($url_cotizar, $args);
+
+        $BodyEnd = microtime(true);
+
+        $ResponseStart = microtime(true);
 
         // Validar respuesta HTTP
         if (is_wp_error($response)) {
@@ -263,6 +268,8 @@ function resultado_cotizador_auto()
         }
 
         $body = json_decode(wp_remote_retrieve_body($response), true);
+
+        $ResponseEnd = microtime(true);
 
         // Validar estructura de la respuesta
         if (!$body || !isset($body['Data']) || !isset($body['Data']['Cotizaciones'])) {
@@ -389,11 +396,9 @@ function resultado_cotizador_auto()
 
         echo "<pre>";
         echo "Tiempo total: " . round($fin - $inicio, 4) . " segundos\n";
-        // echo "Paso 1 (autenticación y validaciones): " . round($validacionesGeneralesStart - $validacionesGeneralesEnd, 4) . " segundos\n";
-        // echo "Paso 2 (Sancor): " . round($ProvinciasSancorStart - $ProvinciasSancorEnd, 4) . " segundos\n";
-        // echo "Paso 3 (Zurich): " . round($ProvinciasZurichStart - $ProvinciasZurichEnd, 4) . " segundos\n";
-        // echo "Paso 4 (Experta): " . round($ProvinciasExpertaStart - $ProvinciasExpertaEnd, 4) . " segundos\n";
-        echo "Paso 5 (Cotizador): " . round($CotizarStart - $CotizarEnd, 4) . " segundos\n";
+        echo "Paso 2 (Cotizador): " . round($CotizarStart - $CotizarEnd, 4) . " segundos\n";
+        echo "Body: " . round($BodyStart - $BodyEnd, 4) . " segundos\n";
+        echo "Response: " . round($ResponseStart - $ResponseEnd, 4) . " segundos\n";
 
         echo "</pre>";
 
