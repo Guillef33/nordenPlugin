@@ -272,23 +272,95 @@ function resultado_cotizador_auto()
         $url_cotizar = 'https://quickbi4.norden.com.ar/api_externa/autos/cotizador/cotizar';
 
         TimeMeasurer::start('preparar_datos_curl');
-            
+
+        $bodyReq = [
+            "ParametrosGenerales" => [
+                "ProductorVendedor" => "208",
+                "Año" => $anio,
+                "CeroKm" => (sanitize_text_field($_POST['condicion']) == "0km"),
+                "CodVehiculoExterno" => sanitize_text_field($_POST['modelo']),
+                "Provincia" => $provincia_sanitized,
+                "Localidad" => $intId,
+                "MedioDePago" => "T",
+                "TipoFacturacion" => "M",
+                "TipoIva" => "CF",
+                "TipoPersona" => "P",
+                "FechaNacimiento" => $fecha_nac,
+                "Sexo" => sanitize_text_field($_POST['sexo']),
+                "EstadoCivil" => sanitize_text_field($_POST['estado_civil']),
+                "SnGNC" => (sanitize_text_field($_POST['gnc']) == "SI" ? 'S' : "N"),
+                "ValuacionGNC" => ""
+            ],
+            "ParametrosEspecificos" => [
+                "Sancor" => [
+                    "ClausulaAjuste" => "0",
+                    "NeumaticosAuxiliares" => "1",
+                    "Garage" => "1",
+                    "KilometrosAnuales" => "1",
+                    "TipoIva" => "4",
+                    "PlanDePago" => "1",
+                    "FechaEmisionValor" => $fechaActual,
+                    "Provincia" => $datos_sancor['provincia'],
+                    "Localidad" => $datos_sancor['localidad'],
+                    "Menor25Años" => $menor25anos,
+                    "DescuentoEspecial" => "0",
+                    "TipoFacturacionCustom" => "M",
+                    "Deducible" => "0",
+                    "DescuentoPromocional" => "0",
+                ],
+                "Zurich" => [
+                    "Beneficio" => "1",
+                    "ClausulaAjuste" => "0",
+                    "Descuento" => "10",
+                    "Comision" => "10",
+                    "DescuentoComision" => "10",
+                    "PlanDePago" => "91",
+                    "Rastreador" => "0",
+                    "TipoIva" => "1",
+                    "EstadoCivil" => "1",
+                    "Provincia" => $datos_zurich['provincia'],
+                    "IdPlan" => "350",
+                    "Localidad" => $datos_zurich['localidad'],
+                    "Asistencia" => "31",
+                    "TipoFacturacionCustom" => "M"
+                ],
+                "SanCristobal" => [
+                    "TipoFacturacionCustom" => "",
+                    "TipoDocumento" => sanitize_text_field($_POST['tipo_doc']),
+                    "NroDocumento" => $nro_doc,
+                    "FechaInicioVigencia" => $fechaActual,
+                    "CantidadCuotas" => "12",
+                    "ClausulaAjuste" => "10",
+                    "AlternativaComercial" => "5",
+                    "SnGPS" => false,
+                    "GrupoAfinidad" => "pc:50502"
+                ],
+                "Experta" => [
+                    "Localidad" => $datos_experta['localidad'],
+                    "Comision" => "EX0",
+                    "FechaInicioVigencia" => $fechaActual,
+                    "TipoFacturacionCustom" => "M",
+                    "PlanPago" => "1"
+                ]
+            ]
+        ];
+
         // Convertir el body a JSON
-            $json_body = json_encode($bodyReq, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-            $body_size = strlen($json_body);
-    
+        $json_body = json_encode($bodyReq, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        $body_size = strlen($json_body);
+
         TimeMeasurer::end('preparar_datos');
-    
+
         // Realizar petición HTTP
         TimeMeasurer::start('peticion_cotizacion');
-        
+
         // Log del tamaño del body (manteniendo formato original)
         error_log("Cotización POST: " . $body_size . " chars - " . ($body_size > 1024 ? "GRANDE" : "OK"));
         error_log("POST Body: " . $json_body);
-        
+
         // Inicializar cURL
         $ch = curl_init();
-        
+
         // Configuración básica de cURL
         curl_setopt_array($ch, [
             CURLOPT_URL => $url_cotizar,
@@ -306,7 +378,7 @@ function resultado_cotizador_auto()
             CURLOPT_FRESH_CONNECT => true, // Equivalente a Connection: close
             CURLOPT_FORBID_REUSE => true,  // No reutilizar conexión
         ]);
-        
+
         // Headers base
         $headers = [
             'Authorization: Bearer ' . $token,
@@ -315,36 +387,36 @@ function resultado_cotizador_auto()
             'Cache-Control: no-cache',
             'Content-Length: ' . $body_size
         ];
-        
+
         // **FUNCIONALIDAD ESPECIAL**: Para bodies grandes, agregar header personalizado
         if ($body_size > 1024) {
             $headers[] = 'X-Large-Payload: true';
             $headers[] = 'X-Payload-Size: ' . $body_size;
-            
+
             // Configuraciones adicionales para payloads grandes
             curl_setopt($ch, CURLOPT_TIMEOUT, 60); // Aumentar timeout
             curl_setopt($ch, CURLOPT_TCP_NODELAY, true); // Mejorar performance
             curl_setopt($ch, CURLOPT_BUFFERSIZE, 65536); // Buffer más grande
-            
+
             error_log("cURL: Configuración especial para payload grande activada");
         }
-        
+
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        
+
         // Ejecutar la petición
         TimeMeasurer::start('remote post');
         $response = curl_exec($ch);
         TimeMeasurer::end('remote post');
-        
+
         // Obtener información de la petición
         $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $curl_error = curl_error($ch);
         $curl_errno = curl_errno($ch);
         $total_time = curl_getinfo($ch, CURLINFO_TOTAL_TIME);
         $size_download = curl_getinfo($ch, CURLINFO_SIZE_DOWNLOAD);
-        
+
         curl_close($ch);
-        
+
         TimeMeasurer::end('peticion_cotizacion');
 
         // Validar respuesta HTTP
