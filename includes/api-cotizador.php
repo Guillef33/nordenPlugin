@@ -369,6 +369,8 @@ function resultado_cotizador_auto()
         TimeMeasurer::end('args');
 
         TimeMeasurer::start('remote post');
+        error_log("Cotización POST: " . strlen($args['body']) . " chars - " . (strlen($args['body']) > 1024 ? "GRANDE" : "OK"));
+
         $response = wp_remote_post($url_cotizar, $args);
         TimeMeasurer::end('remote post');
         TimeMeasurer::end('peticion_cotizacion');
