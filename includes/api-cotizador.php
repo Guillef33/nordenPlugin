@@ -340,8 +340,18 @@ function resultado_cotizador_auto() {
             'headers' => [
                 'Authorization' => 'Bearer ' . $token,
                 'Content-Type' => 'application/json',
+                'Connection' => 'close', // Cierra conexión después de la respuesta
+                'Cache-Control' => 'no-cache'
             ],
-            'timeout' => 100,
+            'timeout' => 30,
+            'redirection' => 3,     // Máximo 3 redirects
+            'httpversion' => '1.1', // Usar HTTP/1.1 específicamente
+            'blocking' => true,     // Petición síncrona
+            'compress' => true,     // Comprimir respuesta si es posible
+            'decompress' => true,   // Descomprimir respuesta automáticamente
+            'sslverify' => true,    // Verificar SSL (cambiar a false solo si hay problemas)
+            'stream' => false,      // No usar streaming para esta petición
+            'cookies' => array()    // No enviar cookies
         ];
 
         $response = wp_remote_post($url_cotizar, $args);
