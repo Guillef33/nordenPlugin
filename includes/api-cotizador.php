@@ -1,11 +1,21 @@
 <?php
 
 if (!defined('ABSPATH')) exit;
-function resultado_cotizador_auto() {
 
-    //  echo '<pre>';
-    // print_r($_POST);
-    // echo '</pre>';
+function resultado_cotizador_auto() {
+    // Iniciar timer general
+    $tiempo_inicio = microtime(true);
+    $debug_log = [];
+    
+    // Función helper para logging
+    function log_tiempo($mensaje, &$debug_log, $tiempo_inicio) {
+        $tiempo_actual = microtime(true);
+        $tiempo_transcurrido = round(($tiempo_actual - $tiempo_inicio) * 1000, 2);
+        $debug_log[] = "[{$tiempo_transcurrido}ms] $mensaje";
+        error_log("COTIZADOR DEBUG: [{$tiempo_transcurrido}ms] $mensaje");
+    }
+    
+    log_tiempo("Inicio de función", $debug_log, $tiempo_inicio);
     
     // Validar que sea una petición POST
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -14,7 +24,10 @@ function resultado_cotizador_auto() {
 
     try {
         // Validar y obtener token
+        log_tiempo("Iniciando obtención de token", $debug_log, $tiempo_inicio);
         $token = obtener_token_norden();
+        log_tiempo("Token obtenido", $debug_log, $tiempo_inicio);
+        
         if (empty($token)) {
             return '<p>Error: No se pudo obtener el token de autorización.</p>';
         }
@@ -45,21 +58,30 @@ function resultado_cotizador_auto() {
         }
 
         $provincia_sanitized = sanitize_text_field($_POST['provincia']);
+        log_tiempo("Validaciones básicas completadas", $debug_log, $tiempo_inicio);
 
         // Validaciones para Sancor
         $provincia_sancor = null;
         $sancorLocalidad = null;
         try {
+            log_tiempo("Iniciando consulta Sancor - Provincia", $debug_log, $tiempo_inicio);
             $provincia_sancor = obtener_provincia_sancor($provincia_sanitized, $token);
+            log_tiempo("Provincia Sancor obtenida", $debug_log, $tiempo_inicio);
+            
             if ($provincia_sancor) {
+                log_tiempo("Iniciando consulta Sancor - Localidades", $debug_log, $tiempo_inicio);
                 $localidades_sancor = obtener_localidad_sancor(sanitize_text_field($cp), $provincia_sancor, $token);
+                log_tiempo("Localidades Sancor obtenidas", $debug_log, $tiempo_inicio);
+                
                 if ($localidades_sancor && is_array($localidades_sancor)) {
                     $result_sancor = compare_strings($cpName, $localidades_sancor);
                     $sancorLocalidad = isset($result_sancor["Value"]) ? $result_sancor["Value"] : null;
                 }
             }
+            log_tiempo("Procesamiento Sancor completado", $debug_log, $tiempo_inicio);
         } catch (Exception $e) {
             error_log("Error obteniendo datos de Sancor: " . $e->getMessage());
+            log_tiempo("Error en Sancor: " . $e->getMessage(), $debug_log, $tiempo_inicio);
             $sancorLocalidad = null;
         }
 
@@ -67,16 +89,24 @@ function resultado_cotizador_auto() {
         $provincia_zurich = null;
         $zurichLocalidad = null;
         try {
+            log_tiempo("Iniciando consulta Zurich - Provincia", $debug_log, $tiempo_inicio);
             $provincia_zurich = obtener_provincia_zurich($provincia_sanitized, $token);
+            log_tiempo("Provincia Zurich obtenida", $debug_log, $tiempo_inicio);
+            
             if ($provincia_zurich) {
+                log_tiempo("Iniciando consulta Zurich - Localidades", $debug_log, $tiempo_inicio);
                 $localidades_zurich = obtener_localidad_zurich(sanitize_text_field($cp), $provincia_zurich, $token);
+                log_tiempo("Localidades Zurich obtenidas", $debug_log, $tiempo_inicio);
+                
                 if ($localidades_zurich && is_array($localidades_zurich)) {
                     $result_zurich = compare_strings($cpName, $localidades_zurich);
                     $zurichLocalidad = isset($result_zurich["Value"]) ? $result_zurich["Value"] : null;
                 }
             }
+            log_tiempo("Procesamiento Zurich completado", $debug_log, $tiempo_inicio);
         } catch (Exception $e) {
             error_log("Error obteniendo datos de Zurich: " . $e->getMessage());
+            log_tiempo("Error en Zurich: " . $e->getMessage(), $debug_log, $tiempo_inicio);
             $zurichLocalidad = null;
         }
 
@@ -84,24 +114,32 @@ function resultado_cotizador_auto() {
         $provincia_experta = null;
         $expertaLocalidad = null;
         try {
+            log_tiempo("Iniciando consulta Experta - Provincia", $debug_log, $tiempo_inicio);
             $provincia_experta = obtener_provincia_experta($provincia_sanitized, $token);
+            log_tiempo("Provincia Experta obtenida", $debug_log, $tiempo_inicio);
+            
             if ($provincia_experta) {
+                log_tiempo("Iniciando consulta Experta - Localidades", $debug_log, $tiempo_inicio);
                 $localidades_experta = obtener_localidad_experta(sanitize_text_field($cp), $provincia_experta, $token);
+                log_tiempo("Localidades Experta obtenidas", $debug_log, $tiempo_inicio);
+                
                 if ($localidades_experta && is_array($localidades_experta)) {
                     $result_experta = compare_strings($cpName, $localidades_experta);
                     $expertaLocalidad = isset($result_experta["Value"]) ? $result_experta["Value"] : null;
                 }
             }
+            log_tiempo("Procesamiento Experta completado", $debug_log, $tiempo_inicio);
         } catch (Exception $e) {
             error_log("Error obteniendo datos de Experta: " . $e->getMessage());
+            log_tiempo("Error en Experta: " . $e->getMessage(), $debug_log, $tiempo_inicio);
             $expertaLocalidad = null;
         }
 
         // Validar fecha actual
         try {
             $fecha = new DateTime();
-$fecha->modify('+1 day');
-$fechaActual = $fecha->format('Y-m-d') . ' 00:00:00';
+            $fecha->modify('+1 day');
+            $fechaActual = $fecha->format('Y-m-d') . ' 00:00:00';
         } catch (Exception $e) {
             return '<p>Error: No se pudo generar la fecha actual.</p>';
         }
@@ -143,13 +181,13 @@ $fechaActual = $fecha->format('Y-m-d') . ' 00:00:00';
             return '<p>Error: Número de documento no válido.</p>';
         }
 
-$fechaNacimiento = $_POST['fecha_nac']; // por ejemplo: "2002-06-06"
-$fechaNacimientoDate = new DateTime($fechaNacimiento);
-$hoy = new DateTime();
+        $fechaNacimiento = $_POST['fecha_nac'];
+        $fechaNacimientoDate = new DateTime($fechaNacimiento);
+        $hoy = new DateTime();
+        $edad = $fechaNacimientoDate->diff($hoy)->y;
+        $menor25anos = $edad < 25 ? 1 : 2;
 
-$edad = $fechaNacimientoDate->diff($hoy)->y;
-
-$menor25anos = $edad < 25 ? 1 : 2;
+        log_tiempo("Preparando request de cotización", $debug_log, $tiempo_inicio);
 
         $url_cotizar = 'https://quickbi4.norden.com.ar/api_externa/autos/cotizador/cotizar';
 
@@ -234,29 +272,38 @@ $menor25anos = $edad < 25 ? 1 : 2;
             'timeout' => 100,
         ];
 
+        log_tiempo("Enviando request de cotización", $debug_log, $tiempo_inicio);
         $response = wp_remote_post($url_cotizar, $args);
+        log_tiempo("Response de cotización recibido", $debug_log, $tiempo_inicio);
 
         // Validar respuesta HTTP
         if (is_wp_error($response)) {
+            $error_msg = $response->get_error_message();
+            log_tiempo("Error en request: " . $error_msg, $debug_log, $tiempo_inicio);
             return '<p>Error: No se pudo conectar con el servicio de cotización.</p>';
         }
 
         $http_code = wp_remote_retrieve_response_code($response);
         if ($http_code !== 200) {
+            log_tiempo("HTTP Error: Código " . $http_code, $debug_log, $tiempo_inicio);
             return '<p>Error: El servicio de cotización respondió con código ' . $http_code . '</p>';
         }
 
+        log_tiempo("Procesando respuesta JSON", $debug_log, $tiempo_inicio);
         $body = json_decode(wp_remote_retrieve_body($response), true);
 
         // Validar estructura de la respuesta
         if (!$body || !isset($body['Data']) || !isset($body['Data']['Cotizaciones'])) {
+            log_tiempo("Error: Estructura de respuesta inválida", $debug_log, $tiempo_inicio);
             return '<p>Error: Respuesta del servicio de cotización no válida.</p>';
         }
         
         if (!is_array($body['Data']['Cotizaciones']) || empty($body['Data']['Cotizaciones'])) {
+            log_tiempo("No se encontraron cotizaciones", $debug_log, $tiempo_inicio);
             return '<p>No se encontraron cotizaciones disponibles para los datos proporcionados.</p>';
         }
         
+        log_tiempo("Iniciando generación de HTML", $debug_log, $tiempo_inicio);
         ob_start();
 
         // Lista de planes permitidos por aseguradora
@@ -266,36 +313,25 @@ $menor25anos = $edad < 25 ? 1 : 2;
                 'CG PREMIUM CON GRANIZO',
                 'TODO RIESGO CON FRANQUICIA – PLAN D2 2%',
                 'TODO RIESGO CON FRANQUICIA – PLAN DV 4%',
-                // 'TR CON FRANQUICIA – TALLER ZURICH (DZ)'
             ],
             'San Cristobal' => ['CM', 'TODO RIESGO 2%', 
-            'Todo riesgo con franq. del 5',
-            'Todo riesgo con franq. del 2', 
-            // "D102", "D101"
-        ],
+                'Todo riesgo con franq. del 5',
+                'Todo riesgo con franq. del 2', 
+            ],
             'Experta' => [
                 'PREMIUM MAX',
-                // 'TODO RIESGO FRANQ. VARIABLE XL - 1%',
                 'TODO RIESGO 2%',
                 'TODO RIESGO 5%'
             ]
         ];
-    echo '<div class="aseguradoras-container">';
+        
+        echo '<div class="aseguradoras-container">';
 
         foreach ($body["Data"]['Cotizaciones'] as $aseguradora) {
             // Validar estructura de aseguradora
             if (!isset($aseguradora['Aseguradora'])) {
                 continue;
             }
-
-
-            // // Omitir resultados si la compañía es Sancor y no tiene coberturas
-            // if (
-            //     $aseguradora['Aseguradora'] === 'Sancor' &&
-            //     empty($aseguradora['Coberturas'])
-            // ) {
-            //     continue;
-            // }
 
             $nombre_aseguradora = $aseguradora["Aseguradora"];
 
@@ -311,63 +347,76 @@ $menor25anos = $edad < 25 ? 1 : 2;
             ];
 
             $logo_url = isset($logos[$nombre_aseguradora]) ? $logos[$nombre_aseguradora] : '';
-                if (!empty($aseguradora['Coberturas']) && is_array($aseguradora['Coberturas'])) {
-                    echo '<div class="aseguradora">';
+            
+            if (!empty($aseguradora['Coberturas']) && is_array($aseguradora['Coberturas'])) {
+                echo '<div class="aseguradora">';
 
-                    // Mostrar logo si existe
-                    if (!empty($logo_url)) {
-                        echo '<div class="aseguradora-logo-wrapper"> <img src="' . esc_url($logo_url) . '" alt="' . esc_attr($nombre_aseguradora) . ' logo" class="aseguradora-logo"></div>';
+                // Mostrar logo si existe
+                if (!empty($logo_url)) {
+                    echo '<div class="aseguradora-logo-wrapper"> <img src="' . esc_url($logo_url) . '" alt="' . esc_attr($nombre_aseguradora) . ' logo" class="aseguradora-logo"></div>';
+                }
+
+                echo '<ul class="coberturas-list">';
+
+                foreach ($aseguradora['Coberturas'] as $index => $coti) {
+                    // Validar estructura de cobertura
+                    if (!isset($coti['DescCobertura']) || !isset($coti['Prima'])) {
+                        continue;
                     }
 
-                    echo '<ul class="coberturas-list">';
+                    $permitido = false;
 
-                    foreach ($aseguradora['Coberturas'] as $index => $coti) {
-                        // Validar estructura de cobertura
-                        if (!isset($coti['DescCobertura']) || !isset($coti['Prima'])) {
-                            continue;
+                    foreach ($planes_permitidos[$nombre_aseguradora] as $plan) {
+                        if (stripos($coti['DescCobertura'], $plan) !== false) {
+                            $permitido = true;
+                            break;
                         }
+                    }
 
-                      
-        $permitido = false;
+                    if ($permitido) {
+                        $id = 'cobertura_' . $index . '_' . md5($coti['DescCobertura']);
 
-        foreach ($planes_permitidos[$nombre_aseguradora] as $plan) {
-            if (stripos($coti['DescCobertura'], $plan) !== false) {
-                $permitido = true;
-                break;
+                        echo '<li class="cobertura-item">';
+                        echo '<div class="cobertura-content">';
+                        echo '<p>' . esc_html($coti['DescCobertura']) . '</p>';
+                        echo '<h5>$ ' . number_format((float) $coti['Prima'], 2, ',', '.') . '</h5>';
+
+                        echo '<a href="#"> 
+                            <span> 
+                                <img class="whatsapp-icon" src="' . plugin_dir_url(dirname(__FILE__)) . 'assets/whatsapp-icon.png" width="19px" height="19px" alt="icono-whatsapp" /> 
+                            </span>
+                            Contratar ahora
+                        </a>';
+                        echo '</div>';
+                        echo '</li>';
+                    }
+                }
+
+                echo '</ul>';
+                echo '</div>';
             }
         }
+        echo '</div>';
 
-        if ($permitido) {
-            $id = 'cobertura_' . $index . '_' . md5($coti['DescCobertura']);
-
-            echo '<li class="cobertura-item">';
-            echo '<div class="cobertura-content">';
-            echo '<p>' . esc_html($coti['DescCobertura']) . '</p>';
-            echo '<h5>$ ' . number_format((float) $coti['Prima'], 2, ',', '.') . '</h5>';
-
-                echo '<a href="#"> 
-                <span> 
-                    <img class="whatsapp-icon" src="' . plugin_dir_url(dirname(__FILE__)) . 'assets/whatsapp-icon.png" width="19px" height="19px" alt="icono-whatsapp" /> 
-                </span>
-                Contratar ahora
-            </a>';
-            echo '</div>';
-            echo '</li>';
-        }
-    }
-
-            echo '</ul>';
-            echo '</div>';
-        } else {
-            // echo '<p>No se encontraron coberturas para ' . esc_html($nombre_aseguradora) . '.</p>';
-        }
-    }
-    echo '</div>';
-
+        log_tiempo("HTML generado completamente", $debug_log, $tiempo_inicio);
+        
+        // Log del tiempo total
+        $tiempo_total = microtime(true) - $tiempo_inicio;
+        $debug_log[] = "TIEMPO TOTAL: " . round($tiempo_total * 1000, 2) . "ms";
+        error_log("COTIZADOR DEBUG: TIEMPO TOTAL: " . round($tiempo_total * 1000, 2) . "ms");
+        
+        // Mostrar debug info en HTML
+        echo '<div style="margin-top: 20px;">';
+        echo '<h3>Debug Info - Tiempos de Ejecución:</h3>';
+        echo '<pre style="background: #f4f4f4; padding: 10px; border-radius: 5px; font-size: 12px; max-height: 300px; overflow-y: auto;">';
+        echo implode("\n", $debug_log);
+        echo '</pre>';
+        echo '</div>';
 
         return ob_get_clean();
 
     } catch (Exception $e) {
+        log_tiempo("Exception: " . $e->getMessage(), $debug_log, $tiempo_inicio);
         error_log("Error en resultado_cotizador_auto: " . $e->getMessage());
         return '<p>Error interno: No se pudo procesar la cotización.</p>';
     }
