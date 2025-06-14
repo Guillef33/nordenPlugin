@@ -2,20 +2,61 @@
 
 if (!defined('ABSPATH')) exit;
 
+// Clase para manejar mediciones de tiempo
+class TimeMeasurer {
+    private static $times = [];
+    private static $start_times = [];
+    
+    public static function start($key) {
+        self::$start_times[$key] = microtime(true);
+    }
+    
+    public static function end($key) {
+        if (isset(self::$start_times[$key])) {
+            $execution_time = microtime(true) - self::$start_times[$key];
+            self::$times[$key] = $execution_time;
+            
+            // Log del tiempo (opcional, para debug)
+            error_log("Tiempo de ejecución [$key]: " . number_format($execution_time, 4) . " segundos");
+            
+            return $execution_time;
+        }
+        return false;
+    }
+    
+    public static function getTimes() {
+        return self::$times;
+    }
+    
+    public static function getTotalTime() {
+        return array_sum(self::$times);
+    }
+    
+    public static function reset() {
+        self::$times = [];
+        self::$start_times = [];
+    }
+}
+
 function validar_datos_iniciales() {
+    TimeMeasurer::start('validacion_inicial');
+    
     // Validar que sea una petición POST
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        TimeMeasurer::end('validacion_inicial');
         return '<p>Error: Método de petición no válido.</p>';
     }
 
     // Validar que exista codigo_postal
     if (!isset($_POST['codigo_postal']) || empty($_POST['codigo_postal'])) {
+        TimeMeasurer::end('validacion_inicial');
         return '<p>Error: Código postal no proporcionado.</p>';
     }
 
     // Validar formato del código postal
     $arr = explode(" - ", $_POST['codigo_postal']);
     if (count($arr) < 3) {
+        TimeMeasurer::end('validacion_inicial');
         return '<p>Error: Formato de código postal incorrecto. Debe ser: ID - CP - Nombre</p>';
     }
 
@@ -25,11 +66,13 @@ function validar_datos_iniciales() {
 
     // Validar que intId sea numérico
     if (!is_numeric($intId)) {
+        TimeMeasurer::end('validacion_inicial');
         return '<p>Error: ID de localidad no válido.</p>';
     }
 
     // Validar que exista provincia
     if (!isset($_POST['provincia']) || empty($_POST['provincia'])) {
+        TimeMeasurer::end('validacion_inicial');
         return '<p>Error: Provincia no proporcionada.</p>';
     }
 
@@ -48,6 +91,7 @@ function validar_datos_iniciales() {
 
     foreach ($campos_requeridos as $campo => $descripcion) {
         if (!isset($_POST[$campo]) || empty($_POST[$campo])) {
+            TimeMeasurer::end('validacion_inicial');
             return "<p>Error: $descripcion es requerido.</p>";
         }
     }
@@ -55,25 +99,31 @@ function validar_datos_iniciales() {
     // Validar formato de fecha de nacimiento
     $fecha_nac = sanitize_text_field($_POST['fecha_nac']);
     if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $fecha_nac)) {
+        TimeMeasurer::end('validacion_inicial');
         return '<p>Error: Formato de fecha de nacimiento incorrecto (debe ser YYYY-MM-DD).</p>';
     }
 
     // Validar año del vehículo
     $anio = sanitize_text_field($_POST['anio']);
     if (!is_numeric($anio) || $anio < 1900 || $anio > (date('Y') + 1)) {
+        TimeMeasurer::end('validacion_inicial');
         return '<p>Error: Año del vehículo no válido.</p>';
     }
 
     // Validar número de documento
     $nro_doc = sanitize_text_field($_POST['nro_doc']);
     if (!is_numeric($nro_doc) || strlen($nro_doc) < 7 || strlen($nro_doc) > 8) {
+        TimeMeasurer::end('validacion_inicial');
         return '<p>Error: Número de documento no válido.</p>';
     }
 
+    TimeMeasurer::end('validacion_inicial');
     return null; // Sin errores
 }
 
 function obtener_datos_sancor($provincia_sanitized, $cp, $cpName, $token) {
+    TimeMeasurer::start('sancor_datos');
+    
     $provincia_sancor = null;
     $sancorLocalidad = null;
     try {
@@ -90,6 +140,8 @@ function obtener_datos_sancor($provincia_sanitized, $cp, $cpName, $token) {
         $sancorLocalidad = null;
     }
     
+    TimeMeasurer::end('sancor_datos');
+    
     return [
         'provincia' => $provincia_sancor,
         'localidad' => $sancorLocalidad
@@ -97,6 +149,8 @@ function obtener_datos_sancor($provincia_sanitized, $cp, $cpName, $token) {
 }
 
 function obtener_datos_zurich($provincia_sanitized, $cp, $cpName, $token) {
+    TimeMeasurer::start('zurich_datos');
+    
     $provincia_zurich = null;
     $zurichLocalidad = null;
     try {
@@ -113,6 +167,8 @@ function obtener_datos_zurich($provincia_sanitized, $cp, $cpName, $token) {
         $zurichLocalidad = null;
     }
     
+    TimeMeasurer::end('zurich_datos');
+    
     return [
         'provincia' => $provincia_zurich,
         'localidad' => $zurichLocalidad
@@ -120,6 +176,8 @@ function obtener_datos_zurich($provincia_sanitized, $cp, $cpName, $token) {
 }
 
 function obtener_datos_experta($provincia_sanitized, $cp, $cpName, $token) {
+    TimeMeasurer::start('experta_datos');
+    
     $provincia_experta = null;
     $expertaLocalidad = null;
     try {
@@ -136,6 +194,8 @@ function obtener_datos_experta($provincia_sanitized, $cp, $cpName, $token) {
         $expertaLocalidad = null;
     }
     
+    TimeMeasurer::end('experta_datos');
+    
     return [
         'provincia' => $provincia_experta,
         'localidad' => $expertaLocalidad
@@ -144,6 +204,10 @@ function obtener_datos_experta($provincia_sanitized, $cp, $cpName, $token) {
 
 function resultado_cotizador_auto() {
     try {
+        // Resetear mediciones previas
+        TimeMeasurer::reset();
+        TimeMeasurer::start('total_proceso');
+
         // Validaciones iniciales
         $error_validacion = validar_datos_iniciales();
         if ($error_validacion) {
@@ -151,7 +215,10 @@ function resultado_cotizador_auto() {
         }
 
         // Validar y obtener token
+        TimeMeasurer::start('obtener_token');
         $token = obtener_token_norden();
+        TimeMeasurer::end('obtener_token');
+        
         if (empty($token)) {
             return '<p>Error: No se pudo obtener el token de autorización.</p>';
         }
@@ -164,12 +231,13 @@ function resultado_cotizador_auto() {
 
         $provincia_sanitized = sanitize_text_field($_POST['provincia']);
 
-        // Obtener datos de aseguradoras
+        // Obtener datos de aseguradoras (en paralelo conceptual)
         $datos_sancor = obtener_datos_sancor($provincia_sanitized, $cp, $cpName, $token);
         $datos_zurich = obtener_datos_zurich($provincia_sanitized, $cp, $cpName, $token);
         $datos_experta = obtener_datos_experta($provincia_sanitized, $cp, $cpName, $token);
 
         // Validar fecha actual
+        TimeMeasurer::start('preparar_datos');
         try {
             $fecha = new DateTime();
             $fecha->modify('+1 day');
@@ -263,7 +331,10 @@ function resultado_cotizador_auto() {
                 ]
             ]
         ];
+        TimeMeasurer::end('preparar_datos');
 
+        // Realizar petición HTTP
+        TimeMeasurer::start('peticion_cotizacion');
         $args = [
             'body' => json_encode($bodyReq),
             'headers' => [
@@ -274,6 +345,7 @@ function resultado_cotizador_auto() {
         ];
 
         $response = wp_remote_post($url_cotizar, $args);
+        TimeMeasurer::end('peticion_cotizacion');
 
         // Validar respuesta HTTP
         if (is_wp_error($response)) {
@@ -285,6 +357,7 @@ function resultado_cotizador_auto() {
             return '<p>Error: El servicio de cotización respondió con código ' . $http_code . '</p>';
         }
 
+        TimeMeasurer::start('procesar_respuesta');
         $body = json_decode(wp_remote_retrieve_body($response), true);
 
         // Validar estructura de la respuesta
@@ -389,6 +462,20 @@ function resultado_cotizador_auto() {
             }
         }
         echo '</div>';
+        
+        TimeMeasurer::end('procesar_respuesta');
+        TimeMeasurer::end('total_proceso');
+
+        // Log resumen de tiempos al final
+        $tiempos = TimeMeasurer::getTimes();
+        $tiempo_total = TimeMeasurer::getTotalTime();
+        
+        error_log("=== RESUMEN DE TIEMPOS DE EJECUCIÓN ===");
+        foreach ($tiempos as $funcion => $tiempo) {
+            error_log(sprintf("%-20s: %s segundos", $funcion, number_format($tiempo, 4)));
+        }
+        error_log("TIEMPO TOTAL: " . number_format($tiempo_total, 4) . " segundos");
+        error_log("=======================================");
 
         return ob_get_clean();
 
@@ -396,6 +483,22 @@ function resultado_cotizador_auto() {
         error_log("Error en resultado_cotizador_auto: " . $e->getMessage());
         return '<p>Error interno: No se pudo procesar la cotización.</p>';
     }
+}
+
+// Función auxiliar para obtener reporte de tiempos (opcional)
+function get_execution_times_report() {
+    $tiempos = TimeMeasurer::getTimes();
+    if (empty($tiempos)) {
+        return "No hay mediciones disponibles.";
+    }
+    
+    $reporte = "Tiempos de ejecución:\n";
+    foreach ($tiempos as $funcion => $tiempo) {
+        $reporte .= sprintf("- %s: %s segundos\n", $funcion, number_format($tiempo, 4));
+    }
+    $reporte .= sprintf("Total: %s segundos", number_format(TimeMeasurer::getTotalTime(), 4));
+    
+    return $reporte;
 }
 
 function compare_strings($fraseObjetivo, $resultados) {
