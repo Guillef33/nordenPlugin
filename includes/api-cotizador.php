@@ -4,7 +4,7 @@ if (!defined('ABSPATH')) exit;
 function resultado_cotizador_auto()
 {
 
-    $inicio = microtime(true);
+    // $inicio = microtime(true);
 
     // Validar que sea una petición POST
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -169,7 +169,7 @@ function resultado_cotizador_auto()
 
         $url_cotizar = 'https://quickbi4.norden.com.ar/api_externa/autos/cotizador/cotizar';
 
-        $BodyStart = microtime(true);
+        // $BodyStart = microtime(true);
         $bodyReq = [
             "ParametrosGenerales" => [
                 "ProductorVendedor" => "208",
@@ -391,16 +391,16 @@ function resultado_cotizador_auto()
         }
         echo '</div>';
 
-        $fin = microtime(true);
+        // $fin = microtime(true);
 
 
-        echo "<pre>";
-        echo "Tiempo total: " . round($fin - $inicio, 4) . " segundos\n";
-        echo "Paso 2 (Cotizador): " . round($CotizarStart - $CotizarEnd, 4) . " segundos\n";
-        echo "Body: " . round($BodyStart - $BodyEnd, 4) . " segundos\n";
-        // echo "Response: " . round($ResponseStart - $ResponseEnd, 4) . " segundos\n";
+        // echo "<pre>";
+        // echo "Tiempo total: " . round($fin - $inicio, 4) . " segundos\n";
+        // echo "Paso 2 (Cotizador): " . round($CotizarStart - $CotizarEnd, 4) . " segundos\n";
+        // echo "Body: " . round($BodyStart - $BodyEnd, 4) . " segundos\n";
+        // // echo "Response: " . round($ResponseStart - $ResponseEnd, 4) . " segundos\n";
 
-        echo "</pre>";
+        // echo "</pre>";
 
 
         return ob_get_clean();
