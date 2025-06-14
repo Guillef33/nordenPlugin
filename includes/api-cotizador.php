@@ -255,7 +255,7 @@ function resultado_cotizador_auto()
 
         $BodyEnd = microtime(true);
 
-        $ResponseStart = microtime(true);
+        // $ResponseStart = microtime(true);
 
         // Validar respuesta HTTP
         if (is_wp_error($response)) {
@@ -269,7 +269,7 @@ function resultado_cotizador_auto()
 
         $body = json_decode(wp_remote_retrieve_body($response), true);
 
-        $ResponseEnd = microtime(true);
+        // $ResponseEnd = microtime(true);
 
         // Validar estructura de la respuesta
         if (!$body || !isset($body['Data']) || !isset($body['Data']['Cotizaciones'])) {
@@ -398,7 +398,7 @@ function resultado_cotizador_auto()
         echo "Tiempo total: " . round($fin - $inicio, 4) . " segundos\n";
         echo "Paso 2 (Cotizador): " . round($CotizarStart - $CotizarEnd, 4) . " segundos\n";
         echo "Body: " . round($BodyStart - $BodyEnd, 4) . " segundos\n";
-        echo "Response: " . round($ResponseStart - $ResponseEnd, 4) . " segundos\n";
+        // echo "Response: " . round($ResponseStart - $ResponseEnd, 4) . " segundos\n";
 
         echo "</pre>";
 
