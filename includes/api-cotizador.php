@@ -13,7 +13,7 @@ function resultado_cotizador_auto()
 
     try {
 
-        $validacionesGeneralesStart = microtime(true);
+        // $validacionesGeneralesStart = microtime(true);
 
         // Validar y obtener token
         $token = obtener_token_norden();
@@ -41,8 +41,8 @@ function resultado_cotizador_auto()
             return '<p>Error: ID de localidad no válido.</p>';
         }
 
-        $validacionesGeneralesEnd = microtime(true);
-        $ProvinciasSancorStart = microtime(true);
+        // $validacionesGeneralesEnd = microtime(true);
+        // $ProvinciasSancorStart = microtime(true);
 
         // Validar que exista provincia
         if (!isset($_POST['provincia']) || empty($_POST['provincia'])) {
@@ -68,9 +68,9 @@ function resultado_cotizador_auto()
             $sancorLocalidad = null;
         }
 
-        $ProvinciasSancorEnd = microtime(true);
+        // $ProvinciasSancorEnd = microtime(true);
+        // $ProvinciasZurichStart = microtime(true);
 
-        $ProvinciasZurichStart = microtime(true);
         // Validaciones para Zurich
         $provincia_zurich = null;
         $zurichLocalidad = null;
@@ -88,9 +88,8 @@ function resultado_cotizador_auto()
             $zurichLocalidad = null;
         }
 
-        $ProvinciasZurichEnd = microtime(true);
-
-        $ProvinciasExpertaStart = microtime(true);
+        // $ProvinciasZurichEnd = microtime(true);
+        // $ProvinciasExpertaStart = microtime(true);
 
         // Validaciones para Experta
         $provincia_experta = null;
@@ -109,8 +108,7 @@ function resultado_cotizador_auto()
             $expertaLocalidad = null;
         }
 
-        $ProvinciasExpertaEnd = microtime(true);
-
+        // $ProvinciasExpertaEnd = microtime(true);
 
         // Validar fecha actual
         try {
@@ -391,10 +389,10 @@ function resultado_cotizador_auto()
 
         echo "<pre>";
         echo "Tiempo total: " . round($fin - $inicio, 4) . " segundos\n";
-        echo "Paso 1 (autenticación y validaciones): " . round($validacionesGeneralesStart - $validacionesGeneralesEnd, 4) . " segundos\n";
-        echo "Paso 2 (Sancor): " . round($ProvinciasSancorStart - $ProvinciasSancorEnd, 4) . " segundos\n";
-        echo "Paso 3 (Zurich): " . round($ProvinciasZurichStart - $ProvinciasZurichEnd, 4) . " segundos\n";
-        echo "Paso 4 (Experta): " . round($ProvinciasExpertaStart - $ProvinciasExpertaEnd, 4) . " segundos\n";
+        // echo "Paso 1 (autenticación y validaciones): " . round($validacionesGeneralesStart - $validacionesGeneralesEnd, 4) . " segundos\n";
+        // echo "Paso 2 (Sancor): " . round($ProvinciasSancorStart - $ProvinciasSancorEnd, 4) . " segundos\n";
+        // echo "Paso 3 (Zurich): " . round($ProvinciasZurichStart - $ProvinciasZurichEnd, 4) . " segundos\n";
+        // echo "Paso 4 (Experta): " . round($ProvinciasExpertaStart - $ProvinciasExpertaEnd, 4) . " segundos\n";
         echo "Paso 5 (Cotizador): " . round($CotizarStart - $CotizarEnd, 4) . " segundos\n";
 
         echo "</pre>";
