@@ -1,152 +1,194 @@
 <?php
 
 if (!defined('ABSPATH')) exit;
-function resultado_cotizador_auto() {
 
-    
+function validar_datos_iniciales() {
     // Validar que sea una petición POST
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
         return '<p>Error: Método de petición no válido.</p>';
     }
 
+    // Validar que exista codigo_postal
+    if (!isset($_POST['codigo_postal']) || empty($_POST['codigo_postal'])) {
+        return '<p>Error: Código postal no proporcionado.</p>';
+    }
+
+    // Validar formato del código postal
+    $arr = explode(" - ", $_POST['codigo_postal']);
+    if (count($arr) < 3) {
+        return '<p>Error: Formato de código postal incorrecto. Debe ser: ID - CP - Nombre</p>';
+    }
+
+    $intId = trim($arr[0]);
+    $cp = trim($arr[1]);
+    $cpName = trim($arr[2]);
+
+    // Validar que intId sea numérico
+    if (!is_numeric($intId)) {
+        return '<p>Error: ID de localidad no válido.</p>';
+    }
+
+    // Validar que exista provincia
+    if (!isset($_POST['provincia']) || empty($_POST['provincia'])) {
+        return '<p>Error: Provincia no proporcionada.</p>';
+    }
+
+    // Validaciones de campos requeridos
+    $campos_requeridos = [
+        'anio' => 'Año del vehículo',
+        'condicion' => 'Condición del vehículo',
+        'modelo' => 'Modelo del vehículo',
+        'fecha_nac' => 'Fecha de nacimiento',
+        'sexo' => 'Sexo',
+        'estado_civil' => 'Estado civil',
+        'gnc' => 'GNC',
+        'tipo_doc' => 'Tipo de documento',
+        'nro_doc' => 'Número de documento'
+    ];
+
+    foreach ($campos_requeridos as $campo => $descripcion) {
+        if (!isset($_POST[$campo]) || empty($_POST[$campo])) {
+            return "<p>Error: $descripcion es requerido.</p>";
+        }
+    }
+
+    // Validar formato de fecha de nacimiento
+    $fecha_nac = sanitize_text_field($_POST['fecha_nac']);
+    if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $fecha_nac)) {
+        return '<p>Error: Formato de fecha de nacimiento incorrecto (debe ser YYYY-MM-DD).</p>';
+    }
+
+    // Validar año del vehículo
+    $anio = sanitize_text_field($_POST['anio']);
+    if (!is_numeric($anio) || $anio < 1900 || $anio > (date('Y') + 1)) {
+        return '<p>Error: Año del vehículo no válido.</p>';
+    }
+
+    // Validar número de documento
+    $nro_doc = sanitize_text_field($_POST['nro_doc']);
+    if (!is_numeric($nro_doc) || strlen($nro_doc) < 7 || strlen($nro_doc) > 8) {
+        return '<p>Error: Número de documento no válido.</p>';
+    }
+
+    return null; // Sin errores
+}
+
+function obtener_datos_sancor($provincia_sanitized, $cp, $cpName, $token) {
+    $provincia_sancor = null;
+    $sancorLocalidad = null;
     try {
+        $provincia_sancor = obtener_provincia_sancor($provincia_sanitized, $token);
+        if ($provincia_sancor) {
+            $localidades_sancor = obtener_localidad_sancor(sanitize_text_field($cp), $provincia_sancor, $token);
+            if ($localidades_sancor && is_array($localidades_sancor)) {
+                $result_sancor = compare_strings($cpName, $localidades_sancor);
+                $sancorLocalidad = isset($result_sancor["Value"]) ? $result_sancor["Value"] : null;
+            }
+        }
+    } catch (Exception $e) {
+        error_log("Error obteniendo datos de Sancor: " . $e->getMessage());
+        $sancorLocalidad = null;
+    }
+    
+    return [
+        'provincia' => $provincia_sancor,
+        'localidad' => $sancorLocalidad
+    ];
+}
+
+function obtener_datos_zurich($provincia_sanitized, $cp, $cpName, $token) {
+    $provincia_zurich = null;
+    $zurichLocalidad = null;
+    try {
+        $provincia_zurich = obtener_provincia_zurich($provincia_sanitized, $token);
+        if ($provincia_zurich) {
+            $localidades_zurich = obtener_localidad_zurich(sanitize_text_field($cp), $provincia_zurich, $token);
+            if ($localidades_zurich && is_array($localidades_zurich)) {
+                $result_zurich = compare_strings($cpName, $localidades_zurich);
+                $zurichLocalidad = isset($result_zurich["Value"]) ? $result_zurich["Value"] : null;
+            }
+        }
+    } catch (Exception $e) {
+        error_log("Error obteniendo datos de Zurich: " . $e->getMessage());
+        $zurichLocalidad = null;
+    }
+    
+    return [
+        'provincia' => $provincia_zurich,
+        'localidad' => $zurichLocalidad
+    ];
+}
+
+function obtener_datos_experta($provincia_sanitized, $cp, $cpName, $token) {
+    $provincia_experta = null;
+    $expertaLocalidad = null;
+    try {
+        $provincia_experta = obtener_provincia_experta($provincia_sanitized, $token);
+        if ($provincia_experta) {
+            $localidades_experta = obtener_localidad_experta(sanitize_text_field($cp), $provincia_experta, $token);
+            if ($localidades_experta && is_array($localidades_experta)) {
+                $result_experta = compare_strings($cpName, $localidades_experta);
+                $expertaLocalidad = isset($result_experta["Value"]) ? $result_experta["Value"] : null;
+            }
+        }
+    } catch (Exception $e) {
+        error_log("Error obteniendo datos de Experta: " . $e->getMessage());
+        $expertaLocalidad = null;
+    }
+    
+    return [
+        'provincia' => $provincia_experta,
+        'localidad' => $expertaLocalidad
+    ];
+}
+
+function resultado_cotizador_auto() {
+    try {
+        // Validaciones iniciales
+        $error_validacion = validar_datos_iniciales();
+        if ($error_validacion) {
+            return $error_validacion;
+        }
+
         // Validar y obtener token
         $token = obtener_token_norden();
         if (empty($token)) {
             return '<p>Error: No se pudo obtener el token de autorización.</p>';
         }
-        
-        // Validar que exista codigo_postal
-        if (!isset($_POST['codigo_postal']) || empty($_POST['codigo_postal'])) {
-            return '<p>Error: Código postal no proporcionado.</p>';
-        }
 
-        // Validar formato del código postal
+        // Procesar código postal
         $arr = explode(" - ", $_POST['codigo_postal']);
-        if (count($arr) < 3) {
-            return '<p>Error: Formato de código postal incorrecto. Debe ser: ID - CP - Nombre</p>';
-        }
-
         $intId = trim($arr[0]);
         $cp = trim($arr[1]);
         $cpName = trim($arr[2]);
 
-        // Validar que intId sea numérico
-        if (!is_numeric($intId)) {
-            return '<p>Error: ID de localidad no válido.</p>';
-        }
-
-        // Validar que exista provincia
-        if (!isset($_POST['provincia']) || empty($_POST['provincia'])) {
-            return '<p>Error: Provincia no proporcionada.</p>';
-        }
-
         $provincia_sanitized = sanitize_text_field($_POST['provincia']);
 
-        // Validaciones para Sancor
-        $provincia_sancor = null;
-        $sancorLocalidad = null;
-        try {
-            $provincia_sancor = obtener_provincia_sancor($provincia_sanitized, $token);
-            if ($provincia_sancor) {
-                $localidades_sancor = obtener_localidad_sancor(sanitize_text_field($cp), $provincia_sancor, $token);
-                if ($localidades_sancor && is_array($localidades_sancor)) {
-                    $result_sancor = compare_strings($cpName, $localidades_sancor);
-                    $sancorLocalidad = isset($result_sancor["Value"]) ? $result_sancor["Value"] : null;
-                }
-            }
-        } catch (Exception $e) {
-            error_log("Error obteniendo datos de Sancor: " . $e->getMessage());
-            $sancorLocalidad = null;
-        }
-
-        // Validaciones para Zurich
-        $provincia_zurich = null;
-        $zurichLocalidad = null;
-        try {
-            $provincia_zurich = obtener_provincia_zurich($provincia_sanitized, $token);
-            if ($provincia_zurich) {
-                $localidades_zurich = obtener_localidad_zurich(sanitize_text_field($cp), $provincia_zurich, $token);
-                if ($localidades_zurich && is_array($localidades_zurich)) {
-                    $result_zurich = compare_strings($cpName, $localidades_zurich);
-                    $zurichLocalidad = isset($result_zurich["Value"]) ? $result_zurich["Value"] : null;
-                }
-            }
-        } catch (Exception $e) {
-            error_log("Error obteniendo datos de Zurich: " . $e->getMessage());
-            $zurichLocalidad = null;
-        }
-
-        // Validaciones para Experta
-        $provincia_experta = null;
-        $expertaLocalidad = null;
-        try {
-            $provincia_experta = obtener_provincia_experta($provincia_sanitized, $token);
-            if ($provincia_experta) {
-                $localidades_experta = obtener_localidad_experta(sanitize_text_field($cp), $provincia_experta, $token);
-                if ($localidades_experta && is_array($localidades_experta)) {
-                    $result_experta = compare_strings($cpName, $localidades_experta);
-                    $expertaLocalidad = isset($result_experta["Value"]) ? $result_experta["Value"] : null;
-                }
-            }
-        } catch (Exception $e) {
-            error_log("Error obteniendo datos de Experta: " . $e->getMessage());
-            $expertaLocalidad = null;
-        }
+        // Obtener datos de aseguradoras
+        $datos_sancor = obtener_datos_sancor($provincia_sanitized, $cp, $cpName, $token);
+        $datos_zurich = obtener_datos_zurich($provincia_sanitized, $cp, $cpName, $token);
+        $datos_experta = obtener_datos_experta($provincia_sanitized, $cp, $cpName, $token);
 
         // Validar fecha actual
         try {
             $fecha = new DateTime();
-$fecha->modify('+1 day');
-$fechaActual = $fecha->format('Y-m-d') . ' 00:00:00';
+            $fecha->modify('+1 day');
+            $fechaActual = $fecha->format('Y-m-d') . ' 00:00:00';
         } catch (Exception $e) {
             return '<p>Error: No se pudo generar la fecha actual.</p>';
         }
 
-        // Validaciones de campos requeridos
-        $campos_requeridos = [
-            'anio' => 'Año del vehículo',
-            'condicion' => 'Condición del vehículo',
-            'modelo' => 'Modelo del vehículo',
-            'fecha_nac' => 'Fecha de nacimiento',
-            'sexo' => 'Sexo',
-            'estado_civil' => 'Estado civil',
-            'gnc' => 'GNC',
-            'tipo_doc' => 'Tipo de documento',
-            'nro_doc' => 'Número de documento'
-        ];
+        // Calcular edad
+        $fechaNacimiento = $_POST['fecha_nac'];
+        $fechaNacimientoDate = new DateTime($fechaNacimiento);
+        $hoy = new DateTime();
+        $edad = $fechaNacimientoDate->diff($hoy)->y;
+        $menor25anos = $edad < 25 ? 1 : 2;
 
-        foreach ($campos_requeridos as $campo => $descripcion) {
-            if (!isset($_POST[$campo]) || empty($_POST[$campo])) {
-                return "<p>Error: $descripcion es requerido.</p>";
-            }
-        }
-
-        // Validar formato de fecha de nacimiento
-        $fecha_nac = sanitize_text_field($_POST['fecha_nac']);
-        if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $fecha_nac)) {
-            return '<p>Error: Formato de fecha de nacimiento incorrecto (debe ser YYYY-MM-DD).</p>';
-        }
-
-        // Validar año del vehículo
+        // Preparar datos para el request
         $anio = sanitize_text_field($_POST['anio']);
-        if (!is_numeric($anio) || $anio < 1900 || $anio > (date('Y') + 1)) {
-            return '<p>Error: Año del vehículo no válido.</p>';
-        }
-
-        // Validar número de documento
+        $fecha_nac = sanitize_text_field($_POST['fecha_nac']);
         $nro_doc = sanitize_text_field($_POST['nro_doc']);
-        if (!is_numeric($nro_doc) || strlen($nro_doc) < 7 || strlen($nro_doc) > 8) {
-            return '<p>Error: Número de documento no válido.</p>';
-        }
-
-$fechaNacimiento = $_POST['fecha_nac']; // por ejemplo: "2002-06-06"
-$fechaNacimientoDate = new DateTime($fechaNacimiento);
-$hoy = new DateTime();
-
-$edad = $fechaNacimientoDate->diff($hoy)->y;
-
-$menor25anos = $edad < 25 ? 1 : 2;
 
         $url_cotizar = 'https://quickbi4.norden.com.ar/api_externa/autos/cotizador/cotizar';
 
@@ -177,8 +219,8 @@ $menor25anos = $edad < 25 ? 1 : 2;
                     "TipoIva" => "4",
                     "PlanDePago" => "1",
                     "FechaEmisionValor" => $fechaActual,
-                    "Provincia" => $provincia_sancor,
-                    "Localidad" => $sancorLocalidad,
+                    "Provincia" => $datos_sancor['provincia'],
+                    "Localidad" => $datos_sancor['localidad'],
                     "Menor25Años" => $menor25anos,
                     "DescuentoEspecial" => "0",
                     "TipoFacturacionCustom" => "M",
@@ -195,9 +237,9 @@ $menor25anos = $edad < 25 ? 1 : 2;
                     "Rastreador" => "0",
                     "TipoIva" => "1",
                     "EstadoCivil" => "1",
-                    "Provincia" => $provincia_zurich,
+                    "Provincia" => $datos_zurich['provincia'],
                     "IdPlan" => "350",
-                    "Localidad" => $zurichLocalidad,
+                    "Localidad" => $datos_zurich['localidad'],
                     "Asistencia" => "31",
                     "TipoFacturacionCustom" => "M"
                 ],
@@ -213,7 +255,7 @@ $menor25anos = $edad < 25 ? 1 : 2;
                     "GrupoAfinidad" => "pc:50502"
                 ],
                 "Experta" => [
-                    "Localidad" => $expertaLocalidad,
+                    "Localidad" => $datos_experta['localidad'],
                     "Comision" => "EX0",
                     "FechaInicioVigencia" => $fechaActual,
                     "TipoFacturacionCustom" => "M",
@@ -263,36 +305,25 @@ $menor25anos = $edad < 25 ? 1 : 2;
                 'CG PREMIUM CON GRANIZO',
                 'TODO RIESGO CON FRANQUICIA – PLAN D2 2%',
                 'TODO RIESGO CON FRANQUICIA – PLAN DV 4%',
-                // 'TR CON FRANQUICIA – TALLER ZURICH (DZ)'
             ],
             'San Cristobal' => ['CM', 'TODO RIESGO 2%', 
             'Todo riesgo con franq. del 5',
             'Todo riesgo con franq. del 2', 
-            // "D102", "D101"
         ],
             'Experta' => [
                 'PREMIUM MAX',
-                // 'TODO RIESGO FRANQ. VARIABLE XL - 1%',
                 'TODO RIESGO 2%',
                 'TODO RIESGO 5%'
             ]
         ];
-    echo '<div class="aseguradoras-container">';
+        
+        echo '<div class="aseguradoras-container">';
 
         foreach ($body["Data"]['Cotizaciones'] as $aseguradora) {
             // Validar estructura de aseguradora
             if (!isset($aseguradora['Aseguradora'])) {
                 continue;
             }
-
-
-            // // Omitir resultados si la compañía es Sancor y no tiene coberturas
-            // if (
-            //     $aseguradora['Aseguradora'] === 'Sancor' &&
-            //     empty($aseguradora['Coberturas'])
-            // ) {
-            //     continue;
-            // }
 
             $nombre_aseguradora = $aseguradora["Aseguradora"];
 
@@ -308,59 +339,56 @@ $menor25anos = $edad < 25 ? 1 : 2;
             ];
 
             $logo_url = isset($logos[$nombre_aseguradora]) ? $logos[$nombre_aseguradora] : '';
-                if (!empty($aseguradora['Coberturas']) && is_array($aseguradora['Coberturas'])) {
-                    echo '<div class="aseguradora">';
+            
+            if (!empty($aseguradora['Coberturas']) && is_array($aseguradora['Coberturas'])) {
+                echo '<div class="aseguradora">';
 
-                    // Mostrar logo si existe
-                    if (!empty($logo_url)) {
-                        echo '<div class="aseguradora-logo-wrapper"> <img src="' . esc_url($logo_url) . '" alt="' . esc_attr($nombre_aseguradora) . ' logo" class="aseguradora-logo"></div>';
+                // Mostrar logo si existe
+                if (!empty($logo_url)) {
+                    echo '<div class="aseguradora-logo-wrapper"> <img src="' . esc_url($logo_url) . '" alt="' . esc_attr($nombre_aseguradora) . ' logo" class="aseguradora-logo"></div>';
+                }
+
+                echo '<ul class="coberturas-list">';
+
+                foreach ($aseguradora['Coberturas'] as $index => $coti) {
+                    // Validar estructura de cobertura
+                    if (!isset($coti['DescCobertura']) || !isset($coti['Prima'])) {
+                        continue;
                     }
 
-                    echo '<ul class="coberturas-list">';
+                    $permitido = false;
 
-                    foreach ($aseguradora['Coberturas'] as $index => $coti) {
-                        // Validar estructura de cobertura
-                        if (!isset($coti['DescCobertura']) || !isset($coti['Prima'])) {
-                            continue;
+                    foreach ($planes_permitidos[$nombre_aseguradora] as $plan) {
+                        if (stripos($coti['DescCobertura'], $plan) !== false) {
+                            $permitido = true;
+                            break;
                         }
+                    }
 
-                      
-        $permitido = false;
+                    if ($permitido) {
+                        $id = 'cobertura_' . $index . '_' . md5($coti['DescCobertura']);
 
-        foreach ($planes_permitidos[$nombre_aseguradora] as $plan) {
-            if (stripos($coti['DescCobertura'], $plan) !== false) {
-                $permitido = true;
-                break;
+                        echo '<li class="cobertura-item">';
+                        echo '<div class="cobertura-content">';
+                        echo '<p>' . esc_html($coti['DescCobertura']) . '</p>';
+                        echo '<h5>$ ' . number_format((float) $coti['Prima'], 2, ',', '.') . '</h5>';
+
+                        echo '<a href="#"> 
+                        <span> 
+                            <img class="whatsapp-icon" src="' . plugin_dir_url(dirname(__FILE__)) . 'assets/whatsapp-icon.png" width="19px" height="19px" alt="icono-whatsapp" /> 
+                        </span>
+                        Contratar ahora
+                    </a>';
+                        echo '</div>';
+                        echo '</li>';
+                    }
+                }
+
+                echo '</ul>';
+                echo '</div>';
             }
         }
-
-        if ($permitido) {
-            $id = 'cobertura_' . $index . '_' . md5($coti['DescCobertura']);
-
-            echo '<li class="cobertura-item">';
-            echo '<div class="cobertura-content">';
-            echo '<p>' . esc_html($coti['DescCobertura']) . '</p>';
-            echo '<h5>$ ' . number_format((float) $coti['Prima'], 2, ',', '.') . '</h5>';
-
-                echo '<a href="#"> 
-                <span> 
-                    <img class="whatsapp-icon" src="' . plugin_dir_url(dirname(__FILE__)) . 'assets/whatsapp-icon.png" width="19px" height="19px" alt="icono-whatsapp" /> 
-                </span>
-                Contratar ahora
-            </a>';
-            echo '</div>';
-            echo '</li>';
-        }
-    }
-
-            echo '</ul>';
-            echo '</div>';
-        } else {
-            // echo '<p>No se encontraron coberturas para ' . esc_html($nombre_aseguradora) . '.</p>';
-        }
-    }
-    echo '</div>';
-
+        echo '</div>';
 
         return ob_get_clean();
 
