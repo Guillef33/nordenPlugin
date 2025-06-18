@@ -4,9 +4,9 @@ if (!defined('ABSPATH')) exit;
 function resultado_cotizador_auto() {
 
 
-    echo '<pre>';
-    print_r($_POST);
-    echo '</pre>';
+    // echo '<pre>';
+    // print_r($_POST);
+    // echo '</pre>';
     
     // Validar que sea una petición POST
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -281,6 +281,12 @@ function resultado_cotizador_auto() {
                 'TODO RIESGO 5%'
             ]
         ];
+
+
+    echo '<pre>';
+        print_r($body["Data"]['Cotizaciones'] );
+    echo '</pre>';
+
     echo '<div class="aseguradoras-container">';
 
         foreach ($body["Data"]['Cotizaciones'] as $aseguradora) {
