@@ -3,8 +3,7 @@
 if (!defined('ABSPATH')) exit;
 function resultado_cotizador_auto() {
 
-
-    // echo '<pre>';
+    //  echo '<pre>';
     // print_r($_POST);
     // echo '</pre>';
     
@@ -101,56 +100,56 @@ function resultado_cotizador_auto() {
         // Validar fecha actual
         try {
             $fecha = new DateTime();
-            $fecha->modify('+1 day');
-            $fechaActual = $fecha->format('Y-m-d') . ' 00:00:00';
-                    } catch (Exception $e) {
-                        return '<p>Error: No se pudo generar la fecha actual.</p>';
-                    }
+$fecha->modify('+1 day');
+$fechaActual = $fecha->format('Y-m-d') . ' 00:00:00';
+        } catch (Exception $e) {
+            return '<p>Error: No se pudo generar la fecha actual.</p>';
+        }
 
-                    // Validaciones de campos requeridos
-                    $campos_requeridos = [
-                        'anio' => 'Año del vehículo',
-                        'condicion' => 'Condición del vehículo',
-                        'modelo' => 'Modelo del vehículo',
-                        'fecha_nac' => 'Fecha de nacimiento',
-                        'sexo' => 'Sexo',
-                        'estado_civil' => 'Estado civil',
-                        'gnc' => 'GNC',
-                        'tipo_doc' => 'Tipo de documento',
-                        'nro_doc' => 'Número de documento'
-                    ];
+        // Validaciones de campos requeridos
+        $campos_requeridos = [
+            'anio' => 'Año del vehículo',
+            'condicion' => 'Condición del vehículo',
+            'modelo' => 'Modelo del vehículo',
+            'fecha_nac' => 'Fecha de nacimiento',
+            'sexo' => 'Sexo',
+            'estado_civil' => 'Estado civil',
+            'gnc' => 'GNC',
+            'tipo_doc' => 'Tipo de documento',
+            'nro_doc' => 'Número de documento'
+        ];
 
-                    foreach ($campos_requeridos as $campo => $descripcion) {
-                        if (!isset($_POST[$campo]) || empty($_POST[$campo])) {
-                            return "<p>Error: $descripcion es requerido.</p>";
-                        }
-                    }
+        foreach ($campos_requeridos as $campo => $descripcion) {
+            if (!isset($_POST[$campo]) || empty($_POST[$campo])) {
+                return "<p>Error: $descripcion es requerido.</p>";
+            }
+        }
 
-                    // Validar formato de fecha de nacimiento
-                    $fecha_nac = sanitize_text_field($_POST['fecha_nac']);
-                    if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $fecha_nac)) {
-                        return '<p>Error: Formato de fecha de nacimiento incorrecto (debe ser YYYY-MM-DD).</p>';
-                    }
+        // Validar formato de fecha de nacimiento
+        $fecha_nac = sanitize_text_field($_POST['fecha_nac']);
+        if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $fecha_nac)) {
+            return '<p>Error: Formato de fecha de nacimiento incorrecto (debe ser YYYY-MM-DD).</p>';
+        }
 
-                    // Validar año del vehículo
-                    $anio = sanitize_text_field($_POST['anio']);
-                    if (!is_numeric($anio) || $anio < 1900 || $anio > (date('Y') + 1)) {
-                        return '<p>Error: Año del vehículo no válido.</p>';
-                    }
+        // Validar año del vehículo
+        $anio = sanitize_text_field($_POST['anio']);
+        if (!is_numeric($anio) || $anio < 1900 || $anio > (date('Y') + 1)) {
+            return '<p>Error: Año del vehículo no válido.</p>';
+        }
 
-                    // Validar número de documento
-                    $nro_doc = sanitize_text_field($_POST['nro_doc']);
-                    if (!is_numeric($nro_doc) || strlen($nro_doc) < 7 || strlen($nro_doc) > 8) {
-                        return '<p>Error: Número de documento no válido.</p>';
-                    }
+        // Validar número de documento
+        $nro_doc = sanitize_text_field($_POST['nro_doc']);
+        if (!is_numeric($nro_doc) || strlen($nro_doc) < 7 || strlen($nro_doc) > 8) {
+            return '<p>Error: Número de documento no válido.</p>';
+        }
 
-            $fechaNacimiento = $_POST['fecha_nac']; // por ejemplo: "2002-06-06"
-            $fechaNacimientoDate = new DateTime($fechaNacimiento);
-            $hoy = new DateTime();
+$fechaNacimiento = $_POST['fecha_nac']; // por ejemplo: "2002-06-06"
+$fechaNacimientoDate = new DateTime($fechaNacimiento);
+$hoy = new DateTime();
 
-            $edad = $fechaNacimientoDate->diff($hoy)->y;
+$edad = $fechaNacimientoDate->diff($hoy)->y;
 
-            $menor25anos = $edad < 25 ? 1 : 2;
+$menor25anos = $edad < 25 ? 1 : 2;
 
         $url_cotizar = 'https://quickbi4.norden.com.ar/api_externa/autos/cotizador/cotizar';
 
@@ -264,10 +263,10 @@ function resultado_cotizador_auto() {
         $planes_permitidos = [
             'Sancor' => ['PREMIUM MAX', 'TODO RIESGO 2%', 'TODO RIESGO 4%'],
             'Zurich' => [
-                'CG',
+                'CG PREMIUM CON GRANIZO',
                 'TODO RIESGO CON FRANQUICIA - PLAN D2 2%',
                 'TODO RIESGO CON FRANQUICIA – PLAN DV 4%',
-                // 'TR CON FRANQUICIA - TALLER ZURICH (DZ)'
+                // 'TR CON FRANQUICIA – TALLER ZURICH (DZ)'
             ],
             'San Cristobal' => ['CM', 'TODO RIESGO 2%', 
             'Todo riesgo con franq. del 5',
@@ -281,12 +280,6 @@ function resultado_cotizador_auto() {
                 'TODO RIESGO 5%'
             ]
         ];
-
-
-    // echo '<pre>';
-    //     print_r($body["Data"]['Cotizaciones'] );
-    // echo '</pre>';
-
     echo '<div class="aseguradoras-container">';
 
         foreach ($body["Data"]['Cotizaciones'] as $aseguradora) {
