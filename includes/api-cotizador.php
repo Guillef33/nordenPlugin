@@ -281,6 +281,23 @@ $menor25anos = $edad < 25 ? 1 : 2;
                 'TODO RIESGO 5%'
             ]
         ];
+
+                $nombres = [
+                'PREMIUM MAX'=>'Terceros Completos Premium',
+                'TODO RIESGO 2%'=>'Todo Riesgo Franquicia 2%',
+                'TODO RIESGO 4%'=>'Todo Riesgo Franquicia 4%',
+                'CG'=>'Terceros Completos Premium',
+                'TODO RIESGO CON FRANQUICIA - PLAN D2 2%'=>'Todo Riesgo Franquicia 2%',
+                'TODO RIESGO CON FRANQUICIA – PLAN DV 4%'=>'Todo Riesgo Franquicia 5%',
+                'CM'=>'Terceros Completos Premium',
+                'TODO RIESGO 2%'=>'Todo Riesgo Franquicia 2%', 
+                'Todo riesgo con franq. del 5'=>'Todo Riesgo Franquicia 5%',
+                'Todo riesgo con franq. del 2,0'=>'Todo Riesgo Franquicia 2%', 
+                'TERCEROS COMPLETO XL + GRANIZO'=>'Terceros Completos Premium',
+                'TODO RIESGO 2%'=>'Todo Riesgo Franquicia 2%',
+                'TODO RIESGO 5%'=>'Todo Riesgo Franquicia 5%'
+        ];
+
     echo '<div class="aseguradoras-container">';
 
        echo '<pre>';
@@ -344,6 +361,15 @@ $menor25anos = $edad < 25 ? 1 : 2;
 
         if ($permitido) {
             $id = 'cobertura_' . $index . '_' . md5($coti['DescCobertura']);
+
+                // Buscar una coincidencia en las claves del array $nombres
+    foreach ($nombres as $clave => $valor) {
+        if (stripos($coti['DescCobertura'], $clave) !== false) {
+            // Si encuentra coincidencia, mostrar el valor mapeado
+            echo '<p class="nombre-mapeado">' . esc_html($valor) . '</p>';
+            break; // Si querés que solo se muestre la primera coincidencia
+        }
+    }
 
             echo '<li class="cobertura-item">';
             echo '<div class="cobertura-content">';
