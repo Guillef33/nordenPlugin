@@ -264,9 +264,9 @@ function resultado_cotizador_auto() {
         $planes_permitidos = [
             'Sancor' => ['PREMIUM MAX', 'TODO RIESGO 2%', 'TODO RIESGO 4%'],
             'Zurich' => [
-                'CG PREMIUM CON GRANIZO',
+                'CG',
                 'TODO RIESGO CON FRANQUICIA - PLAN D2 2%',
-                'TODO RIESGO CON FRANQUICIA - PLAN DV 4%',
+                'TODO RIESGO CON FRANQUICIA – PLAN DV 4%',
                 // 'TR CON FRANQUICIA - TALLER ZURICH (DZ)'
             ],
             'San Cristobal' => ['CM', 'TODO RIESGO 2%', 
