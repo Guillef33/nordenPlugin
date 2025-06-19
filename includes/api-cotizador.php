@@ -274,7 +274,8 @@ $menor25anos = $edad < 25 ? 1 : 2;
             // "D102", "D101"
         ],
             'Experta' => [
-                'PREMIUM MAX',
+                'Terceros Completo XL',
+                // 'PREMIUM MAX',
                 // 'TODO RIESGO FRANQ. VARIABLE XL - 1%',
                 'TODO RIESGO 2%',
                 'TODO RIESGO 5%'
