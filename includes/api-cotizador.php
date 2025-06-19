@@ -363,17 +363,19 @@ $menor25anos = $edad < 25 ? 1 : 2;
             $id = 'cobertura_' . $index . '_' . md5($coti['DescCobertura']);
 
                 // Buscar una coincidencia en las claves del array $nombres
-    foreach ($nombres as $clave => $valor) {
-        if (stripos($coti['DescCobertura'], $clave) !== false) {
-            // Si encuentra coincidencia, mostrar el valor mapeado
-            echo '<p class="nombre-mapeado">' . esc_html($valor) . '</p>';
-            break; // Si querés que solo se muestre la primera coincidencia
-        }
-    }
+                
+                echo '<li class="cobertura-item">';
+                echo '<div class="cobertura-content">';
+                echo '<p>' . esc_html($coti['DescCobertura']) . '</p>';
+                
+                foreach ($nombres as $clave => $valor) {
+                    if (stripos($coti['DescCobertura'], $clave) !== false) {
+                        // Si encuentra coincidencia, mostrar el valor mapeado
+                        echo '<p class="nombre-mapeado">' . esc_html($valor) . '</p>';
+                        break; // Si querés que solo se muestre la primera coincidencia
+                    }
+                }
 
-            echo '<li class="cobertura-item">';
-            echo '<div class="cobertura-content">';
-            echo '<p>' . esc_html($coti['DescCobertura']) . '</p>';
             echo '<h5>$ ' . number_format((float) $coti['Prima'], 2, ',', '.') . '</h5>';
 
                 echo '<a href="#"> 
