@@ -282,6 +282,10 @@ $menor25anos = $edad < 25 ? 1 : 2;
         ];
     echo '<div class="aseguradoras-container">';
 
+       echo '<pre>';
+    print_r($body["Data"]['Cotizaciones']);
+    echo '</pre>';
+
         foreach ($body["Data"]['Cotizaciones'] as $aseguradora) {
             // Validar estructura de aseguradora
             if (!isset($aseguradora['Aseguradora'])) {
