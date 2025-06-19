@@ -265,9 +265,9 @@ function resultado_cotizador_auto() {
             'Sancor' => ['PREMIUM MAX', 'TODO RIESGO 2%', 'TODO RIESGO 4%'],
             'Zurich' => [
                 'CG PREMIUM CON GRANIZO',
-                'TODO RIESGO CON FRANQUICIA – PLAN D2 2%',
-                'TODO RIESGO CON FRANQUICIA – PLAN DV 4%',
-                // 'TR CON FRANQUICIA – TALLER ZURICH (DZ)'
+                'TODO RIESGO CON FRANQUICIA - PLAN D2 2%',
+                'TODO RIESGO CON FRANQUICIA - PLAN DV 4%',
+                // 'TR CON FRANQUICIA - TALLER ZURICH (DZ)'
             ],
             'San Cristobal' => ['CM', 'TODO RIESGO 2%', 
             'Todo riesgo con franq. del 5',
@@ -283,9 +283,9 @@ function resultado_cotizador_auto() {
         ];
 
 
-    echo '<pre>';
-        print_r($body["Data"]['Cotizaciones'] );
-    echo '</pre>';
+    // echo '<pre>';
+    //     print_r($body["Data"]['Cotizaciones'] );
+    // echo '</pre>';
 
     echo '<div class="aseguradoras-container">';
 
