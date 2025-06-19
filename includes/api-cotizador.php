@@ -156,7 +156,7 @@ $menor25anos = $edad < 25 ? 1 : 2;
         $bodyReq = [
             "ParametrosGenerales" => [
                 "ProductorVendedor" => "208",
-                "Año" => $anio,
+                "Año" => (sanitize_text_field($_POST['condicion']) == "usado")?$anio:'2025',
                 "CeroKm" => (sanitize_text_field($_POST['condicion']) == "0km"),
                 "CodVehiculoExterno" => sanitize_text_field($_POST['modelo']),
                 "Provincia" => $provincia_sanitized,
@@ -270,7 +270,7 @@ $menor25anos = $edad < 25 ? 1 : 2;
             ],
             'San Cristobal' => ['CM', 'TODO RIESGO 2%', 
             'Todo riesgo con franq. del 5',
-            'Todo riesgo con franq. del 2', 
+            'Todo riesgo con franq. del 2,0', 
             // "D102", "D101"
         ],
             'Experta' => [
