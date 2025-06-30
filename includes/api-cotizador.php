@@ -3,10 +3,6 @@
 if (!defined('ABSPATH')) exit;
 function resultado_cotizador_auto() {
 
-    //  echo '<pre>';
-    // print_r($_POST);
-    // echo '</pre>';
-    
     // Validar que sea una petición POST
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
         return '<p>Error: Método de petición no válido.</p>';
@@ -282,7 +278,7 @@ $menor25anos = $edad < 25 ? 1 : 2;
             ]
         ];
 
-                $nombres = [
+            $nombres = [
                 'PREMIUM MAX'=>'Terceros Completos Premium',
                 'TODO RIESGO 2%'=>'Todo Riesgo Franquicia 2%',
                 'TODO RIESGO 4%'=>'Todo Riesgo Franquicia 4%',
@@ -366,7 +362,7 @@ $menor25anos = $edad < 25 ? 1 : 2;
                 
                 echo '<li class="cobertura-item">';
                 echo '<div class="cobertura-content">';
-                echo '<p>' . esc_html($coti['DescCobertura']) . '</p>';
+                // echo '<p>' . esc_html($coti['DescCobertura']) . '</p>';
                 foreach ($nombres as $clave => $valor) {
                     if (stripos($coti['DescCobertura'], $clave) !== false) {
                         // Si encuentra coincidencia, mostrar el valor mapeado
