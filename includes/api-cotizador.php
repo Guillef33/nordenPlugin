@@ -1,7 +1,8 @@
 <?php
 
 if (!defined('ABSPATH')) exit;
-function resultado_cotizador_auto() {
+function resultado_cotizador_auto()
+{
 
     // Validar que sea una petición POST
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -14,7 +15,7 @@ function resultado_cotizador_auto() {
         if (empty($token)) {
             return '<p>Error: No se pudo obtener el token de autorización.</p>';
         }
-        
+
         // Validar que exista codigo_postal
         if (!isset($_POST['codigo_postal']) || empty($_POST['codigo_postal'])) {
             return '<p>Error: Código postal no proporcionado.</p>';
@@ -96,8 +97,8 @@ function resultado_cotizador_auto() {
         // Validar fecha actual
         try {
             $fecha = new DateTime();
-$fecha->modify('+1 day');
-$fechaActual = $fecha->format('Y-m-d') . ' 00:00:00';
+            $fecha->modify('+1 day');
+            $fechaActual = $fecha->format('Y-m-d') . ' 00:00:00';
         } catch (Exception $e) {
             return '<p>Error: No se pudo generar la fecha actual.</p>';
         }
@@ -139,13 +140,13 @@ $fechaActual = $fecha->format('Y-m-d') . ' 00:00:00';
             return '<p>Error: Número de documento no válido.</p>';
         }
 
-$fechaNacimiento = $_POST['fecha_nac']; // por ejemplo: "2002-06-06"
-$fechaNacimientoDate = new DateTime($fechaNacimiento);
-$hoy = new DateTime();
+        $fechaNacimiento = $_POST['fecha_nac']; // por ejemplo: "2002-06-06"
+        $fechaNacimientoDate = new DateTime($fechaNacimiento);
+        $hoy = new DateTime();
 
-$edad = $fechaNacimientoDate->diff($hoy)->y;
+        $edad = $fechaNacimientoDate->diff($hoy)->y;
 
-$menor25anos = $edad < 25 ? 1 : 2;
+        $menor25anos = $edad < 25 ? 1 : 2;
 
         $url_cotizar = 'https://quickbi4.norden.com.ar/api_externa/autos/cotizador/cotizar';
 
@@ -239,7 +240,8 @@ $menor25anos = $edad < 25 ? 1 : 2;
 
         $http_code = wp_remote_retrieve_response_code($response);
         if ($http_code !== 200) {
-            return '<p>Error: El servicio de cotización respondió con código ' . $http_code . '</p>';
+            $body = wp_remote_retrieve_body($response);
+            return '<p>Error: El servicio respondió con código ' . $http_code . '. Detalles: ' . esc_html($body) . '</p>';
         }
 
         $body = json_decode(wp_remote_retrieve_body($response), true);
@@ -248,11 +250,11 @@ $menor25anos = $edad < 25 ? 1 : 2;
         if (!$body || !isset($body['Data']) || !isset($body['Data']['Cotizaciones'])) {
             return '<p>Error: Respuesta del servicio de cotización no válida.</p>';
         }
-        
+
         if (!is_array($body['Data']['Cotizaciones']) || empty($body['Data']['Cotizaciones'])) {
             return '<p>No se encontraron cotizaciones disponibles para los datos proporcionados.</p>';
         }
-        
+
         ob_start();
 
         // Lista de planes permitidos por aseguradora
@@ -264,11 +266,13 @@ $menor25anos = $edad < 25 ? 1 : 2;
                 'TODO RIESGO CON FRANQUICIA – PLAN DV 4%',
                 // 'TR CON FRANQUICIA – TALLER ZURICH (DZ)'
             ],
-            'San Cristobal' => ['CM', 'TODO RIESGO 2%', 
-            'Todo riesgo con franq. del 5',
-            'Todo riesgo con franq. del 2,0', 
-            // "D102", "D101"
-        ],
+            'San Cristobal' => [
+                'CM',
+                'TODO RIESGO 2%',
+                'Todo riesgo con franq. del 5',
+                'Todo riesgo con franq. del 2,0',
+                // "D102", "D101"
+            ],
             'Experta' => [
                 'TERCEROS COMPLETO XL + GRANIZO',
                 // 'PREMIUM MAX',
@@ -278,27 +282,27 @@ $menor25anos = $edad < 25 ? 1 : 2;
             ]
         ];
 
-            $nombres = [
-                'PREMIUM MAX'=>'Terceros Completos Premium',
-                'TODO RIESGO 2%'=>'Todo Riesgo Franquicia 2%',
-                'TODO RIESGO 4%'=>'Todo Riesgo Franquicia 4%',
-                'CG'=>'Terceros Completos Premium',
-                'TODO RIESGO CON FRANQUICIA - PLAN D2 2%'=>'Todo Riesgo Franquicia 2%',
-                'TODO RIESGO CON FRANQUICIA – PLAN DV 4%'=>'Todo Riesgo Franquicia 5%',
-                'CM'=>'Terceros Completos Premium',
-                'TODO RIESGO 2%'=>'Todo Riesgo Franquicia 2%', 
-                'Todo riesgo con franq. del 5'=>'Todo Riesgo Franquicia 5%',
-                'Todo riesgo con franq. del 2,0'=>'Todo Riesgo Franquicia 2%', 
-                'TERCEROS COMPLETO XL + GRANIZO'=>'Terceros Completos Premium',
-                'TODO RIESGO 2%'=>'Todo Riesgo Franquicia 2%',
-                'TODO RIESGO 5%'=>'Todo Riesgo Franquicia 5%'
+        $nombres = [
+            'PREMIUM MAX' => 'Terceros Completos Premium',
+            'TODO RIESGO 2%' => 'Todo Riesgo Franquicia 2%',
+            'TODO RIESGO 4%' => 'Todo Riesgo Franquicia 4%',
+            'CG' => 'Terceros Completos Premium',
+            'TODO RIESGO CON FRANQUICIA - PLAN D2 2%' => 'Todo Riesgo Franquicia 2%',
+            'TODO RIESGO CON FRANQUICIA – PLAN DV 4%' => 'Todo Riesgo Franquicia 5%',
+            'CM' => 'Terceros Completos Premium',
+            'TODO RIESGO 2%' => 'Todo Riesgo Franquicia 2%',
+            'Todo riesgo con franq. del 5' => 'Todo Riesgo Franquicia 5%',
+            'Todo riesgo con franq. del 2,0' => 'Todo Riesgo Franquicia 2%',
+            'TERCEROS COMPLETO XL + GRANIZO' => 'Terceros Completos Premium',
+            'TODO RIESGO 2%' => 'Todo Riesgo Franquicia 2%',
+            'TODO RIESGO 5%' => 'Todo Riesgo Franquicia 5%'
         ];
 
-    echo '<div class="aseguradoras-container">';
+        echo '<div class="aseguradoras-container">';
 
-    //    echo '<pre>';
-    // print_r($body["Data"]['Cotizaciones']);
-    // echo '</pre>';
+        //    echo '<pre>';
+        // print_r($body["Data"]['Cotizaciones']);
+        // echo '</pre>';
 
         foreach ($body["Data"]['Cotizaciones'] as $aseguradora) {
             // Validar estructura de aseguradora
@@ -329,78 +333,78 @@ $menor25anos = $edad < 25 ? 1 : 2;
             ];
 
             $logo_url = isset($logos[$nombre_aseguradora]) ? $logos[$nombre_aseguradora] : '';
-                if (!empty($aseguradora['Coberturas']) && is_array($aseguradora['Coberturas'])) {
-                    echo '<div class="aseguradora">';
+            if (!empty($aseguradora['Coberturas']) && is_array($aseguradora['Coberturas'])) {
+                echo '<div class="aseguradora">';
 
-                    // Mostrar logo si existe
-                    if (!empty($logo_url)) {
-                        echo '<div class="aseguradora-logo-wrapper"> <img src="' . esc_url($logo_url) . '" alt="' . esc_attr($nombre_aseguradora) . ' logo" class="aseguradora-logo"></div>';
-                    }
-
-                    echo '<ul class="coberturas-list">';
-
-                    foreach ($aseguradora['Coberturas'] as $index => $coti) {
-                        // Validar estructura de cobertura
-                        if (!isset($coti['DescCobertura']) || !isset($coti['Prima'])) {
-                            continue;
-                        }
-
-                      
-        $permitido = false;
-
-        foreach ($planes_permitidos[$nombre_aseguradora] as $plan) {
-            if (stripos($coti['DescCobertura'], $plan) !== false) {
-                $permitido = true;
-                break;
-            }
-        }
-
-        if ($permitido) {
-            $id = 'cobertura_' . $index . '_' . md5($coti['DescCobertura']);
-
-                // Buscar una coincidencia en las claves del array $nombres
-                
-                echo '<li class="cobertura-item">';
-                echo '<div class="cobertura-content">';
-                // echo '<p>' . esc_html($coti['DescCobertura']) . '</p>';
-                foreach ($nombres as $clave => $valor) {
-                    if (stripos($coti['DescCobertura'], $clave) !== false) {
-                        // Si encuentra coincidencia, mostrar el valor mapeado
-                        echo '<p class="nombre-mapeado">' . esc_html($valor) . '</p>';
-                        break; // Si querés que solo se muestre la primera coincidencia
-                    }
+                // Mostrar logo si existe
+                if (!empty($logo_url)) {
+                    echo '<div class="aseguradora-logo-wrapper"> <img src="' . esc_url($logo_url) . '" alt="' . esc_attr($nombre_aseguradora) . ' logo" class="aseguradora-logo"></div>';
                 }
-            echo '<h5>$ ' . number_format((float) $coti['Prima'], 2, ',', '.') . '</h5>';
 
-                echo '<a href="#"> 
+                echo '<ul class="coberturas-list">';
+
+                foreach ($aseguradora['Coberturas'] as $index => $coti) {
+                    // Validar estructura de cobertura
+                    if (!isset($coti['DescCobertura']) || !isset($coti['Prima'])) {
+                        continue;
+                    }
+
+
+                    $permitido = false;
+
+                    foreach ($planes_permitidos[$nombre_aseguradora] as $plan) {
+                        if (stripos($coti['DescCobertura'], $plan) !== false) {
+                            $permitido = true;
+                            break;
+                        }
+                    }
+
+                    if ($permitido) {
+                        $id = 'cobertura_' . $index . '_' . md5($coti['DescCobertura']);
+
+                        // Buscar una coincidencia en las claves del array $nombres
+
+                        echo '<li class="cobertura-item">';
+                        echo '<div class="cobertura-content">';
+                        // echo '<p>' . esc_html($coti['DescCobertura']) . '</p>';
+                        foreach ($nombres as $clave => $valor) {
+                            if (stripos($coti['DescCobertura'], $clave) !== false) {
+                                // Si encuentra coincidencia, mostrar el valor mapeado
+                                echo '<p class="nombre-mapeado">' . esc_html($valor) . '</p>';
+                                break; // Si querés que solo se muestre la primera coincidencia
+                            }
+                        }
+                        echo '<h5>$ ' . number_format((float) $coti['Prima'], 2, ',', '.') . '</h5>';
+
+                        echo '<a href="#"> 
                 <span> 
                     <img class="whatsapp-icon" src="' . plugin_dir_url(dirname(__FILE__)) . 'assets/whatsapp-icon.png" width="19px" height="19px" alt="icono-whatsapp" /> 
                 </span>
                 Contratar ahora
             </a>';
-            echo '</div>';
-            echo '</li>';
-        }
-    }
+                        echo '</div>';
+                        echo '</li>';
+                    }
+                }
 
-            echo '</ul>';
-            echo '</div>';
-        } else {
-            // echo '<p>No se encontraron coberturas para ' . esc_html($nombre_aseguradora) . '.</p>';
+                echo '</ul>';
+                echo '</div>';
+            } else {
+                // echo '<p>No se encontraron coberturas para ' . esc_html($nombre_aseguradora) . '.</p>';
+            }
         }
-    }
-    echo '</div>';
+        echo '</div>';
 
 
         return ob_get_clean();
-
     } catch (Exception $e) {
         error_log("Error en resultado_cotizador_auto: " . $e->getMessage());
         return '<p>Error interno: No se pudo procesar la cotización.</p>';
     }
 }
 
-function compare_strings($fraseObjetivo, $resultados) {
+function compare_strings($fraseObjetivo, $resultados)
+{
     $mejorSimilitud = -1;
     $mejorCoincidencia = null;
 
