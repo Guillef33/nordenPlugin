@@ -258,7 +258,7 @@ function resultado_cotizador_auto()
                     "EstadoCivil" => "1",
                     "Provincia" => $provincia_zurich,
                     "IdPlan" => "350",
-                    "Localidad" => $zurichLocalidad ?? null,
+                    "Localidad" => $zurichLocalidad ?? "1",
                     "Asistencia" => "31",
                     "TipoFacturacionCustom" => "M"
                 ],
