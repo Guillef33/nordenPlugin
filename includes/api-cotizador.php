@@ -209,6 +209,8 @@ function resultado_cotizador_auto()
 
         $url_cotizar = 'https://quickbi4.norden.com.ar/api_externa/autos/cotizador/cotizar';
 
+        
+
         // Construir body request
         error_log("Construyendo body request...");
         $bodyReq = [
@@ -258,7 +260,7 @@ function resultado_cotizador_auto()
                     "EstadoCivil" => "1",
                     "Provincia" => $provincia_zurich,
                     "IdPlan" => "350",
-                    "Localidad" => $zurichLocalidad ?? "1",
+                    // "Localidad" => $zurichLocalidad ?? "1",
                     "Asistencia" => "31",
                     "TipoFacturacionCustom" => "M"
                 ],
@@ -282,6 +284,10 @@ function resultado_cotizador_auto()
                 ]
             ]
         ];
+
+        if (!empty($zurichLocalidad)) {
+            $bodyReq["ParametrosEspecificos"]["Zurich"]["Localidad"] = (string) $zurichLocalidad;
+        }
 
         // Log del body request (sin datos sensibles)
         error_log("Body request construido:");
