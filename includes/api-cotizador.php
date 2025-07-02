@@ -215,7 +215,7 @@ function resultado_cotizador_auto()
         error_log("Construyendo body request...");
         $bodyReq = [
             "ParametrosGenerales" => [
-                "ProductorVendedor" => "208",
+                "ProductorVendedor" => "27923",
                 "Año" => $anio_final, // DIFERENCIA CLAVE ENTRE USADO Y 0KM
                 "CeroKm" => ($condicion == "0km"),
                 "CodVehiculoExterno" => sanitize_text_field($_POST['modelo']),
