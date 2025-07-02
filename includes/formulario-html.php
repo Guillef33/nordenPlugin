@@ -246,7 +246,7 @@ condicion.addEventListener('change', (e) => {
             
             modeloSelect.innerHTML = '<option value="" disabled selected>Cargando modelos...</option>';
             
-            fetch(`${miPluginData.rest_url}modelos?marca=${marcaId}&anio=${condicion=='usado'?anio:'2025'}`)
+            fetch(`${miPluginData.rest_url}modelos?marca=${marcaId}&anio=${condicion.value=='usado'?anio:'2025'}`)
             .then(res => res.json())
             .then(data => {
     if (!Array.isArray(data.Data) || data.Data.length === 0) {
