@@ -325,10 +325,10 @@ function resultado_cotizador_auto()
         error_log("Respuesta HTTP code: $http_code");
         error_log("Respuesta body length: " . strlen($body_raw));
         
-        if ($http_code !== 200) {
-            error_log("Error HTTP $http_code - Body: " . substr($body_raw, 0, 500));
-            return '<p>Error: El servicio respondió con código ' . $http_code . '. Detalles: ' . esc_html($body_raw) . '</p>';
-        }
+        // if ($http_code !== 200) {
+        //     error_log("Error HTTP $http_code - Body: " . substr($body_raw, 0, 500));
+        //     return '<p>Error: El servicio respondió con código ' . $http_code . '. Detalles: ' . esc_html($body_raw) . '</p>';
+        // }
 
         $body = json_decode($body_raw, true);
         if (json_last_error() !== JSON_ERROR_NONE) {
