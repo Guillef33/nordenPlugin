@@ -8,7 +8,8 @@ add_action('rest_api_init', function () {
     ));
 });
 
-function mi_plugin_codigos_postales_handler(WP_REST_Request $request) {
+function mi_plugin_codigos_postales_handler(WP_REST_Request $request)
+{
     $provincia = $request->get_param('provincia');
 
     if (!$provincia) {
@@ -21,7 +22,8 @@ function mi_plugin_codigos_postales_handler(WP_REST_Request $request) {
     return new WP_REST_Response($codigos, 200);
 }
 
-function obtener_codigos_postales($token, $provincia = '02') {
+function obtener_codigos_postales($token, $provincia = '02')
+{
     $url_base = 'https://quickbi4.norden.com.ar/api/general/ubicacion/listacodigopostal';
 
     $url = $url_base . '?' . http_build_query([
@@ -47,8 +49,11 @@ function obtener_codigos_postales($token, $provincia = '02') {
 
     $body = json_decode(wp_remote_retrieve_body($response), true);
 
-    function compareByName($a,$b){
-        return strcmp($a["Text"], $b["Text"]);
+    if (!function_exists('compareByName')) {
+        function compareByName($a, $b)
+        {
+            return strcmp($a["Text"], $b["Text"]);
+        }
     }
 
     usort($body["Data"], 'compareByName');
