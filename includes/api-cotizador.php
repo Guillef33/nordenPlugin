@@ -372,7 +372,7 @@ function resultado_cotizador_auto()
             return '<p>No se encontraron cotizaciones disponibles para los datos proporcionados.</p>';
         }
 
-        error_log("Cotizaciones encontradas: " . count($body['Data']['Cotizaciones']));
+        //error_log("Cotizaciones encontradas: " . count($body['Data']['Cotizaciones']));
 
         /*
         error_log('--------------COTIZACIONES-----------------------');
@@ -432,7 +432,17 @@ function resultado_cotizador_auto()
         echo '<pre>';
         print_r($body["Data"]['Cotizaciones']);
         echo '</pre>';
+
+        
 */
+
+
+        $api_experta_encontradas = 0;
+        $api_sancor_encontradas = 0;
+        $api_zurich_encontradas = 0;
+        $api_sancristobal_encontradas = 0;
+
+
         foreach ($body["Data"]['Cotizaciones'] as $aseguradora) {
             // Validar estructura de aseguradora
             if (!isset($aseguradora['Aseguradora'])) {
@@ -440,7 +450,12 @@ function resultado_cotizador_auto()
                 continue;
             }
 
+
+
+
+
             $nombre_aseguradora = $aseguradora["Aseguradora"];
+            error_log("----------------------------");
             error_log("Procesando aseguradora: $nombre_aseguradora");
 
             if (!isset($planes_permitidos[$nombre_aseguradora])) {
@@ -469,9 +484,24 @@ function resultado_cotizador_auto()
 
                 $return .= '<ul class="coberturas-list">';
 
+
                 $coberturas_mostradas = 0;
 
+
+
                 foreach ($aseguradora['Coberturas'] as $index => $coti) {
+
+
+
+
+
+                    if ($aseguradora['IdAseguradora'] == 43) $api_experta_encontradas++;
+                    if ($aseguradora['IdAseguradora'] == 168) $api_sancor_encontradas++;
+                    if ($aseguradora['IdAseguradora'] == 195) $api_zurich_encontradas++;
+                    if ($aseguradora['IdAseguradora'] == 166) $api_sancristobal_encontradas++;
+
+
+
                     // Validar estructura de cobertura
                     if (!isset($coti['DescCobertura']) || !isset($coti['Prima'])) {
                         error_log("Cobertura con estructura incompleta en $nombre_aseguradora");
@@ -534,6 +564,13 @@ function resultado_cotizador_auto()
             }
         }
         $return .= '</div>';
+
+        error_log("------------------------------------------------");
+        error_log("Coberturas mostradas para Experta: " . $api_experta_encontradas);
+        error_log("Coberturas mostradas para Sancor: " . $api_sancor_encontradas);
+        error_log("Coberturas mostradas para Zurich: " . $api_zurich_encontradas);
+        error_log("Coberturas mostradas para SanCristobal: " . $api_sancristobal_encontradas);
+        error_log("------------------------------------------------");
 
         error_log("=== COTIZADOR COMPLETADO EXITOSAMENTE ===");
 
