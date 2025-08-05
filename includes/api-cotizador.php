@@ -6,7 +6,7 @@ function resultado_cotizador_auto()
 {
     // Habilitar logging detallado
     error_log("=== INICIO COTIZADOR AUTO ===");
-    
+
     // Validar que sea una petición POST
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
         error_log("Error: Método no POST");
@@ -18,7 +18,7 @@ function resultado_cotizador_auto()
         error_log("POST recibido - Condición: " . ($_POST['condicion'] ?? 'NO_SET'));
         error_log("POST recibido - Año: " . ($_POST['anio'] ?? 'NO_SET'));
         error_log("POST recibido - Modelo: " . ($_POST['modelo'] ?? 'NO_SET'));
-        
+
         // Validar y obtener token
         error_log("Obteniendo token...");
         $token = obtener_token_norden();
@@ -68,12 +68,12 @@ function resultado_cotizador_auto()
             error_log("Obteniendo provincia Sancor...");
             $provincia_sancor = obtener_provincia_sancor($provincia_sanitized, $token);
             error_log("Provincia Sancor obtenida: " . ($provincia_sancor ?? 'NULL'));
-            
+
             if ($provincia_sancor) {
                 error_log("Obteniendo localidades Sancor...");
                 $localidades_sancor = obtener_localidad_sancor(sanitize_text_field($cp), $provincia_sancor, $token);
                 error_log("Localidades Sancor - Count: " . (is_array($localidades_sancor) ? count($localidades_sancor) : 'NO_ARRAY'));
-                
+
                 if ($localidades_sancor && is_array($localidades_sancor)) {
                     $result_sancor = compare_strings($cpName, $localidades_sancor);
                     $sancorLocalidad = isset($result_sancor["Value"]) ? $result_sancor["Value"] : null;
@@ -89,16 +89,21 @@ function resultado_cotizador_auto()
         // Validaciones para Zurich
         $provincia_zurich = null;
         $zurichLocalidad = null;
+        $zurichPlanId = null;
         try {
             error_log("Obteniendo provincia Zurich...");
             $provincia_zurich = obtener_provincia_zurich($provincia_sanitized, $token);
             error_log("Provincia Zurich obtenida: " . ($provincia_zurich ?? 'NULL'));
-            
+
+            error_log("Obteniendo PlanId Zurich...");
+            $zurichPlanId = obtener_planId(PRODUCTOR_VENDEDOR, $token);
+            error_log("PlanId Zurich obtenido: " . ($zurichPlanId ?? 'NULL'));
+
             if ($provincia_zurich) {
                 error_log("Obteniendo localidades Zurich...");
                 $localidades_zurich = obtener_localidad_zurich(sanitize_text_field($cp), $provincia_zurich, $token);
                 error_log("Localidades Zurich - Count: " . (is_array($localidades_zurich) ? count($localidades_zurich) : 'NO_ARRAY'));
-                
+
                 if ($localidades_zurich && is_array($localidades_zurich)) {
                     $result_zurich = compare_strings($cpName, $localidades_zurich);
                     $zurichLocalidad = isset($result_zurich["Value"]) ? $result_zurich["Value"] : null;
@@ -118,12 +123,12 @@ function resultado_cotizador_auto()
             error_log("Obteniendo provincia Experta...");
             $provincia_experta = obtener_provincia_experta($provincia_sanitized, $token);
             error_log("Provincia Experta obtenida: " . ($provincia_experta ?? 'NULL'));
-            
+
             if ($provincia_experta) {
                 error_log("Obteniendo localidades Experta...");
                 $localidades_experta = obtener_localidad_experta(sanitize_text_field($cp), $provincia_experta, $token);
                 error_log("Localidades Experta - Count: " . (is_array($localidades_experta) ? count($localidades_experta) : 'NO_ARRAY'));
-                
+
                 if ($localidades_experta && is_array($localidades_experta)) {
                     $result_experta = compare_strings($cpName, $localidades_experta);
                     $expertaLocalidad = isset($result_experta["Value"]) ? $result_experta["Value"] : null;
@@ -194,7 +199,7 @@ function resultado_cotizador_auto()
         // PUNTO CRÍTICO: Diferencia entre usado y 0km
         $condicion = sanitize_text_field($_POST['condicion']);
         error_log("Condición del vehículo: $condicion");
-        
+
         // Para autos usados, usar el año proporcionado; para 0km usar 2025
         $anio_final = ($condicion == "usado") ? $anio : '2025';
         error_log("Año final a usar en la cotización: $anio_final");
@@ -204,18 +209,18 @@ function resultado_cotizador_auto()
         $hoy = new DateTime();
         $edad = $fechaNacimientoDate->diff($hoy)->y;
         $menor25anos = $edad < 25 ? 1 : 2;
-        
+
         error_log("Edad calculada: $edad, Menor 25 años: $menor25anos");
 
         $url_cotizar = 'https://quickbi4.norden.com.ar/api_externa/autos/cotizador/cotizar';
 
-        
+
 
         // Construir body request
         error_log("Construyendo body request...");
         $bodyReq = [
             "ParametrosGenerales" => [
-                "ProductorVendedor" => "27923",
+                "ProductorVendedor" => PRODUCTOR_VENDEDOR,
                 "Año" => $anio_final, // DIFERENCIA CLAVE ENTRE USADO Y 0KM
                 "CeroKm" => ($condicion == "0km"),
                 "CodVehiculoExterno" => sanitize_text_field($_POST['modelo']),
@@ -259,8 +264,8 @@ function resultado_cotizador_auto()
                     "TipoIva" => "1",
                     "EstadoCivil" => "1",
                     "Provincia" => $provincia_zurich,
-                    "IdPlan" => "350",
-                    // "Localidad" => $zurichLocalidad ?? "1",
+                    "IdPlan" => $zurichPlanId,
+                    "Localidad" => $zurichLocalidad,
                     "Asistencia" => "31",
                     "TipoFacturacionCustom" => "M"
                 ],
@@ -285,11 +290,16 @@ function resultado_cotizador_auto()
             ]
         ];
 
+        error_log('--------------REQUEST-----------------------');
+        error_log(print_r($bodyReq, true));
+        error_log('-------------------------------------------');
+
         if (!empty($zurichLocalidad)) {
             $bodyReq["ParametrosEspecificos"]["Zurich"]["Localidad"] = (string) $zurichLocalidad;
         }
 
         // Log del body request (sin datos sensibles)
+        /*
         error_log("Body request construido:");
         error_log("- Año: " . $bodyReq["ParametrosGenerales"]["Año"]);
         error_log("- CeroKm: " . ($bodyReq["ParametrosGenerales"]["CeroKm"] ? 'true' : 'false'));
@@ -299,14 +309,19 @@ function resultado_cotizador_auto()
         error_log("- Provincia Zurich: " . ($provincia_zurich ?? 'NULL'));
         error_log("- Localidad Zurich: " . ($zurichLocalidad ?? 'NULL'));
         error_log("- Localidad Experta: " . ($expertaLocalidad ?? 'NULL'));
+        */
 
         $args = [
             'body' => json_encode($bodyReq),
             'headers' => [
                 'Authorization' => 'Bearer ' . $token,
                 'Content-Type' => 'application/json',
+                'Cache-Control' => 'no-cache',
+                //'Accept'          => '*/*',
+                //'Accept-Encoding' => 'gzip, deflate, br',
+                'Connection'      => 'keep-alive',
             ],
-            'timeout' => 100,
+            'timeout' => 20,
         ];
 
         error_log("Enviando request a API...");
@@ -319,12 +334,19 @@ function resultado_cotizador_auto()
             return '<p>Error: No se pudo conectar con el servicio de cotización.</p>';
         }
 
+        /*
+        error_log('--------------RESPONSE-----------------------');
+        error_log(print_r($response, true));
+        error_log('-------------------------------------------');
+        */
+
+
         $http_code = wp_remote_retrieve_response_code($response);
         $body_raw = wp_remote_retrieve_body($response);
-        
+
         error_log("Respuesta HTTP code: $http_code");
         error_log("Respuesta body length: " . strlen($body_raw));
-        
+
         // if ($http_code !== 200) {
         //     error_log("Error HTTP $http_code - Body: " . substr($body_raw, 0, 500));
         //     return '<p>Error: El servicio respondió con código ' . $http_code . '. Detalles: ' . esc_html($body_raw) . '</p>';
@@ -352,7 +374,13 @@ function resultado_cotizador_auto()
 
         error_log("Cotizaciones encontradas: " . count($body['Data']['Cotizaciones']));
 
-        ob_start();
+        /*
+        error_log('--------------COTIZACIONES-----------------------');
+        error_log(print_r($body['Data']['Cotizaciones'], true));
+        error_log('-------------------------------------------');
+        */
+
+
 
         // Lista de planes permitidos por aseguradora
         $planes_permitidos = [
@@ -395,8 +423,8 @@ function resultado_cotizador_auto()
             'TODO RIESGO 5%' => 'Todo Riesgo Franquicia 5%'
         ];
 
-        echo '<div class="aseguradoras-container">';
-
+        $return = '<div class="aseguradoras-container">';
+        /*
         echo '<pre>';
         print_r($bodyReq);
         echo '</pre>';
@@ -404,7 +432,7 @@ function resultado_cotizador_auto()
         echo '<pre>';
         print_r($body["Data"]['Cotizaciones']);
         echo '</pre>';
-
+*/
         foreach ($body["Data"]['Cotizaciones'] as $aseguradora) {
             // Validar estructura de aseguradora
             if (!isset($aseguradora['Aseguradora'])) {
@@ -428,18 +456,18 @@ function resultado_cotizador_auto()
             ];
 
             $logo_url = isset($logos[$nombre_aseguradora]) ? $logos[$nombre_aseguradora] : '';
-            
+
             if (!empty($aseguradora['Coberturas']) && is_array($aseguradora['Coberturas'])) {
                 error_log("Coberturas encontradas para $nombre_aseguradora: " . count($aseguradora['Coberturas']));
-                
-                echo '<div class="aseguradora">';
+
+                $return .= '<div class="aseguradora">';
 
                 // Mostrar logo si existe
                 if (!empty($logo_url)) {
-                    echo '<div class="aseguradora-logo-wrapper"> <img src="' . esc_url($logo_url) . '" alt="' . esc_attr($nombre_aseguradora) . ' logo" class="aseguradora-logo"></div>';
+                    $return .= '<div class="aseguradora-logo-wrapper"> <img src="' . esc_url($logo_url) . '" alt="' . esc_attr($nombre_aseguradora) . ' logo" class="aseguradora-logo"></div>';
                 }
 
-                echo '<ul class="coberturas-list">';
+                $return .= '<ul class="coberturas-list">';
 
                 $coberturas_mostradas = 0;
 
@@ -464,53 +492,52 @@ function resultado_cotizador_auto()
                         $coberturas_mostradas++;
                         $id = 'cobertura_' . $index . '_' . md5($coti['DescCobertura']);
 
-                        echo '<li class="cobertura-item">';
-                        echo '<div class="cobertura-content">';
-                        
+                        $return .= '<li class="cobertura-item">';
+                        $return .= '<div class="cobertura-content">';
+
                         // Buscar una coincidencia en las claves del array $nombres
                         $nombre_mostrado = false;
                         foreach ($nombres as $clave => $valor) {
                             if (stripos($coti['DescCobertura'], $clave) !== false) {
                                 // Si encuentra coincidencia, mostrar el valor mapeado
-                                echo '<p class="nombre-mapeado">' . esc_html($valor) . '</p>';
+                                $return .= '<p class="nombre-mapeado">' . esc_html($valor) . '</p>';
                                 $nombre_mostrado = true;
                                 break; // Si querés que solo se muestre la primera coincidencia
                             }
                         }
-                        
+
                         if (!$nombre_mostrado) {
                             error_log("No se encontró mapeo para: " . $coti['DescCobertura']);
                         }
-                        
-                        echo '<h5>$ ' . number_format((float) $coti['Prima'], 2, ',', '.') . '</h5>';
 
-                        echo '<a href="#"> 
+                        $return .= '<h5>$ ' . number_format((float) $coti['Prima'], 2, ',', '.') . '</h5>';
+
+                        $return .= '<a href="#"> 
                 <span> 
                     <img class="whatsapp-icon" src="' . plugin_dir_url(dirname(__FILE__)) . 'assets/whatsapp-icon.png" width="19px" height="19px" alt="icono-whatsapp" /> 
                 </span>
                 Contratar ahora
             </a>';
-                        echo '</div>';
-                        echo '</li>';
+                        $return .= '</div>';
+                        $return .= '</li>';
                     } else {
                         error_log("Plan no permitido: " . $coti['DescCobertura']);
                     }
                 }
 
-                echo '</ul>';
-                echo '</div>';
-                
+                $return .= '</ul>';
+                $return .= '</div>';
+
                 error_log("Coberturas mostradas para $nombre_aseguradora: $coberturas_mostradas");
             } else {
                 error_log("No se encontraron coberturas válidas para $nombre_aseguradora");
             }
         }
-        echo '</div>';
+        $return .= '</div>';
 
         error_log("=== COTIZADOR COMPLETADO EXITOSAMENTE ===");
 
-        return ob_get_clean();
-        
+        return $return;
     } catch (Exception $e) {
         error_log("EXCEPCIÓN GENERAL: " . $e->getMessage());
         error_log("Stack trace: " . $e->getTraceAsString());
@@ -526,7 +553,7 @@ function compare_strings($fraseObjetivo, $resultados)
 {
     error_log("Comparando strings - Frase objetivo: $fraseObjetivo");
     error_log("Resultados count: " . (is_array($resultados) ? count($resultados) : 'NO_ARRAY'));
-    
+
     $mejorSimilitud = -1;
     $mejorCoincidencia = null;
 
@@ -535,10 +562,10 @@ function compare_strings($fraseObjetivo, $resultados)
             error_log("Resultado sin campo Text encontrado");
             continue;
         }
-        
+
         similar_text($fraseObjetivo, $oracion["Text"], $porcentaje);
         error_log("Similitud con '" . $oracion["Text"] . "': $porcentaje%");
-        
+
         if ($porcentaje > $mejorSimilitud) {
             $mejorSimilitud = $porcentaje;
             $mejorCoincidencia = $oracion;

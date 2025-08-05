@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Plugin Name:       Formulario de Cotizacion Norden API 
  * Plugin URI:        https://somosvalencia.com/
@@ -11,7 +12,11 @@
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  */
 
-defined( 'ABSPATH' ) or die( 'No molestar!' );
+defined('ABSPATH') or die('No molestar!');
+
+define('PRODUCTOR_VENDEDOR', '27923');
+define('NORDEN_USERNAME', 'ApiQuick');
+define('NORDEN_PASSWORD', 'a9_e3G_5x4A7');
 
 add_action('wp_ajax_mi_endpoint', 'mi_funcion_php');
 
@@ -29,7 +34,8 @@ require_once plugin_dir_path(__FILE__) . 'includes/api-experta.php';
 require_once plugin_dir_path(__FILE__) . 'includes/formulario-cotizacion.php';
 
 // Agregar assets de css y js, actualizando el nombre del archivo con ?ver=1.0 para que no se guarde en caché y se actualice
-function cotizador_norden_enqueue_assets() {
+function cotizador_norden_enqueue_assets()
+{
     $plugin_url = plugin_dir_url(__FILE__);
     $plugin_path = plugin_dir_path(__FILE__);
 
@@ -82,4 +88,3 @@ add_action('rest_api_init', function () {
 // Shortcodes
 add_shortcode('resultado_cotizador_auto', 'resultado_cotizador_auto');
 add_shortcode('formulario_cotizador_auto', 'formulario_cotizacion_auto');
-?>

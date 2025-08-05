@@ -2,12 +2,13 @@
 
 if (!defined('ABSPATH')) exit;
 
-function obtener_token_norden() {
+function obtener_token_norden()
+{
     $url = 'https://quickbi4.norden.com.ar/api_externa/seguridad/autenticacion/login';
 
     $datos_login = [
-        "Username" => "ApiQuick",
-        "Password" => "a9_e3G_5x4A7"
+        "Username" => NORDEN_USERNAME,
+        "Password" => NORDEN_PASSWORD
     ];
 
     $args = [
