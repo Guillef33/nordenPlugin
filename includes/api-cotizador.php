@@ -248,17 +248,18 @@ function resultado_cotizador_auto()
                     "Provincia" => $provincia_sancor,
                     "Localidad" => $sancorLocalidad,
                     "Menor25Años" => $menor25anos,
-                    "DescuentoEspecial" => "0",
+                    "DescuentoEspecial" => "15", // 15% DESCUENTO PROMOCIONAL
                     "TipoFacturacionCustom" => "M",
                     "Deducible" => "0",
                     "DescuentoPromocional" => "0",
                 ],
+                /*
                 "Zurich" => [
                     "Beneficio" => "1",
                     "ClausulaAjuste" => "0",
-                    "Descuento" => "10",
-                    "Comision" => "10",
-                    "DescuentoComision" => "10",
+                    "Descuento" => "15", //DESCUENTO 15%
+                    "Comision" => "25", // COMISION 25%
+                    "DescuentoComision" => "0", // DESCUENTO COMISION 10% ???
                     "PlanDePago" => "91",
                     "Rastreador" => "0",
                     "TipoIva" => "1",
@@ -287,6 +288,7 @@ function resultado_cotizador_auto()
                     "TipoFacturacionCustom" => "M",
                     "PlanPago" => "1"
                 ]
+                */
             ]
         ];
 
