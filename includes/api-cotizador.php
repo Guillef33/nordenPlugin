@@ -384,8 +384,8 @@ function resultado_cotizador_auto()
 
         // Lista de planes permitidos por aseguradora
         $planes_permitidos = [
-            'Sancor' => ['PREMIUM MAX', 'TODO RIESGO 2%', 'TODO RIESGO 4%'],
-            'Zurich' => [
+            /* 'Sancor' => ['PREMIUM MAX', 'TODO RIESGO 2%', 'TODO RIESGO 4%'],
+             'Zurich' => [
                 'CG',
                 'TODO RIESGO CON FRANQUICIA - PLAN D2 2%',
                 'TODO RIESGO CON FRANQUICIA – PLAN DV 4%',
@@ -405,9 +405,48 @@ function resultado_cotizador_auto()
                 'TODO RIESGO 2%',
                 'TODO RIESGO 5%'
             ]
+            */
+            'Sancor' => [
+                '12', //'PREMIUM MAX -TERCEROS COMPLETO PREMIUM', --- ver si es correcto
+                '28', //'AUTO TODO RIESGO 2%', 
+                '31' //'AUTO TODO RIESGO 4%'
+            ],
+            'Zurich' => [
+                'DZ', //TR CON FRANQUICIA – TALLER ZURICH (DZ)
+                'D2', //'TODO RIESGO CON FRANQUICIA - PLAN D2 2%',
+                'DV' //'TODO RIESGO CON FRANQUICIA - PLAN DV 4%'
+            ],
+            'San Cristobal' => [
+                'CA7_CM', //'CM - Terceros Completos Premium - Destrucción total por accidente, total y parcial por incendio y robo o hurto',
+                'CA7_D106', //'D106 - Todo riesgo con franq. del 3,5%',
+                'CA7_D102'  //'D102 -Todo riesgo con franq. del 5,0%',
+            ],
+            'Experta' => [
+                '642', //'TERCEROS COMPLETO XL + GRANIZO FULL',
+                '964', //'TODO RIESGO FRANQ. VARIABLE XL - 2%',
+                '967' //'TODO RIESGO FRANQ. VARIABLE XL - 5%'
+            ]
         ];
 
         $nombres = [
+            //Sancor
+            '12' => 'Terceros Completos Premium',
+            '28' => 'Todo Riesgo Franquicia 2%',
+            '31' => 'Todo Riesgo Franquicia 4%',
+            //Zurich
+            'DZ' => 'Terceros Completos Premium',
+            'D2' => 'Todo Riesgo Franquicia 2%',
+            'DV' => 'Todo Riesgo Franquicia 5%',
+            //San Cristobal
+            'CA7_CM' => 'Terceros Completos Premium',
+            'CA7_D106' => 'Todo Riesgo Franquicia 3,5%',
+            'CA7_D102' => 'Todo Riesgo Franquicia 5%',
+            //Experta
+            '642' => 'Terceros Completos Premium',
+            '964' => 'Todo Riesgo Franquicia 2%',
+            '967' => 'Todo Riesgo Franquicia 5%'
+
+            /*
             'PREMIUM MAX' => 'Terceros Completos Premium',
             'TODO RIESGO 2%' => 'Todo Riesgo Franquicia 2%',
             'TODO RIESGO 4%' => 'Todo Riesgo Franquicia 4%',
@@ -421,6 +460,8 @@ function resultado_cotizador_auto()
             'TERCEROS COMPLETO XL + GRANIZO' => 'Terceros Completos Premium',
             'TODO RIESGO 2%' => 'Todo Riesgo Franquicia 2%',
             'TODO RIESGO 5%' => 'Todo Riesgo Franquicia 5%'
+            */
+
         ];
 
         $return = '<div class="aseguradoras-container">';
@@ -511,24 +552,30 @@ function resultado_cotizador_auto()
                     $permitido = false;
 
                     foreach ($planes_permitidos[$nombre_aseguradora] as $plan) {
-                        if (stripos($coti['DescCobertura'], $plan) !== false) {
+                        //if (stripos($coti['DescCobertura'], $plan) !== false) {
+                        if ($coti['CodCoberturaCia'] === $plan) {
                             $permitido = true;
-                            error_log("Plan permitido encontrado: " . $coti['DescCobertura']);
+                            error_log("Plan permitido encontrado: " . $coti['CodCoberturaCia'] . ' - ' . $coti['DescCobertura']);
                             break;
                         }
                     }
 
+
+
                     if ($permitido) {
                         $coberturas_mostradas++;
-                        $id = 'cobertura_' . $index . '_' . md5($coti['DescCobertura']);
+                        //$id = 'cobertura_' . $index . '_' . md5($coti['DescCobertura']);
 
                         $return .= '<li class="cobertura-item">';
                         $return .= '<div class="cobertura-content">';
 
                         // Buscar una coincidencia en las claves del array $nombres
+                        /*
                         $nombre_mostrado = false;
+                        
                         foreach ($nombres as $clave => $valor) {
-                            if (stripos($coti['DescCobertura'], $clave) !== false) {
+                            //if (stripos($coti['Id'], $clave) !== false) {
+                            if ($coti['CodCoberturaCia'] === $clave) {
                                 // Si encuentra coincidencia, mostrar el valor mapeado
                                 $return .= '<p class="nombre-mapeado">' . esc_html($valor) . '</p>';
                                 $nombre_mostrado = true;
@@ -537,8 +584,11 @@ function resultado_cotizador_auto()
                         }
 
                         if (!$nombre_mostrado) {
-                            error_log("No se encontró mapeo para: " . $coti['DescCobertura']);
+                            error_log("No se encontró mapeo para: "  . $coti['CodCoberturaCia'] . ' - ' . $coti['DescCobertura']);
                         }
+                        */
+                        $return .= '<p class="nombre-mapeado">' . $nombres[$coti['CodCoberturaCia']] . '</p>';
+
 
                         $return .= '<h5>$ ' . number_format((float) $coti['Prima'], 2, ',', '.') . '</h5>';
 
