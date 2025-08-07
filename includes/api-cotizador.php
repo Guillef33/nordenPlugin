@@ -248,10 +248,10 @@ function resultado_cotizador_auto()
                     "Provincia" => $provincia_sancor,
                     "Localidad" => $sancorLocalidad,
                     "Menor25Años" => $menor25anos,
-                    "DescuentoEspecial" => "15", // 15% DESCUENTO PROMOCIONAL
+                    "DescuentoEspecial" => "0",
                     "TipoFacturacionCustom" => "M",
                     "Deducible" => "0",
-                    "DescuentoPromocional" => "0",
+                    "DescuentoPromocional" => "15", // 15% DESCUENTO PROMOCIONAL
                 ],
                 /*
                 "Zurich" => [
@@ -546,7 +546,7 @@ function resultado_cotizador_auto()
 
 
                     // Validar estructura de cobertura
-                    if (!isset($coti['DescCobertura']) || !isset($coti['Prima'])) {
+                    if (!isset($coti['DescCobertura']) || !isset($coti['Premio'])) {
                         error_log("Cobertura con estructura incompleta en $nombre_aseguradora");
                         continue;
                     }
@@ -592,7 +592,7 @@ function resultado_cotizador_auto()
                         $return .= '<p class="nombre-mapeado">' . $nombres[$coti['CodCoberturaCia']] . '</p>';
 
 
-                        $return .= '<h5>$ ' . number_format((float) $coti['Prima'], 2, ',', '.') . '</h5>';
+                        $return .= '<h5>$ ' . number_format((float) $coti['Premio'], 2, ',', '.') . '</h5>';
 
                         $return .= '<a href="#"> 
                 <span> 
