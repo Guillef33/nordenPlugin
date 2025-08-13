@@ -253,7 +253,6 @@ function resultado_cotizador_auto()
                     "Deducible" => "0",
                     "DescuentoPromocional" => "15", // 15% DESCUENTO PROMOCIONAL
                 ],
-                /*
                 "Zurich" => [
                     "Beneficio" => "1",
                     "ClausulaAjuste" => "0",
@@ -288,7 +287,6 @@ function resultado_cotizador_auto()
                     "TipoFacturacionCustom" => "M",
                     "PlanPago" => "1"
                 ]
-                */
             ]
         ];
 
