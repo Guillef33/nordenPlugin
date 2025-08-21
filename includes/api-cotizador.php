@@ -248,17 +248,17 @@ function resultado_cotizador_auto()
                     "Provincia" => $provincia_sancor,
                     "Localidad" => $sancorLocalidad,
                     "Menor25Años" => $menor25anos,
-                    "DescuentoEspecial" => "0",
+                    "DescuentoEspecial" => "15",
                     "TipoFacturacionCustom" => "M",
                     "Deducible" => "0",
-                    "DescuentoPromocional" => "15", // 15% DESCUENTO PROMOCIONAL
+                    "DescuentoPromocional" => "0",
                 ],
                 "Zurich" => [
-                    "Beneficio" => "1",
+                    "Beneficio" => "0",
                     "ClausulaAjuste" => "0",
-                    "Descuento" => "15", //DESCUENTO 15%
-                    "Comision" => "25", // COMISION 25%
-                    "DescuentoComision" => "0", // DESCUENTO COMISION 10% ???
+                    "Descuento" => "15",
+                    "Comision" => "15",
+                    "DescuentoComision" => "0",
                     "PlanDePago" => "91",
                     "Rastreador" => "0",
                     "TipoIva" => "1",
@@ -270,13 +270,13 @@ function resultado_cotizador_auto()
                     "TipoFacturacionCustom" => "M"
                 ],
                 "SanCristobal" => [
-                    "TipoFacturacionCustom" => "",
+                    "TipoFacturacionCustom" => "M",
                     "TipoDocumento" => sanitize_text_field($_POST['tipo_doc']),
                     "NroDocumento" => $nro_doc,
                     "FechaInicioVigencia" => $fechaActual,
                     "CantidadCuotas" => "12",
-                    "ClausulaAjuste" => "10",
-                    "AlternativaComercial" => "5",
+                    "ClausulaAjuste" => "5",
+                    "AlternativaComercial" => "-20",
                     "SnGPS" => false,
                     "GrupoAfinidad" => "pc:50502"
                 ],
@@ -436,7 +436,7 @@ function resultado_cotizador_auto()
             //Zurich
             'DZ' => 'Terceros Completos Premium',
             'D2' => 'Todo Riesgo Franquicia 2%',
-            'DV' => 'Todo Riesgo Franquicia 5%',
+            'DV' => 'Todo Riesgo Franquicia 4%',
             //San Cristobal
             'CA7_CM' => 'Terceros Completos Premium',
             'CA7_D106' => 'Todo Riesgo Franquicia 3,5%',
