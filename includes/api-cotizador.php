@@ -412,7 +412,7 @@ function resultado_cotizador_auto()
                 '31' //'AUTO TODO RIESGO 4%'
             ],
             'Zurich' => [
-                'DZ', //TR CON FRANQUICIA – TALLER ZURICH (DZ)
+                'CG', //TR CON FRANQUICIA – TALLER ZURICH (DZ)
                 'D2', //'TODO RIESGO CON FRANQUICIA - PLAN D2 2%',
                 'DV' //'TODO RIESGO CON FRANQUICIA - PLAN DV 4%'
             ],
@@ -434,7 +434,7 @@ function resultado_cotizador_auto()
             '28' => 'Todo Riesgo Franquicia 2%',
             '31' => 'Todo Riesgo Franquicia 4%',
             //Zurich
-            'DZ' => 'Terceros Completos Premium',
+            'CG' => 'Terceros Premium con Granizo',
             'D2' => 'Todo Riesgo Franquicia 2%',
             'DV' => 'Todo Riesgo Franquicia 4%',
             //San Cristobal
