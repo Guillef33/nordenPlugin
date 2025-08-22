@@ -251,7 +251,7 @@ function resultado_cotizador_auto()
                     "DescuentoEspecial" => "15",
                     "TipoFacturacionCustom" => "M",
                     "Deducible" => "0",
-                    "DescuentoPromocional" => "0",
+                    "DescuentoPromocional" => "1",
                 ],
                 "Zurich" => [
                     "Beneficio" => "0",
