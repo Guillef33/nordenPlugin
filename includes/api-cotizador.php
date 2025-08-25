@@ -200,8 +200,8 @@ function resultado_cotizador_auto()
         $condicion = sanitize_text_field($_POST['condicion']);
         error_log("Condición del vehículo: $condicion");
 
-        // Para autos usados, usar el año proporcionado; para 0km usar 2025
-        $anio_final = ($condicion == "usado") ? $anio : '2025';
+        // Para autos usados, usar el año proporcionado; para 0km usar año actual
+        $anio_final = ($condicion == "usado") ? $anio : date('Y');
         error_log("Año final a usar en la cotización: $anio_final");
 
         $fechaNacimiento = $_POST['fecha_nac'];
@@ -251,7 +251,7 @@ function resultado_cotizador_auto()
                     "DescuentoEspecial" => "15",
                     "TipoFacturacionCustom" => "M",
                     "Deducible" => "0",
-                    "DescuentoPromocional" => "1",
+                    "DescuentoPromocional" => true,
                 ],
                 "Zurich" => [
                     "Beneficio" => "0",
