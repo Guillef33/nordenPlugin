@@ -124,7 +124,7 @@
                 <label for="nro_doc">Numero de Documento</label>
                 <input type="text" name="nro_doc" id="nro_doc" for="nro_doc" required="" value="">
             </div>
-            <div>
+            <?php /* <div>
                 <label for="estado_civil">Estado Civil</label>
                 <select name="estado_civil" id="estado_civil" for="estado_civil" required="">
                     <option value="">Selecciona un estado civil</option>
@@ -144,6 +144,7 @@
                     <option value="N">NO CORRESPONDE</option>
                 </select>
             </div>
+            */ ?>
             <div>
 
 

@@ -159,8 +159,8 @@ function resultado_cotizador_auto()
             'condicion' => 'Condición del vehículo',
             'modelo' => 'Modelo del vehículo',
             'fecha_nac' => 'Fecha de nacimiento',
-            'sexo' => 'Sexo',
-            'estado_civil' => 'Estado civil',
+            //'sexo' => 'Sexo',
+            //'estado_civil' => 'Estado civil',
             'gnc' => 'GNC',
             'tipo_doc' => 'Tipo de documento',
             'nro_doc' => 'Número de documento'
@@ -231,8 +231,8 @@ function resultado_cotizador_auto()
                 "TipoIva" => "CF",
                 "TipoPersona" => "P",
                 "FechaNacimiento" => $fecha_nac,
-                "Sexo" => sanitize_text_field($_POST['sexo']),
-                "EstadoCivil" => sanitize_text_field($_POST['estado_civil']),
+                "Sexo" => "M", //sanitize_text_field($_POST['sexo']),
+                "EstadoCivil" => "01", //sanitize_text_field($_POST['estado_civil']),
                 "SnGNC" => (sanitize_text_field($_POST['gnc']) == "SI" ? 'S' : "N"),
                 "ValuacionGNC" => ""
             ],
