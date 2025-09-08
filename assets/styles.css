@@ -126,9 +126,8 @@
 
 .aseguradora-logo {
   width: auto;
-  height: 150px !important;
   object-fit: contain;
-  ;
+  
 }
 
 .coberturas-list {

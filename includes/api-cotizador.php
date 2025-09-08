@@ -505,10 +505,10 @@ function resultado_cotizador_auto()
             }
 
             $logos = [
-                'Sancor' => plugin_dir_url(dirname(__FILE__)) . 'assets/logos/sancor.webp',
-                'Zurich' => plugin_dir_url(dirname(__FILE__)) . 'assets/logos/zurich.webp',
-                'San Cristobal' => plugin_dir_url(dirname(__FILE__)) . 'assets/logos/SanCristobal.webp',
-                'Experta' => plugin_dir_url(dirname(__FILE__)) . 'assets/logos/experta.webp'
+                'Sancor' => plugin_dir_url(dirname(__FILE__)) . 'assets/logos/logo_sancor.png',
+                'Zurich' => plugin_dir_url(dirname(__FILE__)) . 'assets/logos/logo_zurich.png',
+                'San Cristobal' => plugin_dir_url(dirname(__FILE__)) . 'assets/logos/logo_sancristobal.png',
+                'Experta' => plugin_dir_url(dirname(__FILE__)) . 'assets/logos/logo_experta.png'
             ];
 
             $logo_url = isset($logos[$nombre_aseguradora]) ? $logos[$nombre_aseguradora] : '';
