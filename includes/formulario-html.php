@@ -291,7 +291,7 @@
         Swal.fire({
             // title: 'Enviando solicitud...',
             html: `
-                <img src="https://chocolate-hyena-849814.hostingersite.com/wp-content/uploads/2025/03/LogoQuick.png" alt="Logo Banco" style="width: 100px; margin-bottom: 1rem;">
+                <img src="<?php echo NORDEN_PLUGIN_URL; ?>assets/logos/LogoQuicksm.png" alt="Logo Quick Seguro" style="width: 150px; margin: .5rem;">
                 <p style="font-family:"Gotham Book">Estamos procesando tu solicitud. Por favor, espera unos segundos.</p>
             `,
             allowOutsideClick: false,

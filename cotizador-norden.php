@@ -17,6 +17,7 @@ defined('ABSPATH') or die('No molestar!');
 define('PRODUCTOR_VENDEDOR', '27923');
 define('NORDEN_USERNAME', 'ApiQuick');
 define('NORDEN_PASSWORD', 'a9_e3G_5x4A7');
+define('NORDEN_PLUGIN_URL', plugin_dir_url(__FILE__));
 
 add_action('wp_ajax_mi_endpoint', 'mi_funcion_php');
 
