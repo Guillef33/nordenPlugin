@@ -44,7 +44,7 @@
                     <option value="">Seleccionar Marca</option>
                     <?php if (!empty($marcas)): ?>
                         <?php foreach ($marcas['Data'] as $marca): ?>
-                            <option value="<?= esc_attr($marca['Value']) ?>"><?= esc_html($marca['Text']) ?></option>
+                            <option value="<?= esc_attr($marca['Value']) ?>|<?= esc_attr($marca['Text']) ?>"><?= esc_html($marca['Text']) ?></option>
                         <?php endforeach; ?>
                     <?php else: ?>
                         <option value="">No se pudieron cargar las marcas</option>
@@ -83,7 +83,7 @@
                 <select name="provincia" required>
                     <?php if (!empty($provincias)): ?>
                         <?php foreach ($provincias['Data'] as $prov): ?>
-                            <option value="<?= esc_attr($prov['Value']) ?>"><?= esc_html($prov['Text']) ?></option>
+                            <option value="<?= esc_attr($prov['Value']) ?>|<?= esc_html($prov['Text']) ?>"><?= esc_html($prov['Text']) ?></option>
                         <?php endforeach; ?>
                     <?php else: ?>
                         <option value="">No se pudieron cargar las provincias</option>
@@ -240,14 +240,16 @@
         // ********************************************* Logica get marcas *********************************************
 
         function cargarModelosSiCorresponde() {
-            const marcaId = marcaSelect.value;
+            const marcaValue = marcaSelect.value;
             const anio = anioSelect.value;
 
-            if (!marcaId || !anio) {
+            if (!marcaValue || !anio) {
                 return;
             }
 
             modeloSelect.innerHTML = '<option value="" disabled selected>Cargando modelos...</option>';
+
+            const marcaId = marcaValue.split('|')[0];
 
             fetch(`${miPluginData.rest_url}modelos?marca=${marcaId}&anio=${condicion.value=='usado'?anio:'2025'}`)
                 .then(res => res.json())
@@ -259,7 +261,7 @@
                     modeloSelect.innerHTML = '<option value="" disabled selected>Selecciona un modelo</option>';
                     data.Data.forEach(modelo => {
                         const option = document.createElement('option');
-                        option.value = modelo.Value;
+                        option.value = modelo.Value + '|' + modelo.Text; // Enviamos ID y Nombre
                         option.textContent = modelo.Text;
                         modeloSelect.appendChild(option);
                     });

@@ -12,12 +12,17 @@ function mi_plugin_codigos_postales_handler(WP_REST_Request $request)
 {
     $provincia = $request->get_param('provincia');
 
+
     if (!$provincia) {
         return new WP_REST_Response(['error' => 'Provincia requerida'], 400);
     }
 
+
+    $provincia_parts = explode('|', $provincia);
+    $provincia_id = sanitize_text_field($provincia_parts[0]);
+
     $token = obtener_token_norden(); // Tu función existente
-    $codigos = obtener_codigos_postales($token, $provincia); // Tu función existente
+    $codigos = obtener_codigos_postales($token, $provincia_id); // Tu función existente
 
     return new WP_REST_Response($codigos, 200);
 }

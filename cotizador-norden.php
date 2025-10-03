@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Plugin Name:       Formulario de Cotizacion Norden API 
+ * Plugin Name:       Cotizacion Norden API para Quick
  * Plugin URI:        https://somosvalencia.com/
  * Description:       Plugin para la generacion de formularios de cotizacion con Norden API
  * Version:           1.1

@@ -19,6 +19,24 @@ function resultado_cotizador_auto()
         error_log("POST recibido - Año: " . ($_POST['anio'] ?? 'NO_SET'));
         error_log("POST recibido - Modelo: " . ($_POST['modelo'] ?? 'NO_SET'));
 
+        // Parsear Marca (formato: ID|Nombre)
+        $marca_id = 'No disponible';
+        $marca_nombre = 'No disponible';
+        if (isset($_POST['marcas']) && !empty($_POST['marcas'])) {
+            $marca_parts = explode('|', $_POST['marcas']);
+            $marca_id = $marca_parts[0];
+            $marca_nombre = $marca_parts[1] ?? $marca_id; // Usar ID si el nombre no está
+        }
+
+        // Parsear Modelo (formato: ID|Nombre)
+        $modelo_id = 'No disponible';
+        $modelo_nombre = 'No disponible';
+        if (isset($_POST['modelo']) && !empty($_POST['modelo'])) {
+            $modelo_parts = explode('|', $_POST['modelo']);
+            $modelo_id = $modelo_parts[0];
+            $modelo_nombre = $modelo_parts[1] ?? $modelo_id; // Usar ID si el nombre no está
+        }
+
         // Validar y obtener token
         error_log("Obteniendo token...");
         $token = obtener_token_norden();
@@ -58,15 +76,21 @@ function resultado_cotizador_auto()
             return '<p>Error: Provincia no proporcionada.</p>';
         }
 
-        $provincia_sanitized = sanitize_text_field($_POST['provincia']);
-        error_log("Provincia sanitizada: $provincia_sanitized");
+        // Parsear Provincia (formato: ID|Nombre)
+        $provincia_id = 'No disponible';
+        $provincia_nombre = 'No disponible';
+        $provincia_parts = explode('|', $_POST['provincia']);
+        $provincia_id = sanitize_text_field($provincia_parts[0]);
+        $provincia_nombre = isset($provincia_parts[1]) ? sanitize_text_field($provincia_parts[1]) : $provincia_id;
+
+        error_log("Provincia parseada - ID: $provincia_id, Nombre: $provincia_nombre");
 
         // Validaciones para Sancor
         $provincia_sancor = null;
         $sancorLocalidad = null;
         try {
             error_log("Obteniendo provincia Sancor...");
-            $provincia_sancor = obtener_provincia_sancor($provincia_sanitized, $token);
+            $provincia_sancor = obtener_provincia_sancor($provincia_id, $token);
             error_log("Provincia Sancor obtenida: " . ($provincia_sancor ?? 'NULL'));
 
             if ($provincia_sancor) {
@@ -92,7 +116,7 @@ function resultado_cotizador_auto()
         $zurichPlanId = null;
         try {
             error_log("Obteniendo provincia Zurich...");
-            $provincia_zurich = obtener_provincia_zurich($provincia_sanitized, $token);
+            $provincia_zurich = obtener_provincia_zurich($provincia_id, $token);
             error_log("Provincia Zurich obtenida: " . ($provincia_zurich ?? 'NULL'));
 
             error_log("Obteniendo PlanId Zurich...");
@@ -121,7 +145,7 @@ function resultado_cotizador_auto()
         $expertaLocalidad = null;
         try {
             error_log("Obteniendo provincia Experta...");
-            $provincia_experta = obtener_provincia_experta($provincia_sanitized, $token);
+            $provincia_experta = obtener_provincia_experta($provincia_id, $token);
             error_log("Provincia Experta obtenida: " . ($provincia_experta ?? 'NULL'));
 
             if ($provincia_experta) {
@@ -223,8 +247,8 @@ function resultado_cotizador_auto()
                 "ProductorVendedor" => PRODUCTOR_VENDEDOR,
                 "Año" => $anio_final, // DIFERENCIA CLAVE ENTRE USADO Y 0KM
                 "CeroKm" => ($condicion == "0km"),
-                "CodVehiculoExterno" => sanitize_text_field($_POST['modelo']),
-                "Provincia" => $provincia_sanitized,
+                "CodVehiculoExterno" => $modelo_id,
+                "Provincia" => $provincia_id,
                 "Localidad" => $intId,
                 "MedioDePago" => "T",
                 "TipoFacturacion" => "M",
@@ -483,6 +507,7 @@ function resultado_cotizador_auto()
         $api_zurich_encontradas = 0;
         $api_sancristobal_encontradas = 0;
 
+        $email_cotizaciones_detail = '';
 
         foreach ($body["Data"]['Cotizaciones'] as $aseguradora) {
             // Validar estructura de aseguradora
@@ -528,7 +553,9 @@ function resultado_cotizador_auto()
 
                 $coberturas_mostradas = 0;
 
-
+                $email_cotizaciones_detail .= '<h3>' . esc_attr($nombre_aseguradora) . '</h3>';
+                $email_cotizaciones_detail .= '<table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse; width: 100%;"><tbody>';
+                $email_cotizaciones_detail .= '<thead><tr><th style="text-align: left;">COTIZACIÓN NÚMERO</th><th style="text-align: left;">PLAN</th><th style="text-align: left;">PRECIO</th></tr></thead>';
 
                 foreach ($aseguradora['Coberturas'] as $index => $coti) {
 
@@ -567,7 +594,7 @@ function resultado_cotizador_auto()
                         //$id = 'cobertura_' . $index . '_' . md5($coti['DescCobertura']);
 
                         $return .= '<li class="cobertura-item">';
-                        $return .= '<div class="cobertura-content">';
+                        $return .= '<div class="cobertura-content" data-id="' . esc_attr($coti['Id']) . '">';
 
                         // Buscar una coincidencia en las claves del array $nombres
                         /*
@@ -592,7 +619,7 @@ function resultado_cotizador_auto()
 
                         $return .= '<h5>$ ' . number_format((float) $coti['Premio'], 2, ',', '.') . '</h5>';
 
-                        $return .= '<a href="#"> 
+                        $return .= '<a href="https://wa.me/5491156057767?text=' . urlencode('¡Hola! Te escribo desde la web y me interesa saber más sobre la Cotización número ' . $coti['Id'] . ', Plan "' . $nombres[$coti['CodCoberturaCia']] . '" de ' . $nombre_aseguradora) . '." target="_blank"> 
                 <span> 
                     <img class="whatsapp-icon" src="' . plugin_dir_url(dirname(__FILE__)) . 'assets/whatsapp-icon.png" width="19px" height="19px" alt="icono-whatsapp" /> 
                 </span>
@@ -600,13 +627,20 @@ function resultado_cotizador_auto()
             </a>';
                         $return .= '</div>';
                         $return .= '</li>';
+
+
+                        $email_cotizaciones_detail .= '<tr><td>' . $coti['Id'] . '</td><td>' . $nombres[$coti['CodCoberturaCia']] . '</td><td>$ ' . number_format((float) $coti['Premio'], 2, ',', '.') . '</td></tr>';
                     } else {
                         error_log("Plan no permitido: " . $coti['DescCobertura']);
                     }
                 }
 
+                $email_cotizaciones_detail .= '</tbody></table>';
+
                 $return .= '</ul>';
                 $return .= '</div>';
+
+
 
                 error_log("Coberturas mostradas para $nombre_aseguradora: $coberturas_mostradas");
             } else {
@@ -622,6 +656,8 @@ function resultado_cotizador_auto()
         error_log("Coberturas mostradas para SanCristobal: " . $api_sancristobal_encontradas);
         error_log("------------------------------------------------");
 
+        enviar_correo_cotizacion($body, $_POST, $nro_doc, $fecha_nac, $marca_nombre, $modelo_nombre, $provincia_nombre, $email_cotizaciones_detail);
+
         error_log("=== COTIZADOR COMPLETADO EXITOSAMENTE ===");
 
         return $return;
@@ -634,6 +670,65 @@ function resultado_cotizador_auto()
         error_log("Stack trace: " . $e->getTraceAsString());
         return '<p>Error crítico del servidor.</p>';
     }
+}
+
+function enviar_correo_cotizacion($api_response_body, $form_data, $nro_doc, $fecha_nac, $marca_nombre, $modelo_nombre, $provincia_nombre, $email_cotizaciones_detail)
+{
+    $to = 'test1@gustavotroisi.com.ar';
+    $subject = 'Nueva Cotización de Auto Recibida';
+    $headers = array('Content-Type: text/html; charset=UTF-8');
+
+    $id_cotizacion = 'No disponible';
+    if (isset($api_response_body['Data']['IdCotizacion'])) {
+        $id_cotizacion = esc_html($api_response_body['Data']['IdCotizacion']);
+    }
+
+    $tipo_doc = [
+        "Ext_CUIT80" => "C.U.I.T.",
+        "Ext_CUIL86" => "CLAVE UNICA DE IDENTIFICACION LABORAL",
+        "Ext_DNI96"  => "DOCUMENTO NACIONAL IDENTIDAD",
+        "Ext_LC90"   => "L.C.",
+        "Ext_LE89"   => "L.E.",
+        "Ext_PAS94"  => "PASAPORTE",
+    ];
+
+
+    // Construir el cuerpo del email, con el ID de cotización destacado arriba
+    $email_body = '<h2>Datos del Cliente</h2>';
+    $email_body .= '<table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse; width: 100%;"><tbody>';
+    $email_body .= '<tr><td>Condición</td><td>' . esc_html($form_data['condicion']) . '</td></tr>';
+    $email_body .= '<tr><td>Año</td><td>' . esc_html($form_data['anio']) . '</td></tr>';
+    $email_body .= '<tr><td>Marca</td><td>' . esc_html($marca_nombre) . '</td></tr>';
+    $email_body .= '<tr><td>Modelo</td><td>' . esc_html($modelo_nombre) . '</td></tr>';
+    $email_body .= '<tr><td>Usa GNC</td><td>' . esc_html($form_data['gnc']) . '</td></tr>';
+    $email_body .= '<tr><td>Provincia</td><td>' . esc_html($provincia_nombre) . '</td></tr>';
+    $email_body .= '<tr><td>Código Postal</td><td>' . esc_html($form_data['codigo_postal']) . '</td></tr>';
+    $email_body .= '<tr><td>Tipo de Documento</td><td>' . esc_html($tipo_doc[$form_data['tipo_doc']]) . '</td></tr>';
+    $email_body .= '<tr><td>Número de Documento</td><td>' . esc_html($nro_doc) . '</td></tr>';
+    $email_body .= '<tr><td>Fecha de Nacimiento</td><td>' . esc_html(date("d/m/Y", strtotime($fecha_nac))) . '</td></tr>';
+    $email_body .= '</tbody></table>';
+    $email_body .= '<h2>Cotizaciones Obtenidas</h2>';
+    $email_body .= $email_cotizaciones_detail;
+
+
+    if (wp_mail($to, $subject, $email_body, $headers)) {
+        error_log("Correo de cotización enviado exitosamente a $to");
+        $estado_envio = 'EMAIL ENVIADO';
+    } else {
+        error_log("Error al enviar el correo de cotización a $to. Guardando en log de respaldo.");
+        $estado_envio = 'ERROR AL ENVIAR';
+    }
+
+    //Guardar log de respaldo
+    $log_file_path = plugin_dir_path(__FILE__) . '../logs/envios-cotizador.log';
+    $log_entry = "=================================================================\n";
+    $log_entry .= "FECHA: " . date('d-m-Y H:i:s') . "\n";
+    $log_entry .= "ESTADO DEL ENVIO: " . $estado_envio . "\n";
+    $log_entry .= "Destinatario: " . $to . "\n";
+    $log_entry .= "Asunto: " . $subject . "\n";
+    $log_entry .= "Cuerpo del Mensaje:\n" . $email_body . "\n";
+    $log_entry .= "=================================================================\n\n";
+    file_put_contents($log_file_path, $log_entry, FILE_APPEND);
 }
 
 function compare_strings($fraseObjetivo, $resultados)
