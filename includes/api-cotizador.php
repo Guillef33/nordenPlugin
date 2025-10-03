@@ -674,7 +674,7 @@ function resultado_cotizador_auto()
 
 function enviar_correo_cotizacion($api_response_body, $form_data, $nro_doc, $fecha_nac, $marca_nombre, $modelo_nombre, $provincia_nombre, $email_cotizaciones_detail)
 {
-    $to = 'test1@gustavotroisi.com.ar';
+    $to = 'pgomez@quickseguro.com';
     $subject = 'Nueva Cotización de Auto Recibida';
     $headers = array('Content-Type: text/html; charset=UTF-8');
 
