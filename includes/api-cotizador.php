@@ -619,11 +619,7 @@ function resultado_cotizador_auto()
 
                         $return .= '<h5>$ ' . number_format((float) $coti['Premio'], 2, ',', '.') . '</h5>';
 
-                        $return .= '<a href="https://wa.me/5491156057767?text=' . urlencode('¡Hola! Te escribo desde la web y me interesa saber más sobre la Cotización número ' . $coti['Id'] . ', Plan "' . $nombres[$coti['CodCoberturaCia']] . '" de ' . $nombre_aseguradora) . '." target="_blank"> 
-                <span> 
-                    <img class="whatsapp-icon" src="' . plugin_dir_url(dirname(__FILE__)) . 'assets/whatsapp-icon.png" width="19px" height="19px" alt="icono-whatsapp" /> 
-                </span>
-                Contratar ahora
+                        $return .= '<button type="button" class="btn-contacto-whatsapp" data-cotizacion="' . $coti['NroCotizacionCia'] . '" data-cobertura="' . $coti["Id"] . '" data-plan="' . $nombres[$coti['CodCoberturaCia']] . '" data-aseguradora="' . $nombre_aseguradora . '" ><img class="whatsapp-icon" src="' . plugin_dir_url(dirname(__FILE__)) . 'assets/whatsapp-icon.png" width="19px" height="19px" alt="icono-whatsapp" /> Contratar ahora</button>
             </a>';
                         $return .= '</div>';
                         $return .= '</li>';
@@ -649,6 +645,55 @@ function resultado_cotizador_auto()
         }
         $return .= '</div>';
 
+        $return .= '<script>
+        jQuery(function($){
+            $(document).on("click", ".btn-contacto-whatsapp", function(e){
+                e.preventDefault();
+
+                var $btn = $(this);
+
+                $btn.prop("disabled", true);
+               
+
+                $.post("' . admin_url('admin-ajax.php') . '", {
+                        action: "contacto_whatsapp",
+                        nonce: "' . wp_create_nonce('contacto_whatsapp_nonce') . '",
+                        cotizacion: $btn.data("cotizacion"),
+                        cobertura: $btn.data("cobertura"),
+                        tipodoc : "' . tipoDoc2($_POST['tipo_doc']) . '",
+                        fechanac: "' . $fecha_nac . '",
+                        documento: ' . esc_html($nro_doc) . ',
+
+                }, function(resp){
+            
+                    console.log(resp);   
+
+                    if(resp.data=="error"){
+
+                        alert("Hubo un error al procesar la solicitud. Por favor, intente nuevamente.");
+                        $btn.prop("disabled", false);
+
+                    }else{
+
+                        $btn.prop("disabled", false);
+
+                        let url = "https://wa.me/5491156057767?text="+encodeURIComponent("¡Hola! Te escribo desde la web y me interesa saber más sobre el Presupuesto número "+ resp.data + " Plan " + $btn.data("plan") + " de la Aseguradora " + $btn.data("aseguradora"));
+
+                        window.open(url, "_blank");
+
+                    }
+
+                }, "json").fail(function(){
+                    
+                    $btn.prop("disabled", true);
+                    console.log("Fallo en la conexión AJAX.");
+
+                });
+            });
+        });
+
+        </script>';
+
         error_log("------------------------------------------------");
         error_log("Coberturas mostradas para Experta: " . $api_experta_encontradas);
         error_log("Coberturas mostradas para Sancor: " . $api_sancor_encontradas);
@@ -672,6 +717,33 @@ function resultado_cotizador_auto()
     }
 }
 
+function tipoDoc($tipodoc)
+{
+    $tipo_doc = [
+        "Ext_CUIT80" => "C.U.I.T.",
+        "Ext_CUIL86" => "CLAVE UNICA DE IDENTIFICACION LABORAL",
+        "Ext_DNI96"  => "DOCUMENTO NACIONAL IDENTIDAD",
+        "Ext_LC90"   => "L.C.",
+        "Ext_LE89"   => "L.E.",
+        "Ext_PAS94"  => "PASAPORTE",
+    ];
+    return esc_html($tipo_doc[$tipodoc]);
+}
+
+function tipoDoc2($tipodoc)
+{
+    $tipo_doc = [
+        "Ext_CUIT80" => "CU",
+        "Ext_CUIL86" => "CL",
+        "Ext_DNI96"  => "DN",
+        "Ext_LC90"   => "LC",
+        "Ext_LE89"   => "LE",
+        "Ext_PAS94"  => "PP",
+    ];
+    return esc_html($tipo_doc[$tipodoc]);
+}
+
+
 function enviar_correo_cotizacion($api_response_body, $form_data, $nro_doc, $fecha_nac, $marca_nombre, $modelo_nombre, $provincia_nombre, $email_cotizaciones_detail)
 {
     $to = 'pgomez@quickseguro.com';
@@ -683,15 +755,8 @@ function enviar_correo_cotizacion($api_response_body, $form_data, $nro_doc, $fec
         $id_cotizacion = esc_html($api_response_body['Data']['IdCotizacion']);
     }
 
-    $tipo_doc = [
-        "Ext_CUIT80" => "C.U.I.T.",
-        "Ext_CUIL86" => "CLAVE UNICA DE IDENTIFICACION LABORAL",
-        "Ext_DNI96"  => "DOCUMENTO NACIONAL IDENTIDAD",
-        "Ext_LC90"   => "L.C.",
-        "Ext_LE89"   => "L.E.",
-        "Ext_PAS94"  => "PASAPORTE",
-    ];
 
+    $tipodoc = tipoDoc($form_data['tipo_doc']);
 
     // Construir el cuerpo del email, con el ID de cotización destacado arriba
     $email_body = '<h2>Datos del Cliente</h2>';
@@ -703,7 +768,7 @@ function enviar_correo_cotizacion($api_response_body, $form_data, $nro_doc, $fec
     $email_body .= '<tr><td>Usa GNC</td><td>' . esc_html($form_data['gnc']) . '</td></tr>';
     $email_body .= '<tr><td>Provincia</td><td>' . esc_html($provincia_nombre) . '</td></tr>';
     $email_body .= '<tr><td>Código Postal</td><td>' . esc_html($form_data['codigo_postal']) . '</td></tr>';
-    $email_body .= '<tr><td>Tipo de Documento</td><td>' . esc_html($tipo_doc[$form_data['tipo_doc']]) . '</td></tr>';
+    $email_body .= '<tr><td>Tipo de Documento</td><td>' . $tipodoc . '</td></tr>';
     $email_body .= '<tr><td>Número de Documento</td><td>' . esc_html($nro_doc) . '</td></tr>';
     $email_body .= '<tr><td>Fecha de Nacimiento</td><td>' . esc_html(date("d/m/Y", strtotime($fecha_nac))) . '</td></tr>';
     $email_body .= '</tbody></table>';
@@ -757,3 +822,149 @@ function compare_strings($fraseObjetivo, $resultados)
     error_log("Mejor coincidencia: " . ($mejorCoincidencia ? $mejorCoincidencia["Text"] : 'NULL') . " (Similitud: $mejorSimilitud%)");
     return $mejorCoincidencia;
 }
+
+function generar_presupuesto()
+{
+
+    /*if (! isset($_POST['nonce']) || ! wp_verify_nonce($_POST['nonce'], 'contacto_whatsapp_nonce')) {
+        wp_send_json_error(array('error' => 'Nonce inválido.'), 400);
+    }*/
+
+    check_ajax_referer('contacto_whatsapp_nonce', 'nonce');
+
+    // Sanitizar inputs
+    $token = obtener_token_norden();
+    $cotizacion = isset($_POST['cotizacion']) ? sanitize_text_field(wp_unslash($_POST['cotizacion'])) : '';
+    $cobertura = isset($_POST['cobertura']) ? sanitize_text_field(wp_unslash($_POST['cobertura'])) : '';
+    $tipodoc = isset($_POST['tipodoc']) ? sanitize_text_field(wp_unslash($_POST['tipodoc'])) : '';
+    $documento = isset($_POST['documento']) ? sanitize_text_field(wp_unslash($_POST['documento'])) : '';
+    $fechanac = isset($_POST['fechanac']) ? sanitize_text_field(wp_unslash($_POST['fechanac'])) : '';
+
+
+
+
+    $url = 'https://quickbi4.norden.com.ar/api_externa/autos/cotizador/generarpresupuesto';
+
+    $bodyReq = [
+        "ParametrosGenerales" => [
+            "NroCotizacion" => (int)$cotizacion,
+            "Coberturas" => [$cobertura],
+            "Cliente" => [
+                "CodTipoDocumento" =>  $tipodoc,
+                "NroFiscal" => (int)$documento,
+                "ApellidoRazonSocial" =>  "Contacto Web", //este dato no lo tenemos
+                "Nombre" => "Contacto Web", //este dato no lo tenemos
+                "CodSexo" => "F", //este dato no lo tenemos
+                "FecNacimiento" => $fechanac . " 00:00:00",
+                "CodTipoTelefono" => "CEL", //este dato no lo tenemos
+                "Prefijo" => "11", //este dato no lo tenemos
+                "NroTelefono" => "22514970", //este dato no lo tenemos
+                "Email" => "contactoweb@norden.com.ar", //este dato no lo tenemos
+                "CodTipoEstadoCivil" => "01" //este dato no lo tenemos
+            ]
+        ]
+    ];
+
+
+    /******* */
+    //TEST- QUITAR- Devolver peticion
+    //wp_send_json_success($bodyReq);
+    //return;
+    /******* */
+
+
+    $args = [
+        //'body' => json_encode($bodyReq),
+        'body' => json_encode($bodyReq, JSON_UNESCAPED_UNICODE),
+        'headers' => [
+            'Authorization' => 'Bearer ' . $token,
+            'Content-Type'  => 'application/json',
+            'Cache-Control' => 'no-cache',
+            'Connection'    => 'keep-alive',
+        ],
+        'timeout' => 20
+    ];
+
+
+    // error_log(print_r(json_encode($bodyReq), true));
+
+
+
+    //$response = wp_remote_get($url, $args);
+    $response = wp_remote_post($url, $args);
+
+    if (is_wp_error($response)) {
+        error_log('Error WP: ' . $response->get_error_message());
+    } else {
+        error_log('HTTP CODE: ' . wp_remote_retrieve_response_code($response));
+        error_log('BODY: ' . wp_remote_retrieve_body($response));
+    }
+
+    // Validar respuesta HTTP
+    if (is_wp_error($response)) {
+        $error_message = $response->get_error_message();
+        error_log("Error WP: $error_message");
+        error_log('<p>Error: No se pudo conectar con el servicio de presupuesto.</p>');
+        wp_send_json_success('error');
+        return;
+    }
+
+
+    //Debug
+    $http_code = wp_remote_retrieve_response_code($response);
+    $body_raw = wp_remote_retrieve_body($response);
+    error_log("PRESUPUESTO Respuesta HTTP code: $http_code");
+    error_log("PRESUPUESTO Respuesta body length: " . strlen($body_raw));
+
+    /******* */
+    //TEST- QUITAR- Devolver peticion
+    //error_log(print_r($body_raw, true));
+    //return;
+    /******* */
+
+
+    if (is_wp_error($response)) {
+        wp_send_json_success('error');
+        return;
+    }
+
+    $body = json_decode($body_raw, true);
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        error_log("Error decodificando JSON: " . json_last_error_msg());
+        error_log("Body raw: " . substr($body_raw, 0, 500));
+        //return '<p>Error: Presupuesto. Respuesta del servidor no válida.</p>';
+        wp_send_json_success('error');
+        return;
+    }
+
+    // Validar estructura de la respuesta
+    if (!$body || !isset($body['Data']) || !isset($body['Data']["ParametrosGenerales"]['Presupuesto'])) {
+        error_log("Error: Estructura de respuesta de Presuuesto no válida");
+        error_log("Body structure: " . print_r(array_keys($body ?? []), true));
+        error_log("Body structure: " . print_r($body, true));
+        //return '<p>Error: Respuesta del servicio de Presupuesto no válida.</p>';
+        wp_send_json_success('error');
+        return;
+    }
+
+    //$body = json_decode(wp_remote_retrieve_body($response), true);
+
+
+    /******* */
+    //TEST- QUITAR- Devolver peticion
+    //wp_send_json_success($body);
+    error_log(print_r($body, true));
+    //return;
+    //return $body;
+    /******* */
+
+    if ($body["Data"] && isset($body["Data"]["ParametrosGenerales"]["Presupuesto"])) {
+        wp_send_json_success($body["Data"]["ParametrosGenerales"]["Presupuesto"]);
+        return;
+    } else {
+        wp_send_json_success('error');
+        return;
+    }
+}
+add_action('wp_ajax_contacto_whatsapp', 'generar_presupuesto');
+add_action('wp_ajax_nopriv_contacto_whatsapp', 'generar_presupuesto');

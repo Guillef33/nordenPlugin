@@ -191,7 +191,7 @@
 }
 
 
-.cobertura-content a {
+.btn-contacto-whatsapp {
   display: inline-block;
   background-color: #4A9699;
   color: #ffffff !important;
@@ -215,10 +215,11 @@
 
 }
 
-.cobertura-content a:hover {
+.btn-contacto-whatsapp:hover {
   color: white !important;
   background-color: #348D91 !important;
-
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3);
 }
 
 .cobertura-content p {
@@ -251,10 +252,6 @@
   margin-right: 0.5rem;
 }
 
-.cobertura-content a:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3);
-}
 
 .is-invalid {
   border-color: #dc3545 !important;

@@ -8,7 +8,8 @@ add_action('rest_api_init', function () {
     ));
 });
 
-function mi_plugin_modelos_handler(WP_REST_Request $request) {
+function mi_plugin_modelos_handler(WP_REST_Request $request)
+{
     $marca = $request->get_param('marca');
     $anio = $request->get_param('anio');
 
@@ -26,9 +27,10 @@ function mi_plugin_modelos_handler(WP_REST_Request $request) {
     return new WP_REST_Response($codigos, 200);
 }
 
-function obtener_modelos_norden($token, $marca, $anio) {
+function obtener_modelos_norden($token, $marca, $anio)
+{
 
-    if(!$marca || !$anio){
+    if (!$marca || !$anio) {
         return;
     }
 
@@ -59,4 +61,3 @@ function obtener_modelos_norden($token, $marca, $anio) {
 
     return is_array($body) ? $body : [];
 }
-
