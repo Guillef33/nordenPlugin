@@ -134,7 +134,7 @@
                     <option value="04">VIUDO</option>
                     <option value="05">SEPARADO</option>
                 </select>
-            </div>
+            </div>*/ ?>
             <div>
                 <label for="sexo">Sexo</label>
                 <select name="sexo" id="sexo" for="sexo" required="">
@@ -144,7 +144,7 @@
                     <option value="N">NO CORRESPONDE</option>
                 </select>
             </div>
-            */ ?>
+
             <div>
 
 

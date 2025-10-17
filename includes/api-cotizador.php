@@ -183,7 +183,7 @@ function resultado_cotizador_auto()
             'condicion' => 'Condición del vehículo',
             'modelo' => 'Modelo del vehículo',
             'fecha_nac' => 'Fecha de nacimiento',
-            //'sexo' => 'Sexo',
+            'sexo' => 'Sexo',
             //'estado_civil' => 'Estado civil',
             'gnc' => 'GNC',
             'tipo_doc' => 'Tipo de documento',
@@ -233,6 +233,7 @@ function resultado_cotizador_auto()
         $hoy = new DateTime();
         $edad = $fechaNacimientoDate->diff($hoy)->y;
         $menor25anos = $edad < 25 ? 1 : 2;
+        $sexo = sanitize_text_field($_POST['sexo']);
 
         error_log("Edad calculada: $edad, Menor 25 años: $menor25anos");
 
@@ -255,7 +256,7 @@ function resultado_cotizador_auto()
                 "TipoIva" => "CF",
                 "TipoPersona" => "P",
                 "FechaNacimiento" => $fecha_nac,
-                "Sexo" => "F", //sanitize_text_field($_POST['sexo']),  // con "M" da error SAN CRISTOBAL
+                "Sexo" => $sexo,
                 "EstadoCivil" => "01", //sanitize_text_field($_POST['estado_civil']),
                 "SnGNC" => (sanitize_text_field($_POST['gnc']) == "SI" ? 'S' : "N"),
                 "ValuacionGNC" => ""
@@ -662,6 +663,7 @@ function resultado_cotizador_auto()
                         cobertura: $btn.data("cobertura"),
                         tipodoc : "' . tipoDoc2($_POST['tipo_doc']) . '",
                         fechanac: "' . $fecha_nac . '",
+                        sexo: "' . $sexo . '",
                         documento: ' . esc_html($nro_doc) . ',
 
                 }, function(resp){
@@ -839,6 +841,7 @@ function generar_presupuesto()
     $tipodoc = isset($_POST['tipodoc']) ? sanitize_text_field(wp_unslash($_POST['tipodoc'])) : '';
     $documento = isset($_POST['documento']) ? sanitize_text_field(wp_unslash($_POST['documento'])) : '';
     $fechanac = isset($_POST['fechanac']) ? sanitize_text_field(wp_unslash($_POST['fechanac'])) : '';
+    $sexo = isset($_POST['sexo']) ? sanitize_text_field(wp_unslash($_POST['sexo'])) : '';
 
 
 
@@ -854,7 +857,7 @@ function generar_presupuesto()
                 "NroFiscal" => (int)$documento,
                 "ApellidoRazonSocial" =>  "Contacto Web", //este dato no lo tenemos
                 "Nombre" => "Contacto Web", //este dato no lo tenemos
-                "CodSexo" => "F", //este dato no lo tenemos
+                "CodSexo" => $sexo, //"F"
                 "FecNacimiento" => $fechanac . " 00:00:00",
                 "CodTipoTelefono" => "CEL", //este dato no lo tenemos
                 "Prefijo" => "11", //este dato no lo tenemos
