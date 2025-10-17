@@ -193,18 +193,18 @@
 
 .btn-contacto-whatsapp {
   display: inline-block;
-  background-color: #4A9699;
+  background-color: #4A9699 !important;
   color: #ffffff !important;
-  padding: 8px 20px;
-  border: none;
-  border-radius: 20px;
-  font-size: 11px;
-  font-weight: 600;
+  padding: 8px 20px !important;
+  border: none !important;
+  border-radius: 20px !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
   text-transform: uppercase;
   cursor: pointer;
   transition: background-color 0.3s, transform 0.1s;
   font-family: "Gotham Book", sans-serif;
-  display: flex;
+  display: flex !important;
   gap: 10px;
   justify-content: center;
   align-items: center;
