@@ -255,7 +255,7 @@ function resultado_cotizador_auto()
                 "TipoIva" => "CF",
                 "TipoPersona" => "P",
                 "FechaNacimiento" => $fecha_nac,
-                "Sexo" => "M", //sanitize_text_field($_POST['sexo']),
+                "Sexo" => "F", //sanitize_text_field($_POST['sexo']),  // con "M" da error SAN CRISTOBAL
                 "EstadoCivil" => "01", //sanitize_text_field($_POST['estado_civil']),
                 "SnGNC" => (sanitize_text_field($_POST['gnc']) == "SI" ? 'S' : "N"),
                 "ValuacionGNC" => ""
