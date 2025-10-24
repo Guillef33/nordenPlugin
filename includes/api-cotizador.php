@@ -679,7 +679,7 @@ function resultado_cotizador_auto()
 
                         $btn.prop("disabled", false);
 
-                        let url = "https://wa.me/5491156057767?text="+encodeURIComponent("¡Hola! Te escribo desde la web y me interesa saber más sobre el Presupuesto número "+ resp.data + " Plan " + $btn.data("plan") + " de la Aseguradora " + $btn.data("aseguradora"));
+                        let url = "https://wa.me/5491161691404?text="+encodeURIComponent("¡Hola! Te escribo desde la web y me interesa saber más sobre el Presupuesto número "+ resp.data + " Plan " + $btn.data("plan") + " de la Aseguradora " + $btn.data("aseguradora"));
 
                         window.open(url, "_blank");
 
