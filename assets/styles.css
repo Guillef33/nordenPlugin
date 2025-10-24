@@ -68,6 +68,7 @@
   color: #717171;
   transition: border-color 0.3s, background-color 0.3s, color 0.3s !important;
   font-family: "Gotham Book", sans-serif;
+  height: 50px;
 }
 
 
