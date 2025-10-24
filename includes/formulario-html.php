@@ -130,11 +130,11 @@
                 <label>Teléfono Celular</label>
 
                 <div class="phone-input-group">
-                    <div class="phone-input-item">
+                    <div class="phone-input-item telpre">
                         <label for="tel_prefijo">Cód. área (sin 0)</label>
                         <input type="number" name="tel_prefijo" id="tel_prefijo" required="" value="" min="0" max="99" maxlength="2">
                     </div>
-                    <div class="phone-input-item">
+                    <div class="phone-input-item telnum">
                         <label for="tel_numero">Número</label>
                         <input type="number" name="tel_numero" id="tel_numero" required="" value="" maxlength="8">
                     </div>

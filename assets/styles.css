@@ -70,12 +70,7 @@
   font-family: "Gotham Book", sans-serif;
 }
 
-.form-cotizar input[type="number"],
-.form-cotizar input[type="text"],
-.form-cotizar input[type="date"]
-{
-  max-width: 420px;
-}
+
 
 .form-cotizar input:focus,
 .form-cotizar select:focus {
@@ -256,7 +251,12 @@
   width: 100%;
 }
 
-
+.phone-input-item.telpre{
+  width: 30%;
+}
+.phone-input-item.telnum {
+  width: 70%;
+}
 .phone-input-item label {
   font-size: 14px;
   margin-bottom: 0.5em;
@@ -282,7 +282,7 @@ input[type=number] {
 }
 
 #tel_prefijo {
-  max-width: 20% !important;
+  max-width: 90% !important;
   margin-right: 10px;
 }
 
@@ -332,4 +332,7 @@ Mobile
     width: 100%; 
   }
 
+  .phone-input-item.telnum {
+    width: 100%;
+  }
 }
