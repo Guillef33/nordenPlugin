@@ -618,7 +618,7 @@ function resultado_cotizador_auto()
                         $return .= '<p class="nombre-mapeado">' . $nombres[$coti['CodCoberturaCia']] . '</p>';
 
 
-                        $return .= '<h5>$ ' . number_format((float) $coti['Premio'], 2, ',', '.') . '</h5>';
+                        $return .= '<h5>$ ' . number_format((float) $coti['Premio'], 0, ',', '.') . '</h5>';
 
                         $return .= '<button type="button" class="btn-contacto-whatsapp" data-cotizacion="' . $coti['NroCotizacionCia'] . '" data-cobertura="' . $coti["Id"] . '" data-plan="' . $nombres[$coti['CodCoberturaCia']] . '" data-aseguradora="' . $nombre_aseguradora . '" ><img class="whatsapp-icon" src="' . plugin_dir_url(dirname(__FILE__)) . 'assets/whatsapp-icon.png" width="19px" height="19px" alt="icono-whatsapp" /> Contratar ahora</button>
             </a>';
@@ -626,7 +626,7 @@ function resultado_cotizador_auto()
                         $return .= '</li>';
 
 
-                        $email_cotizaciones_detail .= '<tr><td>' . $coti['Id'] . '</td><td>' . $nombres[$coti['CodCoberturaCia']] . '</td><td>$ ' . number_format((float) $coti['Premio'], 2, ',', '.') . '</td></tr>';
+                        $email_cotizaciones_detail .= '<tr><td>' . $coti['Id'] . '</td><td>' . $nombres[$coti['CodCoberturaCia']] . '</td><td>$ ' . number_format((float) $coti['Premio'], 0, ',', '.') . '</td></tr>';
                     } else {
                         error_log("Plan no permitido: " . $coti['DescCobertura']);
                     }
