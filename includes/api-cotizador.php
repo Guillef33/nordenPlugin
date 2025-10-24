@@ -184,6 +184,8 @@ function resultado_cotizador_auto()
             'modelo' => 'Modelo del vehículo',
             'fecha_nac' => 'Fecha de nacimiento',
             'sexo' => 'Sexo',
+            'tel_prefijo' => 'Prefijo telefónico',
+            'tel_numero' => 'Número telefónico',
             //'estado_civil' => 'Estado civil',
             'gnc' => 'GNC',
             'tipo_doc' => 'Tipo de documento',
@@ -220,6 +222,23 @@ function resultado_cotizador_auto()
             return '<p>Error: Número de documento no válido.</p>';
         }
 
+        $sexo = sanitize_text_field($_POST['sexo']);
+        $tel_prefijo = sanitize_text_field($_POST['tel_prefijo']);
+        $tel_numero = sanitize_text_field($_POST['tel_numero']);
+        $telefono = $tel_prefijo . ' ' . $tel_numero;
+
+        // Validar longitud y formato del prefijo telefónico
+        if (!is_numeric($tel_prefijo) || strlen($tel_prefijo) < 1 || strlen($tel_prefijo) > 2) {
+            error_log("Error: Prefijo telefónico no válido: $tel_prefijo");
+            return '<p>Error: El código de área debe tener 1 o 2 dígitos.</p>';
+        }
+
+        // Validar longitud y formato del número telefónico
+        if (!is_numeric($tel_numero) || strlen($tel_numero) !== 8) {
+            error_log("Error: Número telefónico no válido: $tel_numero");
+            return '<p>Error: El número de teléfono debe tener exactamente 8 dígitos.</p>';
+        }
+
         // PUNTO CRÍTICO: Diferencia entre usado y 0km
         $condicion = sanitize_text_field($_POST['condicion']);
         error_log("Condición del vehículo: $condicion");
@@ -233,7 +252,7 @@ function resultado_cotizador_auto()
         $hoy = new DateTime();
         $edad = $fechaNacimientoDate->diff($hoy)->y;
         $menor25anos = $edad < 25 ? 1 : 2;
-        $sexo = sanitize_text_field($_POST['sexo']);
+        //$sexo = sanitize_text_field($_POST['sexo']);
 
         error_log("Edad calculada: $edad, Menor 25 años: $menor25anos");
 
@@ -664,6 +683,8 @@ function resultado_cotizador_auto()
                         tipodoc : "' . tipoDoc2($_POST['tipo_doc']) . '",
                         fechanac: "' . $fecha_nac . '",
                         sexo: "' . $sexo . '",
+                        tel_prefijo: "' . $tel_prefijo . '",
+                        tel_numero: "' . $tel_numero . '",
                         documento: ' . esc_html($nro_doc) . ',
 
                 }, function(resp){
@@ -703,7 +724,7 @@ function resultado_cotizador_auto()
         error_log("Coberturas mostradas para SanCristobal: " . $api_sancristobal_encontradas);
         error_log("------------------------------------------------");
 
-        enviar_correo_cotizacion($body, $_POST, $nro_doc, $fecha_nac, $marca_nombre, $modelo_nombre, $provincia_nombre, $email_cotizaciones_detail);
+        enviar_correo_cotizacion($body, $_POST, $nro_doc, $fecha_nac,  $marca_nombre, $modelo_nombre, $provincia_nombre, $email_cotizaciones_detail);
 
         error_log("=== COTIZADOR COMPLETADO EXITOSAMENTE ===");
 
@@ -746,7 +767,7 @@ function tipoDoc2($tipodoc)
 }
 
 
-function enviar_correo_cotizacion($api_response_body, $form_data, $nro_doc, $fecha_nac, $marca_nombre, $modelo_nombre, $provincia_nombre, $email_cotizaciones_detail)
+function enviar_correo_cotizacion($api_response_body, $form_data, $nro_doc, $fecha_nac,   $marca_nombre, $modelo_nombre, $provincia_nombre, $email_cotizaciones_detail)
 {
     $to = 'pgomez@quickseguro.com';
     $subject = 'Nueva Cotización de Auto Recibida';
@@ -772,6 +793,8 @@ function enviar_correo_cotizacion($api_response_body, $form_data, $nro_doc, $fec
     $email_body .= '<tr><td>Código Postal</td><td>' . esc_html($form_data['codigo_postal']) . '</td></tr>';
     $email_body .= '<tr><td>Tipo de Documento</td><td>' . $tipodoc . '</td></tr>';
     $email_body .= '<tr><td>Número de Documento</td><td>' . esc_html($nro_doc) . '</td></tr>';
+    $email_body .= '<tr><td>Sexo</td><td>' . esc_html($form_data['sexo']) . '</td></tr>';
+    $email_body .= '<tr><td>Teléfono</td><td>' . esc_html($form_data['tel_prefijo']) . ' ' . esc_html($form_data['tel_numero']) . '</td></tr>';
     $email_body .= '<tr><td>Fecha de Nacimiento</td><td>' . esc_html(date("d/m/Y", strtotime($fecha_nac))) . '</td></tr>';
     $email_body .= '</tbody></table>';
     $email_body .= '<h2>Cotizaciones Obtenidas</h2>';
@@ -842,6 +865,8 @@ function generar_presupuesto()
     $documento = isset($_POST['documento']) ? sanitize_text_field(wp_unslash($_POST['documento'])) : '';
     $fechanac = isset($_POST['fechanac']) ? sanitize_text_field(wp_unslash($_POST['fechanac'])) : '';
     $sexo = isset($_POST['sexo']) ? sanitize_text_field(wp_unslash($_POST['sexo'])) : '';
+    $tel_prefijo = isset($_POST['tel_prefijo']) ? sanitize_text_field(wp_unslash($_POST['tel_prefijo'])) : '11';
+    $tel_numero = isset($_POST['tel_numero']) ? sanitize_text_field(wp_unslash($_POST['tel_numero'])) : '11111111';
 
 
 
@@ -859,9 +884,9 @@ function generar_presupuesto()
                 "Nombre" => "Contacto Web", //este dato no lo tenemos
                 "CodSexo" => $sexo, //"F"
                 "FecNacimiento" => $fechanac . " 00:00:00",
-                "CodTipoTelefono" => "CEL", //este dato no lo tenemos
-                "Prefijo" => "11", //este dato no lo tenemos
-                "NroTelefono" => "22514970", //este dato no lo tenemos
+                "CodTipoTelefono" => "CEL",
+                "Prefijo" => $tel_prefijo,
+                "NroTelefono" => $tel_numero,
                 "Email" => "contactoweb@norden.com.ar", //este dato no lo tenemos
                 "CodTipoEstadoCivil" => "01" //este dato no lo tenemos
             ]

@@ -121,8 +121,23 @@
                 </select>
             </div>
             <div>
-                <label for="nro_doc">Numero de Documento</label>
-                <input type="text" name="nro_doc" id="nro_doc" for="nro_doc" required="" value="">
+                <label for="nro_doc">Número de Documento</label>
+                <input type="number" name="nro_doc" id="nro_doc" for="nro_doc" required="" value="">
+            </div>
+        </div>
+        <div class="form-line">
+            <div>
+                <label>Teléfono Celular</label>
+                <div class="phone-input-group">
+                    <div class="phone-input-item">
+                        <label for="tel_prefijo">Cód. área (sin 0)</label>
+                        <input type="number" name="tel_prefijo" id="tel_prefijo" required="" value="" style="width: 40px;" min="0" max="99" maxlength="2">
+                    </div>
+                    <div class="phone-input-item">
+                        <label for="tel_numero">Número</label>
+                        <input type="number" name="tel_numero" id="tel_numero" required="" value="" maxlength="8">
+                    </div>
+                </div>
             </div>
             <?php /* <div>
                 <label for="estado_civil">Estado Civil</label>
@@ -135,7 +150,7 @@
                     <option value="05">SEPARADO</option>
                 </select>
             </div>*/ ?>
-            <div>
+            <div class="col_sexo">
                 <label for="sexo">Sexo</label>
                 <select name="sexo" id="sexo" for="sexo" required="">
                     <option value="">Selecciona un sexo</option>
@@ -144,7 +159,8 @@
                     <option value="N">NO CORRESPONDE</option>
                 </select>
             </div>
-
+        </div>
+        <div class="form-line">
             <div>
 
 

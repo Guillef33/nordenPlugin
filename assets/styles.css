@@ -50,12 +50,14 @@
 }
 
 .form-cotizar input,
-.form-cotizar select {
+.form-cotizar select,
+.form-cotizar input[type="number"],
+.form-cotizar input[type="text"]
+{
   width: 100%;
   padding: 0.5rem 0.75rem;
   margin-bottom: 1rem;
   font-size: 0.95rem;
-  width: 100%;
   padding: 12px 18px !important;
   border: 1px solid #4A9699 !important;
   border-radius: 4px !important;
@@ -65,7 +67,13 @@
   color: #717171;
   transition: border-color 0.3s, background-color 0.3s, color 0.3s !important;
   font-family: "Gotham Book", sans-serif;
+}
 
+.form-cotizar input[type="number"],
+.form-cotizar input[type="text"],
+.form-cotizar input[type="date"]
+{
+  max-width: 420px;
 }
 
 .form-cotizar input:focus,
@@ -74,8 +82,7 @@
   border-color: #4A9699;
   background-color: #ffffff;
   color: #000000;
-  /* Color de la tipografía en negro */
-  transition: border-color 0.3s, background-color 0.3s, color 0.3s;
+    transition: border-color 0.3s, background-color 0.3s, color 0.3s;
 }
 
 .form-cotizar button {
@@ -104,7 +111,6 @@
   padding: 2rem 0rem;
 }
 
-/* Aca empieza el div de cada aseguradora */
 .aseguradora {
   margin-bottom: 2rem;
   padding: 1rem;
@@ -155,40 +161,7 @@
 
 }
 
-@media screen and (max-width: 768px) {
-  .aseguradora {
-    grid-template-columns: 1fr;
-  }
 
-  .coberturas-list {
-    grid-template-columns: 1fr;
-  }
-
-  .form-line {
-    grid-template-columns: 1fr;
-  }
-
-  .form-cotizar h3,
-  .form-cotizar h4 {
-    font-size: 0.8rem;
-    margin-top: 1rem;
-  }
-
-  .form-cotizar label {
-    font-size: 0.8rem;
-
-  }
-
-  .form-cotizar input,
-  .form-cotizar select {
-    font-size: 0.8rem;
-  }
-
-  .form-cotizar button {
-    font-size: 0.8rem;
-  }
-
-}
 
 
 .btn-contacto-whatsapp {
@@ -275,4 +248,88 @@
 
 .hidden {
   display: none;
+}
+
+.phone-input-group {
+  display: flex;
+  gap: 15px;
+  align-items: flex-start;
+}
+
+.phone-input-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.phone-input-item label {
+  font-size: 14px;
+  margin-bottom: 0.5em;
+}
+
+.phone-input-item input {
+  margin-bottom: 0;  
+}
+
+.col_sexo{
+  display: flex;
+  flex-flow: column;
+  align-self: self-end;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+/*
+Mobile
+*/
+
+@media screen and (max-width: 768px) {
+  .aseguradora {
+    grid-template-columns: 1fr;
+  }
+
+  .coberturas-list {
+    grid-template-columns: 1fr;
+  }
+
+  .form-line {
+    grid-template-columns: 1fr;
+  }
+
+  .form-cotizar h3,
+  .form-cotizar h4 {
+    font-size: 0.8rem;
+    margin-top: 1rem;
+  }
+
+  .form-cotizar label {
+    font-size: 0.8rem;
+
+  }
+
+  .form-cotizar input,
+  .form-cotizar select {
+    font-size: 0.8rem;
+  }
+
+  .form-cotizar button {
+    font-size: 0.8rem;
+  }
+
+  .phone-input-group{
+    flex-direction: column;
+  }
+
+    .form-cotizar input[type="number"],
+    .form-cotizar input[type="text"],
+    .form-cotizar input[type="date"] {
+      max-width: 93% !important;
+    }
+
 }
