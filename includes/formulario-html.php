@@ -273,6 +273,7 @@
                 .then(data => {
                     if (!Array.isArray(data.Data) || data.Data.length === 0) {
                         modeloSelect.innerHTML = '<option value="" disabled selected>No existen modelos disponibles para esta marca</option>';
+                        modeloSelect.removeAttribute('required');
                         return;
                     }
                     modeloSelect.innerHTML = '<option value="" disabled selected>Selecciona un modelo</option>';
@@ -282,6 +283,7 @@
                         option.textContent = modelo.Text;
                         modeloSelect.appendChild(option);
                     });
+                    modeloSelect.required = true;
                 })
                 .catch(error => {
                     modeloSelect.innerHTML = '<option disabled selected>Error al cargar modelos</option>';
