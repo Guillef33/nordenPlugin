@@ -47,6 +47,7 @@
   font-size: 17px;
   font-family: "Gotham Book", sans-serif;
   width: 100%;  
+  display: block;
 }
 
 .form-cotizar input,
@@ -251,15 +252,10 @@
 }
 
 .phone-input-group {
-  display: flex;
-  gap: 15px;
-  align-items: flex-start;
+  display: inline-flex;
+  width: 100%;
 }
 
-.phone-input-item {
-  display: flex;
-  flex-direction: column;
-}
 
 .phone-input-item label {
   font-size: 14px;
@@ -284,6 +280,12 @@ input[type=number]::-webkit-outer-spin-button {
 input[type=number] {
   -moz-appearance: textfield;
 }
+
+#tel_prefijo {
+  max-width: 20% !important;
+  margin-right: 10px;
+}
+
 
 /*
 Mobile
@@ -326,10 +328,8 @@ Mobile
     flex-direction: column;
   }
 
-    .form-cotizar input[type="number"],
-    .form-cotizar input[type="text"],
-    .form-cotizar input[type="date"] {
-      max-width: 93% !important;
-    }
+  .phone-input-item input {
+    width: 100%; 
+  }
 
 }

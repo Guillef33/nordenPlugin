@@ -128,10 +128,11 @@
         <div class="form-line">
             <div>
                 <label>Teléfono Celular</label>
+
                 <div class="phone-input-group">
                     <div class="phone-input-item">
                         <label for="tel_prefijo">Cód. área (sin 0)</label>
-                        <input type="number" name="tel_prefijo" id="tel_prefijo" required="" value="" style="width: 40px;" min="0" max="99" maxlength="2">
+                        <input type="number" name="tel_prefijo" id="tel_prefijo" required="" value="" min="0" max="99" maxlength="2">
                     </div>
                     <div class="phone-input-item">
                         <label for="tel_numero">Número</label>
