@@ -287,6 +287,20 @@ input[type=number] {
   margin-right: 10px;
 }
 
+.select2-selection__rendered {
+  padding: 6px;
+}
+span.select2-selection.select2-selection--single {
+  min-height: 50px;
+}
+span.select2-selection__arrow {
+  padding: 23px 0;
+}
+span.select2-selection__rendered {
+  padding: 12px;
+  margin-left: 12px;
+}
+
 
 /*
 Mobile

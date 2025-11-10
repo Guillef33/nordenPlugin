@@ -93,7 +93,7 @@
 
             <div>
                 <label for="codigo_postal">Código Postal</label>
-                <select type="text" name="codigo_postal" id="codigo_postal" for="codigo_postal" searchable required>
+                <select name="codigo_postal" id="codigo_postal" for="codigo_postal" required style="width: 100%">
                     <option value="" disabled selected>Selecciona un codigo postal</option>
                     <?php foreach ($codigos_postales["Data"] as $codigo): ?>
                         <option value="<?= esc_attr($codigo['Value']) . " - " . $codigo['Text']; ?>">
@@ -132,11 +132,11 @@
                 <div class="phone-input-group">
                     <div class="phone-input-item telpre">
                         <label for="tel_prefijo">Cód. área (sin 0)</label>
-                        <input type="number" name="tel_prefijo" id="tel_prefijo" required="" value="" min="0" max="99" maxlength="2">
+                        <input type="number" name="tel_prefijo" id="tel_prefijo" required oninput="if(this.value.length > 4) this.value = this.value.slice(0,4);">
                     </div>
                     <div class="phone-input-item telnum">
                         <label for="tel_numero">Número</label>
-                        <input type="number" name="tel_numero" id="tel_numero" required="" value="" maxlength="8">
+                        <input type="number" name="tel_numero" id="tel_numero" required oninput="if(this.value.length > 8) this.value = this.value.slice(0,8);">
                     </div>
                 </div>
             </div>
@@ -177,10 +177,20 @@
 </section>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    jQuery(document).ready(function($) {
         const provinciaSelect = document.querySelector('select[name="provincia"]');
-        const cpSelect = document.querySelector('#codigo_postal');
+        const cpSelect = $('#codigo_postal');
 
+        // Inicializar Select2 en los campos
+        $('#marca').select2({
+            placeholder: "Seleccionar Marca",
+        });
+        $('#modelo').select2({
+            placeholder: "Selecciona un modelo",
+        });
+        cpSelect.select2({
+            placeholder: "Selecciona un código postal",
+        });
 
         const marcaSelect = document.querySelector('#marca');
         const anioSelect = document.querySelector('#anio');
@@ -229,8 +239,9 @@
 
             const provinciaId = this.value;
 
-            // Limpiar opciones anteriores
-            cpSelect.innerHTML = '<option disabled selected>Cargando...</option>';
+            // Deshabilitar y mostrar "Cargando..." en Select2
+            cpSelect.empty().append('<option disabled selected>Cargando...</option>').trigger('change');
+            cpSelect.prop("disabled", true);
 
             const apiToken = "<?= $token ?>";
 
@@ -238,15 +249,17 @@
             fetch(`${miPluginData.rest_url}codigos-postales?provincia=${provinciaId}`)
                 .then(res => res.json())
                 .then(data => {
-                    cpSelect.innerHTML = '<option disabled selected>Selecciona un código postal</option>';
+                    cpSelect.empty().append('<option value="" disabled selected>Selecciona un código postal</option>');
 
                     data.Data.forEach(codigo => {
                         const option = document.createElement('option');
                         const newValue = codigo.Value + " - " + codigo.Text;
                         option.value = newValue;
                         option.textContent = codigo.Text;
-                        cpSelect.appendChild(option);
+                        cpSelect.append(option);
                     });
+                    cpSelect.prop("disabled", false);
+                    cpSelect.trigger('change'); // Notificar a Select2 de los cambios
                 })
                 .catch(error => {
                     cpSelect.innerHTML = '<option disabled selected>Error al cargar</option>';
@@ -264,26 +277,37 @@
                 return;
             }
 
-            modeloSelect.innerHTML = '<option value="" disabled selected>Cargando modelos...</option>';
+            const $modeloSelect = $(modeloSelect);
+            // Limpiar opciones y mostrar "Cargando..." en el placeholder
+            $modeloSelect.empty().trigger('change');
+            $modeloSelect.select2({
+                placeholder: "Cargando modelos..."
+            });
+            $modeloSelect.prop("disabled", true);
 
             const marcaId = marcaValue.split('|')[0];
 
             fetch(`${miPluginData.rest_url}modelos?marca=${marcaId}&anio=${condicion.value=='usado'?anio:'2025'}`)
                 .then(res => res.json())
                 .then(data => {
-                    if (!Array.isArray(data.Data) || data.Data.length === 0) {
-                        modeloSelect.innerHTML = '<option value="" disabled selected>No existen modelos disponibles para esta marca</option>';
-                        modeloSelect.removeAttribute('required');
-                        return;
-                    }
-                    modeloSelect.innerHTML = '<option value="" disabled selected>Selecciona un modelo</option>';
-                    data.Data.forEach(modelo => {
-                        const option = document.createElement('option');
-                        option.value = modelo.Value + '|' + modelo.Text; // Enviamos ID y Nombre
-                        option.textContent = modelo.Text;
-                        modeloSelect.appendChild(option);
+                    $modeloSelect.empty();
+                    // Restaurar el placeholder original
+                    $modeloSelect.select2({
+                        placeholder: "Selecciona un modelo"
                     });
-                    modeloSelect.required = true;
+                    if (!Array.isArray(data.Data) || data.Data.length === 0) {
+                        $modeloSelect.append('<option value="" disabled selected>No existen modelos para esta marca</option>');
+                        $modeloSelect.removeAttr('required');
+                    } else {
+                        $modeloSelect.append('<option value="" disabled selected>Selecciona un modelo</option>');
+                        data.Data.forEach(modelo => {
+                            const option = new Option(modelo.Text, modelo.Value + '|' + modelo.Text);
+                            $modeloSelect.append(option);
+                        });
+                        $modeloSelect.attr('required', 'required');
+                    }
+                    $modeloSelect.prop("disabled", false);
+                    $modeloSelect.trigger('change'); // Notificar a Select2
                 })
                 .catch(error => {
                     modeloSelect.innerHTML = '<option disabled selected>Error al cargar modelos</option>';
@@ -292,7 +316,7 @@
         }
 
         // Escuchamos cambios en ambos selects
-        marcaSelect.addEventListener('change', cargarModelosSiCorresponde);
+        $('#marca').on('change', cargarModelosSiCorresponde);
         anioSelect.addEventListener('change', cargarModelosSiCorresponde);
 
         // Ejecutar al cargar si ya hay valores seleccionados
