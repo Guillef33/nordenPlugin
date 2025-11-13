@@ -57,7 +57,7 @@ function cotizador_norden_enqueue_assets()
     wp_enqueue_script(
         'cotizador-norden-script',
         $plugin_url . 'assets/app.js',
-        ['jquery', 'sweetalert2', 'select2-js'],
+        ['jquery', 'sweetalert2', 'select2-js', 'datepicker-js'],
         $script_ver,
         true
     );
@@ -82,6 +82,29 @@ function cotizador_norden_enqueue_assets()
         'https://cdn.jsdelivr.net/npm/sweetalert2@11',
         [],
         null,
+        true
+    );
+
+    wp_enqueue_style(
+        'datepicker-css',
+        'https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.3.4/dist/css/datepicker.min.css',
+        [],
+        '1.3.4'
+    );
+
+    wp_enqueue_script(
+        'datepicker-js',
+        'https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.3.4/dist/js/datepicker.min.js',
+        [],
+        '1.3.4',
+        true
+    );
+
+    wp_enqueue_script(
+        'datepicker-es',
+        'https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.3.4/dist/js/locales/es.js',
+        ['datepicker-js'],
+        '1.3.4',
         true
     );
 

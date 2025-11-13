@@ -166,7 +166,7 @@
 
 
                 <label for="fecha_nac">Fecha de nacimiento</label>
-                <input type="date" name="fecha_nac" id="fecha_nac" for="fecha_nac" required="" value="">
+                <input type="text" name="fecha_nac" id="fecha_nac" for="fecha_nac" required="" value="">
             </div>
 
 
@@ -326,6 +326,12 @@
             }
             cargarModelosSiCorresponde();
         }
+
+        const elem = document.getElementById('fecha_nac');
+        const datepicker = new Datepicker(elem, {
+            language: 'es',
+            buttonClass: 'btn',
+        });
     });
 
 
