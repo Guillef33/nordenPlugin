@@ -166,7 +166,8 @@
 
 
                 <label for="fecha_nac">Fecha de nacimiento</label>
-                <input type="text" name="fecha_nac" id="fecha_nac" for="fecha_nac" required="" value="">
+                <input type="text" name="fecha_nac_display" id="fecha_nac_display" for="fecha_nac_display" required="" value="">
+                <input type="hidden" name="fecha_nac" id="fecha_nac">
             </div>
 
 
@@ -327,11 +328,26 @@
             cargarModelosSiCorresponde();
         }
 
-        const elem = document.getElementById('fecha_nac');
+        const elem = document.getElementById('fecha_nac_display');
+        const hiddenInput = document.getElementById('fecha_nac');
         const datepicker = new Datepicker(elem, {
             language: 'es',
             buttonClass: 'btn',
+            format: 'dd/mm/yyyy',
+            autohide: true,
         });
+
+        function updateHiddenDate() {
+            const date = datepicker.getDate();
+            if (date) {
+                hiddenInput.value = Datepicker.formatDate(date, 'yyyy-mm-dd', 'es');
+            } else {
+                hiddenInput.value = '';
+            }
+        }
+
+        elem.addEventListener('changeDate', updateHiddenDate);
+        elem.addEventListener('blur', updateHiddenDate);
     });
 
 
